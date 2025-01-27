@@ -1,0 +1,351 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin order</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+    <link rel="stylesheet" href="\styles\admin\admin_order.css">
+
+</head>
+<body>
+    <!------Navbar------->
+    <nav class="navbar navbar-expand-lg bg-body-tertiary">
+        <div class="container-fluid">
+          <a class="navbar-brand" href="#">HavenCraft</a>
+         </div>
+         
+    </nav>
+    
+
+    <!---------SideBar------>
+
+    
+  <div class="container-fluid">
+    <div class="section-1">
+      <div class="sidebar">
+        <button type="button" class="btn" onclick="window.location.href='/admin/admin_home'">Dashboard</button>   
+        <button type="button" class="btn" onclick="window.location.href='/admin/admin_user'">User Management</button>
+        <button type="button" class="btn" onclick="window.location.href='/admin/admin_product'">Product Management</button>
+        <button type="button" class="btn" onclick="window.location.href='/admin/admin_category'">Category Management</button>
+        <button type="button" class="btn" onclick="window.location.href='/admin/admin_order'">Order Management</button>
+        <button type="button" class="btn" onclick="window.location.href='/admin/admin_stock'">Stock Management</button>
+        <button type="button" class="btn" onclick="window.location.href='/admin/coupon'">Coupon Management</button>
+        <button type="button" class="btn" onclick="window.location.href='/admin/salesReport'">Sales Report</button>
+        <button type="button" class="btn" onclick="window.location.href='/admin/logout'">Logout</button> 
+      </div>
+      <div class="content1">
+        <div class="content1-section1">
+            <h3>Order list</h3><br>
+      
+      <table class="table">
+        <thead>
+          <tr>
+            <th scope="col">No.</th>
+            <th scope="col">Order Id</th>
+            <th scope="col">Username</th>
+            <th scope="col">Created Date</th>
+            <th scope="col">Status</th>
+            <th scope="col">View</th>
+        
+          </tr>
+        </thead>
+       
+
+
+        <tbody>
+          <% if (orders && orders.length > 0) { %>
+            <% orders.forEach((order, index) => { %>
+              
+
+
+                <tr>
+                  <th scope="row"><%= index + 1 %></th>
+                  <td><%= order.uniqueOrderId %></td>
+                  <td><%= order.username %></td>
+                  <td><%= new Date(order.orderDate).toLocaleDateString() %></td>
+                  <td><%= order.status %></td>
+                  <td>
+                    <button type="button" class="btn btn-outline-secondary" data-bs-toggle="modal" data-bs-target="#exampleModal<%= order._id %>">
+                      View
+                    </button>
+  
+                   
+                    <div class="modal fade" id="exampleModal<%= order._id %>" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                      <div class="modal-dialog modal-xl">
+                        <div class="modal-content">
+                          <div class="modal-header">
+                            <h1 class="modal-title fs-5" id="exampleModalLabel"><b>Order Details</b> </h1>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                          </div>
+                          <div class="modal-body" style="display: flex; justify-content: space-between;gap:2%; padding: 2% 5%;" >
+
+                            <div class="modal-section" style="background-color: rgb(19, 19, 30); width: 35%; height: auto; padding: 2% 2%;" >
+                            <p><strong>Username : </strong><%= order.username %></p>
+                            <p><strong>Order Id : </strong><%= order.uniqueOrderId %></p>
+                            <p><strong>Payment Method : </strong><%= order.paymentMethod %></p>
+                            <p><strong>Shipping Address : </strong></p>
+                              <p>&nbsp;&nbsp;&nbsp;&nbsp; <%= order.address.firstname %>  <%= order.address.lastname %></p>
+                              <p>&nbsp;&nbsp;&nbsp;&nbsp; <%= order.address.street %></p>
+                              <p>&nbsp;&nbsp;&nbsp;&nbsp;<%= order.address.city %>, <%= order.address.state %></p>        
+                              <p>&nbsp;&nbsp;&nbsp;&nbsp;<%= order.address.pincode %></p>
+                              <p>&nbsp;&nbsp;&nbsp;&nbsp;<%= order.address.country %></p>
+                              <p><strong>Total Price :</strong><%= order.totalPrice %></p>
+
+
+                              
+
+
+                              <% if (order.status === 'Cancelled') { %>
+                                <p><strong>Order Status: </strong>Cancelled</p>
+                              <% } else if (order.status === 'Returned') { %>
+                                <p><strong>Order Status: </strong>Returned</p>
+                                <% } else if (order.status === 'Returning') { %>
+                                  
+                                  Returning
+  <p><strong>Reason:</strong> <%= order.reason || 'Not specified' %></p>
+  <form id="orderStatusForm-<%= order._id %>" action="/admin/refund-order" method="POST">
+    <input type="hidden" name="orderId" value="<%= order._id %>">
+    
+    <div>
+      <select
+        id="orderStatus-<%= order._id %>"
+        class="form-select order-status-select"
+        style="background-color: rgb(26, 26, 40); color: rgb(113, 103, 90); border-color: rgb(113, 103, 90); width: 80%;"
+        aria-label="Default select example"
+        name="orderStatus">
+        <option value="Approve">Approve</option>
+        <option value="Dismiss">Dismiss</option>
+      </select>
+    </div>
+    
+    <button type="submit" class="btn btn-outline-secondary mt-2">
+      Save
+    </button>
+  </form>
+
+
+
+                              <% } else { %>
+                                  <form id="orderStatusForm-<%= order._id %>" action="/admin/update-order-status" method="POST">
+                                    <input type="hidden" name="orderId" value="<%= order._id %>">
+                                    
+                                    <div>
+                                      <select 
+                                        id="orderStatus-<%= order._id %>"
+                                        class="form-select" 
+                                        style="background-color: rgb(26, 26, 40); color: rgb(113, 103, 90); border-color: rgb(113, 103, 90); width: 80%;" 
+                                        aria-label="Default select example"
+                                        name="orderStatus">
+                                        <option value="Pending" <%= order.status === 'Pending' ? 'selected' : '' %>>Pending</option>
+                                        <option value="Shipped" <%= order.status === 'Shipped' ? 'selected' : '' %>>Shipped</option>
+                                        <option value="Delivered" <%= order.status === 'Delivered' ? 'selected' : '' %>>Delivered</option>
+                                        <option value="Cancelled" <%= order.status === 'Cancelled' ? 'selected' : '' %>>Cancelled</option>
+                                        <option value="Returning" <%= order.status === 'Returning' ? 'selected' : '' %>>Returning</option>
+                                      </select>
+                                    </div>
+                                    
+                                    <button type="submit" class="btn btn-outline-secondary mt-2">
+                                      Save
+                                    </button>
+                                  </form>
+                                <% } %>
+                            
+
+                            </div>
+
+
+
+
+
+
+
+                            <div class="modal-section" style="background-color: rgb(19, 19, 30); width: 35%; height: auto; padding: 2% 2%;" >
+                              <p><strong>Product:</strong></p>
+                            <ul>
+                              <% order.products.forEach((product) => { %>
+                               <p>Name : <%= product.productName %></p>
+                               <p>Quantity : <%= product.quantity %></p>
+                               <p>Price : <%= product.price %></p>
+                               
+                           
+                             
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+                              
+                       
+
+                              <% if (order.products.length > 1) { %>
+                               
+                                    <% if (product.productStatus === 'Cancelled') { %>
+                                      <p>Cancelled</p>
+                                      <% } else if (product.productStatus === 'Approve') { %>
+                                        <p></p>
+                                      <% } else if (order.status === 'Returned') { %>
+                                        <p><strong>Status: </strong>Returned</p>
+                                        <% } else if (order.status === 'Delivered' ) { %>
+                                          <p><strong>Status: </strong>Delivered</p>
+                                          <% } else if (order.status === 'Returning' ) { %>
+                                            <p></p>
+                                    <% } else { %>
+                                      <form id="productStatusForm-<%= product.productId ? product.productId._id : '' %>" action="/admin/update-product-status" method="POST">
+                                        <input type="hidden" name="orderId" value="<%= order._id %>">
+                                        <input type="hidden" name="productId" value="<%= product.productId ? product.productId._id : '' %>">
+                                        <button type="submit" class="btn btn-outline-secondary mt-2">
+                                          Cancel
+                                        </button>
+                                      </form>
+                                    <% } %>
+                                  
+                              <% } %>
+                              
+     
+                              <br>
+                              <br>
+                              
+                               
+                              <% }) %>
+                            </ul>
+                           
+
+                            </div>
+
+
+
+
+
+
+
+
+
+                            <div class="modal-section" style="background-color: rgb(19, 19, 30); width: 35%; height: auto; padding: 2% 2%;">
+                              <% order.products.forEach(product => { %>
+                                <br>
+                                <img src="<%= product.imageBase64 %>" alt="<%= product.productName %>" style="width: 30vh; height: 30vh;">
+                                <br>
+                                <br>
+                                
+                              
+                              
+                                
+                              <% }); %>
+                            </div>
+                            
+                                                 
+                            <hr>
+                          </div>
+
+
+                          <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+
+
+                  </td>
+
+
+
+
+
+                  
+                </tr>
+            
+            <% }) %>
+          <% } else { %>
+            <tr>
+              <td colspan="7" class="text-center">No orders found</td>
+            </tr>
+          <% } %>
+        </tbody>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+      </table>
+        </div>
+
+      </div>
+      </div>
+      </div>
+
+      <script>
+    document.querySelector('form#productStatusForm').addEventListener('submit', function(event) {
+        const productStatus = this.querySelector('.product-status-select').value;
+        if (productStatus === 'Cancelled') {
+            event.preventDefault();  
+
+            Swal.fire({
+                title: 'Are you sure?',
+                text: "This action will cancel the product. Do you want to continue?",
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonText: 'Yes, Cancel it!',
+                cancelButtonText: 'No, Keep it'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    // If confirmed, submit the form
+                    event.target.submit();
+                }
+            });
+        }
+    });
+
+    </script>
+
+     
+
+
+    
+
+
+
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+      <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>
+      <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js" integrity="sha384-IQsoLXl5PILFhosVNubq5LC7Qb9DXgDA9i+tQ8Zj3iwWAwPtgFTxbJ8NT4GN1R8p" crossorigin="anonymous"></script>
+      <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.min.js" integrity="sha384-cVKIPhGWiC2Al4u+LWgxfKTRIcfu0JTxR+EQDz/bgldoEyl4H0zUF0QKbrJ0EcQF" crossorigin="anonymous"></script>
+</body>
+</html>

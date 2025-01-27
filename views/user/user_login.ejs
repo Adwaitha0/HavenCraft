@@ -1,0 +1,267 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Landing Page</title>
+    <link rel="stylesheet" href="\styles\user\user_login.css">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+</head>
+<body>
+
+<div class="container-fluid">
+    <div class="content">
+
+        <!-- Login Form (content1) -->
+        <div class="content1" id="login-content">
+            <div class="container">
+                <div class="login">
+                    <h3>Welcome Back!</h3>
+                    <p>Enter your credentials to access your account.</p>
+                    <br>
+                    <form action="/user/user_login" method="post" onsubmit="return validateForm()">
+                        <div class="mb-3">
+                            <label for="exampleInputEmail1" class="form-label">Email address</label>
+                            <input type="text" class="form-control" id="email" aria-describedby="emailHelp" placeholder="Email" name="email" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="exampleInputPassword1" class="form-label">Password</label>
+                            <input type="password" class="form-control" id="password" placeholder="Password" name="password" required>
+                            <a href="javascript:void(0);" onclick="showForgotPassword()" style="color: blue; text-decoration: none;">Forgot password?</a>
+                        </div>
+                        <div id="responseMessage" style="color: red; font-size: 14px;">
+                            <% if (typeof message !== 'undefined' && message) { %>
+                                <%= message %>  <!-- Display the message if it exists -->
+                            <% } %>
+                        </div>
+
+                        <br>
+                        <button type="submit" style="color: aliceblue;" class="btn btn-outline-secondary">Login</button>
+                    </form>
+                    <hr>
+                    <p style="text-align: center;">Or</p>
+                    <br>
+                    <div class="buttons">
+                        <div class="google">
+                            <a href="/auth/google">
+                                <button type="button" class="btn btn-light" style="border: 1px solid #d1cfcf;">
+                                    <img src="/styles/user/login_pic/google.png" style="width: 23px; height: 23px; margin-right: 3px;">
+                                    Sign In with Google
+                                </button>
+                            </a>
+                        </div>
+                        <div class="apple">
+                            <button type="button" class="btn btn-light" style="border: 1px solid #d1cfcf;">
+                                <img src="\styles\user\login_pic\apple.png" style="width: 23px; height: 23px;margin-right: 3px;">Sign In with Apple
+                            </button>
+                        </div>
+                    </div>
+                    <br>
+                    <p style="text-align: center;">
+                        Don't have an account?
+                        <a href="/user/user_register" style="color: blue; text-decoration: none;">Sign Up</a>
+                    </p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Forgot Password Form (content2) -->
+        <div class="content1" id="forgot-password-content" style="display: none;">
+            <div class="container">
+                <div class="login" style="margin-top: 20%;">
+                    <h3>Reset Password</h3>
+                    <br>
+                    <p>Please enter your email address below to receive OTP.</p>
+                    <form id="resetPasswordForm">
+                      <div class="mb-3">
+                          <label for="email" class="form-label">Email</label>
+                          <input type="email" class="form-control" placeholder="Email" name="email" id="forgotemail" required>
+                      </div>    
+                      <br>
+                      <button type="button" id="submitButton" style="color: aliceblue;"  class="btn btn-outline-secondary" onclick="validateEmailForm()">Send OTP</button>
+                  </form>
+                  
+                </div>
+            </div>
+        </div>
+
+        <div class="content2">
+            <img src="\styles\user\login_pic\login_pic.png" class="pict1">
+        </div>
+    </div>
+</div>
+
+
+
+<script>
+    async function validateEmailForm() {
+      const email = document.getElementById('forgotemail').value;
+      console.log(email)
+      const emailPattern = /^[a-zA-Z0-9]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,6}$/;
+  
+      // Validate email format
+      if (!emailPattern.test(email)) {
+        Swal.fire({
+          icon: 'error',
+          title: 'Invalid Email',
+          text: 'Please enter a valid email address.',
+        });
+        return; // Stop further execution
+      }
+  
+      // Prepare data to send to the server
+      const data = {
+        email: email
+      };
+  
+      try {
+        // Send a POST request to the server
+        const response = await fetch('/user/sent-forgot-otp', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify(data),
+        });
+  
+        // Handle the response
+        const result = await response.json();
+  
+        if (response.ok) {
+          // Success response
+          Swal.fire({
+            icon: 'success',
+            title: 'OTP Sent',
+            text: result.message || 'OTP sent successfully. Please verify.',
+          }).then(() => {
+            window.location.href = '/user/load-forgot-otp';
+          });
+        } else {
+          // Error response
+          Swal.fire({
+            icon: 'error',
+            title: 'Error',
+            text: result.message || 'Something went wrong. Please try again.',
+          });
+        }
+      } catch (error) {
+        // Handle unexpected errors
+        console.error(error);
+        Swal.fire({
+          icon: 'error',
+          title: 'Error',
+          text: 'An unexpected error occurred. Please try again later.',
+        });
+      }
+    }
+  </script>
+
+
+
+
+
+
+
+
+<script>
+  function showForgotPassword() {
+      document.getElementById('login-content').style.display = 'none';
+      document.getElementById('forgot-password-content').style.display = 'block';
+  }
+
+
+
+
+
+  document.getElementById('submitButton').addEventListener('click', function(event) {
+    const email = document.getElementById('email').value;
+    const newPassword = document.getElementById('newPassword').value;
+    const confirmPassword = document.getElementById('confirmPassword').value;
+
+    if (newPassword !== confirmPassword) {
+        Swal.fire({
+            icon: 'error',
+            title: 'Oops...',
+            text: 'Passwords do not match!',
+        });
+        return;
+    }
+    fetch('/user/checkEmail', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ email: email, newPassword: newPassword })  
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.success) {
+            Swal.fire({
+                icon: 'success',
+                title: 'Success!',
+                text: data.message, 
+            });
+        } else {
+            Swal.fire({
+                icon: 'error',
+                title: 'Error!',
+                text: data.message, 
+            });
+        }
+    })
+    .catch(error => {
+        Swal.fire({
+            icon: 'error',
+            title: 'Error!',
+            text: 'Error checking email: ' + error,
+        });
+    });
+});
+
+
+</script>
+
+<script>
+    function validateForm() {
+      console.log('validate form hit')
+        var email = document.getElementById("email").value;
+        var password = document.getElementById("password").value;
+  
+        var emailPattern = /^[a-zA-Z0-9]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,6}$/;
+        if (!emailPattern.test(email)) {
+            Swal.fire({
+                icon: 'error',
+                title: 'Invalid Email',
+                text: 'Please enter a valid email address.',
+            });
+            return false; // Prevent form submission
+        }
+  
+        // Validate password length
+        if (password.length < 4) {
+            Swal.fire({
+                icon: 'error',
+                title: 'Password too short',
+                text: 'Password must be at least 4 characters long.',
+            });
+            return false; 
+        }
+  
+        return true; 
+    }
+  </script>
+  
+  
+
+
+
+
+
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js" integrity="sha384-IQsoLXl5PILFhosVNubq5LC7Qb9DXgDA9i+tQ8Zj3iwWAwPtgFTxbJ8NT4GN1R8p" crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.min.js" integrity="sha384-cVKIPhGWiC2Al4u+LWgxfKTRIcfu0JTxR+EQDz/bgldoEyl4H0zUF0QKbrJ0EcQF" crossorigin="anonymous"></script>
+
+
+</body>
+</html>

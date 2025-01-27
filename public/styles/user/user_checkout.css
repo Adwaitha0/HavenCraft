@@ -1,0 +1,346 @@
+
+*{
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    
+}
+
+body{
+    margin: 0;
+    padding: 0;
+    background-color: #a48383;
+}
+
+.navbar{  
+    background-color: #653434;
+    width: 100%;
+    height: 65px;
+    color: aliceblue;
+    padding: 0% 5%;
+}
+
+.d-flex .form-control {
+    width: 100%;
+    border-radius: 10px;
+    
+}
+.d-flex{
+    margin-right: 50px;
+    /*background-color: aqua;       */
+
+}
+.navbar a{
+    color: aliceblue;
+}
+
+.icons{
+    width: 200px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 20px;
+    /*background-color: aquamarine;   */
+}
+
+.section-1{
+        width: 100%;
+        height: auto;
+        display: block;
+        /*margin-top: 3%;    */
+        justify-content: center;
+        align-items: center;
+        gap: 2%;
+        padding: 3% 10%;
+        /* background-color: rgb(166, 145, 117);     */
+        
+}
+.checkout-session{
+    display: flex;
+    width: 100%;
+    height: auto;
+
+}
+.checkout-content{
+
+    width: 70%;
+    height: auto;
+    background-color: #f5f2f2;
+}
+.cart-sum{
+    width: 30%;
+    height: auto;
+    background-color: rgb(222, 220, 218); 
+    padding: 3% 2%;
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+    
+}
+
+.section-2{
+    width: 100%;
+    /*height: 360px;  */
+    height: auto;
+    display: flex;
+    /*margin-top: 3%;    */
+    justify-content: center;
+    align-items: center;
+    gap: 2%;
+    padding: 5% 10%;
+    /*  background-color: antiquewhite;    */
+
+}
+.db-address{      
+    padding: 2% 5%;
+    background-color:  #FFF;   
+    width: 95%;
+    height: auto;
+    /*border-radius: 15px;*/
+    border: 2px solid rgb(216, 217, 223);
+    margin-bottom: 10px;
+}
+.section-1-2{
+    width: 40%;
+    height: 360px;
+    /*background-color: aquamarine;   */
+}
+.section-1-1{
+    width: 40%;
+    height: 360px;
+    /*background-color: aquamarine;   */
+}
+.payment-button{
+    width: 100%;
+    height: 50px;
+    /*background-color: cadetblue;   */
+    display: flex;
+    justify-content: start;
+    
+}
+
+.pay-1{
+    height: 25%;
+    display: flex;
+    justify-content: start;
+    align-items: center;
+    padding: 1% 2%;
+}
+
+
+
+
+
+
+
+
+.section-3{
+    width: 100%;
+    height: 40vh;
+    /*background-color: #564646;   */
+    padding: 3% 10%;
+    display: flex;
+    justify-content: center;
+    gap: 4%;
+}
+.section-3-1 {
+    width: 35%;
+    height: 24vh;
+    background-color:  rgb(216, 217, 223);
+    display: flex;
+
+}
+.section-3-3 {
+    width: 35%;
+    height: 24vh;
+    border: 1px solid rgb(216, 217, 223);
+    /*background-color: #b77d7d;       */
+}
+
+.section-3-2{
+    width: 100%;
+    height:auto;
+    border: 2px solid rgb(216, 217, 223);
+    background-color:  #FFF; 
+
+}
+
+.section-3-image{
+    width: 35%;
+    height: 24vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+.section-3-product{
+    width: 55%;
+    height: 24vh;
+    padding-top: 10%;
+}
+
+.total{
+    width: 100%; 
+    height: 8%; 
+    /*background-color: rgb(87, 131, 131);   */
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 17px;
+}
+.total-price{
+    width: 100%; 
+    height: 25%; 
+    margin-top: 4%;
+   /* background-color: rgb(62, 228, 228);    */
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 17px;
+
+}
+.placeOrderSection-1{
+    display:block;
+    height: auto;
+    width: 100%;
+}
+.get-payment  {   
+    text-align: right;
+    padding-right: 10%;
+}
+
+
+
+
+
+
+
+
+
+/*            section 6 starting         */
+.section-6{
+    width: 100%;
+    height: auto;
+    padding: 2% 1%;
+    background-color: rgb(222, 220, 218);
+    margin-top: 30px;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    align-items: center;
+    gap: 30px;
+    border-bottom: #f5f2f2;
+}
+
+
+.cat6-1{
+    /*background-color: aquamarine; */
+    width: 45vh;
+    height: 270px;
+}
+.cat6-2{
+    /*background-color: aquamarine; */
+    width: 37vh;
+    height:  250px;
+}
+.cat6-3{
+    /*background-color: aquamarine; */
+    width: 37vh;
+    height:  250px;
+}
+.cat6-4{
+    /*background-color: aquamarine; */
+    width:  40vh;
+    height:  250px;
+}
+.social_media{
+    display: flex;
+    gap: 5px;
+}
+.g {
+    height: 30px; 
+    width: 30px;
+    border-radius: 50px; 
+    background-color: rgb(158, 156, 156);
+    display: flex;
+    justify-content: center; 
+    align-items: center; 
+}
+.f {
+    height: 30px; 
+    width: 30px;
+    border-radius: 50px; 
+    background-color: rgb(158, 156, 156);
+    display: flex;
+    justify-content: center; 
+    align-items: center; 
+}
+.t {
+    height: 30px; 
+    width: 30px;
+    border-radius: 50px; 
+    background-color: rgb(158, 156, 156);
+    display: flex;
+    justify-content: center; 
+    align-items: center; 
+}
+.i {
+    height: 30px; 
+    width: 30px;
+    border-radius: 50px; 
+    background-color: rgb(158, 156, 156);
+    display: flex;
+    justify-content: center; 
+    align-items: center; 
+}
+.cat6-4 button{
+    width: 100%;
+    background-color: #905454;
+    border: none;
+}
+.copy{
+    width: 100%;
+    height: 50px;
+    background-color: rgb(222, 220, 218);
+    border-top: 1px solid #fff;
+    padding-left: 120px;
+    padding-top: 8px;
+
+}
+
+@media (max-width: 768px) {
+
+    .container {
+        flex-direction: column; /* Stack the elements vertically */
+    }
+    
+    .cat6-1, .cat6-2, .cat6-3, .cat6-4 {
+        width: 100%;  
+        height: auto;
+        margin-bottom: 10px; 
+        margin-left: 10px;
+    }
+    .cat6-1 {
+        order: 1;
+    }
+    
+    .cat6-2 {
+        order: 2;
+    }
+    
+    .cat6-3 {
+        order: 3;
+    }
+    
+    .cat6-4 {
+        order: 4;
+    }
+    .copy{
+        width: 100%;
+        height: 50px;
+        display: flex;
+        justify-content: center;
+        padding-left: 2%;
+    }
+    
+
+}

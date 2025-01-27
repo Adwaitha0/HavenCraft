@@ -1,0 +1,619 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Home Page</title>
+    <link rel="stylesheet" href="\styles\user\user_candleDetail.css">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css" integrity="sha512-Kc323vGBEqzTmouAECnVceyQqyqdsSiqLQISBL29aUW4U/M7pSPA/gEUZQqv1cwx4OnYxTxve5UMg5GT6L4JJg==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+  </head>
+<body>
+
+
+    <!----         navbar    ----->
+
+    <nav class="navbar navbar-expand-lg bg-body-tertiary">
+        <div class="container-fluid">
+          <a class="navbar-brand" href="#">HavenCraft</a>
+          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"><i class="fa-solid fa-list"  style="color: rgb(155, 153, 153);"></i></span>
+          </button>
+          <div class="collapse navbar-collapse" id="navbarSupportedContent">
+            <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+              <li class="nav-item">
+                <a class="nav-link active" aria-current="page" href="/user/user_home">Home</a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link" href="/user/about">About</a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link" href="/user/store">Store</a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link" href="/user/contact">Contact Us</a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link" href="/user/user_login">Login</a>
+              </li>
+            </ul>
+            <form class="d-flex" role="search" style="position: relative;">
+              <i class="fa-solid fa-magnifying-glass" style="position: absolute; top: 50%; left: 10px; transform: translateY(-50%); color: gray;"></i>
+              <input class="form-control me-2" type="search" placeholder="Search for products" aria-label="Search" style="padding-left: 40px;">
+              
+          </form>
+            <div class="icons">
+            <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+              <li class="nav-item">
+                <% if (session.user) { %> 
+                  <a class="nav-link" href="/user/wishlist"><i class="fa-solid fa-heart"></i></a>
+                  <% } else { %>
+                    <a class="nav-link" href="/user/user_login"><i class="fa-solid fa-heart"></i></a>
+                    <% } %>
+              </li>
+              <li class="nav-item">
+                <% if (session.user) { %> 
+                  <a class="nav-link" href="/user/user_addToCart"><i class="fa-solid fa-cart-shopping"></i></a>
+                  <% } else { %>
+                    <a class="nav-link" href="/user/user_login"><i class="fa-solid fa-cart-shopping"></i></a>
+                    <% } %>
+              </li>
+              <li class="nav-item">
+                <% if (session.user) { %>    
+                  <a class="nav-link" href="/user/user_profile"><i class="fa-solid fa-user"></i></a>
+                 <% } else { %>
+                    <a class="nav-link" href="/user/user_login"><i class="fa-solid fa-user"></i></a>
+                    <% } %>
+              </li>
+              </ul>
+            </div>
+              
+              
+          
+          
+          
+          </div>
+        </div>
+      </nav>
+
+
+      <!---      categories   ---->
+      <div class="category">
+      <nav class="navbar2 navbar-expand-lg bg-body-tertiary">
+        <div class="container-fluid">
+          
+          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNavDropdown" aria-controls="navbarNavDropdown" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+          </button>
+          <div class="collapse navbar-collapse" id="navbarNavDropdown">
+            <ul class="navbar-nav">
+
+
+              <li class="nav-item dropdown">
+                <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="true">
+                  Decorative Lights
+                </a>
+                <ul class="dropdown-menu">
+                  <li><a class="dropdown-item" href="#">Pendant Lights</a></li>
+                  <li><a class="dropdown-item" href="#">Chendeliers</a></li>
+                  <li><a class="dropdown-item" href="#">Outdoor Lights</a></li>
+                </ul>
+              </li>
+
+
+              <li class="nav-item dropdown">
+                <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="true">
+                  Ceiling Fan
+                </a>
+                <ul class="dropdown-menu">
+                  <li><a class="dropdown-item" href="#">Crystal Ceiling Fan</a></li>
+                  <li><a class="dropdown-item" href="#">Classic Ceiling Fan</a></li>
+                </ul>
+              </li>
+
+              <li class="nav-item dropdown">
+                <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="true">
+                  Wall Lights
+                </a>
+                <ul class="dropdown-menu">
+                  <li><a class="dropdown-item" href="/user/tableLamp">Table Lights</a></li>
+                  <li><a class="dropdown-item" href="#">Ceiling Lights</a></li>
+                  <li><a class="dropdown-item" href="#">Wall Lights</a></li>
+                </ul>
+              </li>
+
+
+              <li class="nav-item dropdown">
+                <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="true">
+                  Home Decor
+                </a>
+                <ul class="dropdown-menu">
+                  <li><a class="dropdown-item" href="/user/artifact">Artifacts</a></li>
+                  <li><a class="dropdown-item" href="/user/sculpture">Sculptures</a></li>
+                  <li><a class="dropdown-item" href="#">Decorative Boxes</a></li>
+                </ul>
+              </li>
+
+
+              <li class="nav-item dropdown">
+                <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="true">
+                Home Accessories
+                </a>
+                <ul class="dropdown-menu">
+                  <li><a class="dropdown-item" href="#">Planters</a></li>
+                  <li><a class="dropdown-item" href="/user/vase">Vases</a></li>
+                  <li><a class="dropdown-item" href="/user/candleHolder">Candle holders</a></li>
+                </ul>
+              </li>
+              
+            </ul>
+          </div>
+        </div>
+      </nav>
+    </div>
+
+
+
+
+
+  <!---------     section-2   ------------>
+
+  <div class="container-fluid">
+    <div class="section-2">
+        <div class="breadcrumb-section">
+            <nav aria-label="breadcrumb">
+                <ol class="breadcrumb">
+                    <li class="breadcrumb-item"><a href="/user/user_home" style="color: rgb(85, 84, 84); text-decoration: none;">Home</a></li>
+                    <li class="breadcrumb-item"><a href="#" style="color: rgb(85, 84, 84); text-decoration: none;"><%= products.category %></a></li>
+                    <li class="breadcrumb-item active" aria-current="page"><%= products.name %></li>
+                </ol>
+            </nav>
+        </div>
+        <div class="inner-section container-fluid">
+            <div class="section-2-1">
+              <div class="image-container">
+                <div class="image">
+                  <img 
+                    id="zoom-image" 
+                    src="data:image/png;base64,<%= products.images[0].toString('base64') %>" 
+                    alt="<%= products.name %>">
+                  <div class="zoom-lens"></div>
+                </div>
+              </div>
+              <div class="small-image">
+                <% products.images.forEach(image => { %>
+                  <img src="data:image/png;base64,<%= image.toString('base64') %>" style="width: 60px; height: 60px;">
+                <% }) %>
+              </div>
+              
+            </div>
+            <div class="section-2-2">
+                <h2><%= products.name %></h2>
+                <p><%= products.description %></p>
+                <div class="size" style="display: flex; gap: 10px;">
+                  <p>Size: </p>
+                  <div class="small size-option" data-size="Small" onclick="fetchStock('Small')">
+                    <p>Small</p>
+                  </div>
+                  <div class="large size-option" data-size="Large" onclick="fetchStock('Large')">
+                    <p>Large</p>
+                  </div>
+                </div>
+                <p>
+                  <div style="display: flex; align-items: center;">
+                  <% if (products.discountPrice !== products.originalPrice) { %>
+                    <h3 ><%= products.discountPrice.toLocaleString('en-IN',{style:"currency",currency:"INR"}) %>  </h3>
+                      <span style="text-decoration: line-through; color: grey; margin-left: 1%; margin-right: 1%;"> <%= products.originalPrice.toLocaleString('en-IN',{style:"currency",currency:"INR"}) %></span> 
+                      
+                      <% if (products.offerPercentage > 0) { %> 
+                         <span style="color: rgb(47, 104, 228);"><%= products.offerPercentage %>% OFF</span>
+                      <% } %>
+                  <% } else { %>
+                     <h3><%= products.originalPrice.toLocaleString('en-IN',{style:"currency",currency:"INR"}) %></h3> 
+                  <% } %>
+                </div>
+                  </p>
+                <p>(Price Inclusive of All Taxes)</p>
+                <div class="Quantity" style="display: flex;">
+                  <p>Quantity:</p>
+                  <form>
+                      <div class="mb-3" style="width: 80px;">
+                          <input type="number" class="form-control" id="quantityInput" value="1" min="1" max="3">
+                      </div>
+                  </form>
+                </div>
+                <p>Stock: <span id="stock-quantity">Select a size to see stock</span></p>
+       
+                <div class="product-button" style="display: flex; gap: 2%;">
+      
+                  <% if (session.user) { %> 
+                    <a  class="nav-link1 btn btn-outline-secondary" data-bs-toggle="modal" data-bs-target="#addToCartModal_<%= products.id %>" data-product-id="<%= products.id %>" href="#">Add to Cart
+
+
+                      <div class="modal fade" id="addToCartModal_<%= products.id %>" tabindex="-1" aria-labelledby="addToCartModalLabel" aria-hidden="true">
+                        <div class="modal-dialog modal-md">
+                          <div class="modal-content">
+                            <div class="modal-header">
+                              <h5 style="color: black;" class="modal-title" id="addToCartModalLabel">Select Size.</h5>
+                              <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                            </div>
+                            <div class="modal-body">
+                              <p style="color: black; text-align:left;">Select size to see available stock!</p>
+                      
+                              <div class="small size-option" data-size="Small" onclick="fetchStockAndUpdateLink('Small', '<%= products.id %>')">
+                                <p style="color: black;">Small</p>
+                              </div>
+                              <div class="large size-option" data-size="Large" onclick="fetchStockAndUpdateLink('Large', '<%= products.id %>')">
+                                <p style="color: black;">Large</p>
+                              </div>
+                      
+                              <p><span id="stock-quantity"></span></p>
+                      
+                      
+                            </div>
+                            <div class="modal-footer">
+                            </div>
+                          </div>
+                        </div>
+                      </div>                      
+
+
+
+
+                    </a>
+                    <% } else { %>
+                      <a  class="nav-link1 btn btn-outline-secondary"  href="/user/user_login">Add to Cart</a>
+                      <% } %> 
+
+                      <% if (session.user) { %> 
+                        <a  class="nav-link1 btn btn-outline-secondary"  href="/user/user_checkout">Buy Now</a>
+                        <% } else { %>
+                          <a class="nav-link1 btn btn-outline-secondary"  href="/user/user_login">Buy Now </a>
+                          <% } %> 
+
+                          <% if (session.user) { %> 
+                            <a href="javascript:void(0);" class="add-to-wishlist" data-product-id="<%= products._id %>">
+                              <i class="fa-regular fa-heart" style="color: rgb(79, 79, 79);"></i>
+                            </a>                           
+                            <% } else { %>
+                              <a class="nav-link"  href="/user/user_login"><i class="fa-regular fa-heart" style="color: rgb(79, 79, 79);"></i></a>
+                              <% } %> 
+
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!--------------------------section-3---------------------->
+
+
+<div class="container-fluid">
+  <div class="heading" style="margin-top: 4%;">
+    <h3>Keep Exploring!</h3>
+  </div>
+  <div class="section-3">
+    
+    <% relatedProducts.forEach(relatedProduct => { %>
+      <div class="cat-1">
+        <img src="data:image/png;base64,<%= relatedProduct.images[0].toString('base64') %>" alt="<%= relatedProduct.name %>" >
+        <br><br>
+        <p><%= relatedProduct.name %></p>
+        <div class="wish" style="display: flex; justify-content: space-between;">
+          <p><%= relatedProduct.originalPrice.toLocaleString('en-IN',{style:"currency",currency:"INR"}) %>
+            <% if (relatedProduct.offerPercentage > 0) { %> 
+              <span style="color: rgb(47, 104, 228);">(<%= relatedProduct.offerPercentage %>% OFF)</span>
+            <% } %>
+          </p>
+          
+        <% if (session.user) { %> 
+          <a href="javascript:void(0);" class="add-to-wishlist" data-product-id="<%=relatedProduct.id %>">
+            <i class="fa-regular fa-heart" style="color: rgb(79, 79, 79);"></i>
+          </a>
+          
+          <% } else { %>
+            <a class="nav-link"  href="/user/user_login"><i class="fa-regular fa-heart" style="color: rgb(79, 79, 79);"></i></a>
+            <% } %> 
+        
+        </div>
+        <div class="cart" style="display: flex; justify-content: space-between;">
+          <p><a class="link-opacity-25" style="text-decoration: none;" href="/user/user_candleDetail/<%= relatedProduct.id %>">Quick View</a></p>
+          <div class="add_to_cart" style="display: flex; align-items: center;">
+            <% if (session.user) { %> 
+       
+          
+<i class="fa-solid fa-cart-shopping" style="margin-right: 4px;"></i>
+<a style="text-decoration: none;" href="#" data-bs-toggle="modal" data-bs-target="#addToCartModal_<%= relatedProduct.id %>" data-product-id="<%= relatedProduct.id %>">
+
+  Add to Cart
+</a>
+
+
+
+<div class="modal fade" id="addToCartModal_<%= relatedProduct.id %>" tabindex="-1" aria-labelledby="addToCartModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-md">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="addToCartModalLabel">Select Size.</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <p>Select size to see available stock!</p>
+
+        <div class="small size-option" data-size="Small" onclick="fetchStockAndUpdateLink('Small', '<%= relatedProduct.id %>')">
+          <p>Small</p>
+        </div>
+        <div class="large size-option" data-size="Large" onclick="fetchStockAndUpdateLink('Large', '<%= relatedProduct.id %>')">
+          <p>Large</p>
+        </div>
+
+        <p><span id="stock-quantity"></span></p>
+
+
+      </div>
+      <div class="modal-footer">
+      </div>
+    </div>
+  </div>
+</div>
+
+            <!--</a>  -->
+            <% } else { %>
+              <i class="fa-solid fa-cart-shopping" style="margin-right: 4px;"></i><a style="text-decoration: none;" href="/user/user_login">
+                <p>Add to Cart</p>
+              </a>
+              <% } %>  
+          </div>
+        </div>
+      </div>
+    <% }); %>
+  </div>
+</div>
+
+
+
+
+
+
+<!------section-6 ----->
+  <div class="container-fluid">
+    <div class="section-6">
+
+      <div class="cat6-1">
+        <h2>HavenCraft</h2>
+        <p>Transform your space into a stylish sanctuary with our curated home decor collections.</p>
+  
+        <p><i class="fa-solid fa-location-dot" style="color: #905454; margin-right: 5px;"></i>Kinfra, Calicut</p>
+        <p><i class="fa-solid fa-envelope"  style="color: #905454; margin-right: 5px;"></i>havencraft@gmail.com</p>
+        <p><i class="fa-solid fa-phone"  style="color: #905454; margin-right: 5px;"></i>+91-9123428910</p>
+         
+      </div>
+      <div class="cat6-2">
+        <h5>Quick Links</h5>
+        <a href="#" style="color: black; text-decoration: none;">Home</a><br>
+        <a href="#" style="color: black; text-decoration: none;">Contact us</a><br>
+        <a href="#" style="color: black; text-decoration: none;">Our shop</a><br>
+        <a href="#" style="color: black; text-decoration: none;">Cart</a><br>
+        <a href="#" style="color: black; text-decoration: none;">Checkout</a><br>
+        
+      </div>
+      <div class="cat6-3">
+        <h5>Help</h5>
+        <a href="#" style="color: black; text-decoration: none;">Track Order</a><br>
+        <a href="#" style="color: black; text-decoration: none;">Returns</a><br>
+        <a href="#" style="color: black; text-decoration: none;">Shipping</a><br>
+        <a href="#" style="color: black; text-decoration: none;">FAQs</a><br>
+        <br>
+        <h5>Connect</h5>
+        <div class="social_media">
+        <div class="g">
+          <i class="fa-brands fa-youtube"></i>
+        </div>
+        <div class="f">
+          <i class="fa-brands fa-facebook-f"></i>
+        </div>
+        <div class="t">
+          <i class="fa-brands fa-twitter"></i>
+        </div>
+        <div class="i">
+          <i class="fa-brands fa-instagram"></i>
+        </div>
+      </div>
+        
+        
+        
+      </div>
+      <div class="cat6-4">
+        <h5>Updates & Offers</h5>
+        <br>
+        <form>
+          <div class="mb-3">
+            
+            <input type="email" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp" placeholder="Your Name">
+          </div>
+          <div class="mb-3">
+            
+            <input type="password" class="form-control" id="exampleInputPassword1" placeholder="Your Email">
+          </div>
+         
+          <button type="submit" class="btn btn-primary">Subscribe Now</button>
+        </form>
+        
+      </div>
+      
+
+    </div>
+   
+  </div>
+  <div class="container-fluid">
+  <div class="copy">
+  <p><b>&copy;2024 HavenCraft.</b>All Rights Reserved.</p>
+    
+  </div>
+</div>
+<script>
+
+document.querySelectorAll('.add-to-wishlist').forEach(button => {
+  button.addEventListener('click', async (e) => {
+    const productId = e.currentTarget.getAttribute('data-product-id');
+    console.log(productId);
+
+    try {
+      const response = await fetch(`/user/addToWishlist/${productId}`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+      });
+
+      const data = await response.json();
+      console.log(data)
+
+      if (data.success) {
+        Swal.fire({
+          icon: 'success',
+          title: data.message,
+          showConfirmButton: false,
+          timer: 1500,
+        }).then(() => {
+          window.location.href = '/user/wishlist';
+        });
+      } else {
+        Swal.fire({
+          icon: 'info',  
+          title: data.message || 'Oops! Something went wrong.',
+        });
+      }
+    } catch (error) {
+      console.error('Error adding to wishlist:', error);
+      Swal.fire({
+        icon: 'error',
+        title: 'Failed to add to wishlist',
+        text: 'Please try again later.',
+      });
+    }
+  });
+});
+
+
+
+
+
+
+
+
+
+
+
+
+ function fetchStock(size) {
+  const productId = '<%= products._id %>';
+  console.log(productId)
+  console.log(size)
+  fetch(`/user/getStock?productId=${productId}&size=${size}`)
+
+    .then(response => response.json())
+    .then(data => {
+      document.getElementById('stock-quantity').textContent = data.stock || 'Out of stock';
+    })
+    .catch(error => {
+      console.error('Error fetching stock:', error);
+      document.getElementById('stock-quantity').textContent = 'Error fetching stock';
+    });
+}
+</script>
+<script>
+const image = document.getElementById('zoom-image');
+const lens = document.querySelector('.zoom-lens');
+
+// Adjust zoom factor
+const zoomFactor = 2;
+
+// Show the lens on mouseenter
+image.addEventListener('mouseenter', () => {
+  lens.style.display = 'block';
+
+  // Dynamically set background size based on the image's natural size
+  const imgWidth = image.offsetWidth; // Use displayed width
+  const imgHeight = image.offsetHeight; 
+  
+  lens.style.backgroundSize = `${imgWidth * zoomFactor}px ${imgHeight * zoomFactor}px`;
+});
+
+// Hide the lens on mouseleave
+image.addEventListener('mouseleave', () => {
+  lens.style.display = 'none';
+});
+
+// Handle mouse movement
+image.addEventListener('mousemove', (event) => {
+  const rect = image.getBoundingClientRect();
+  const x = event.clientX - rect.left;
+  const y = event.clientY - rect.top;
+
+  // Position the lens
+  const lensX = x - lens.offsetWidth / 2;
+  const lensY = y - lens.offsetHeight / 2;
+
+  lens.style.left = `${lensX}px`;
+  lens.style.top = `${lensY}px`;
+
+  // Set the zoomed background
+  const bgPosX = -(x * zoomFactor - lens.offsetWidth / 2);
+  const bgPosY = -(y * zoomFactor - lens.offsetHeight / 2);
+
+  lens.style.backgroundImage = `url(${image.src})`;
+  lens.style.backgroundPosition = `${bgPosX}px ${bgPosY}px`;
+});
+
+</script>
+
+
+
+<script>
+    const quantityInput = document.getElementById('quantityInput');
+    quantityInput.addEventListener('input', () => {
+        const maxQuantity = 3;
+        if (quantityInput.value > maxQuantity) {
+            quantityInput.value = maxQuantity;
+            Swal.fire({
+                icon: 'warning',
+                title: 'Maximum Limit Reached',
+                text: `You can select a maximum of ${maxQuantity} items.`,
+                confirmButtonText: 'OK'
+            });
+        }
+    });
+</script>
+<script>
+  function fetchStockAndUpdateLink(size, productId) {
+    fetch(`/user/getStock?productId=${productId}&size=${size}`)
+      .then(response => response.json())
+      .then(data => {
+        if (data.stock === 'Out of stock') {
+          Swal.fire({
+            icon: 'error',
+            title: 'Oops...',
+            text: 'Product is out of stock!',
+          });
+        } else {
+          window.location.href = `/user/addToCart?productId=${productId}&size=${size}`;
+        }
+      })
+      .catch(error => {
+        console.error('Error fetching stock:', error);
+        Swal.fire({
+          icon: 'error',
+          title: 'Error',
+          text: 'An error occurred while checking the stock!',
+        });
+      });
+  }
+</script>
+
+
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>
+
+
+
+</body>
+</html>

@@ -1,0 +1,32 @@
+*{
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body{
+    margin: 0;
+    padding: 0;
+    background-color: rgb(26, 26, 40);
+}
+.section-2{
+    background-color: rgb(26, 26, 40);
+    color: rgb(113, 103, 90);
+    width: 100%;
+    height: 100vh;
+    padding: 5% 10%;
+    display: grid;
+    align-items: center;
+    justify-content: center;   
+}
+.error{
+    font-size: 60px;
+    text-align: center;
+    color: rgb(113, 103, 90);
+}
+.middle{
+    width: 60vh;
+    height: auto; 
+    text-align: center;
+}
+    

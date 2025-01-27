@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Landing Page</title>
+    <link rel="stylesheet" href="\styles\user\user_register.css">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+</head>
+<body>
+<div class="container-fluid">
+    <div class="content">
+  <div class="content1">
+    <div class="container">
+    <div class="login">
+      <h3>Get Started Now!</h3>
+      <br>
+      <form id="signupForm">
+        <div class="mb-3">
+            <label for="exampleInputEmail1" class="form-label">Name</label>
+            <input type="text" class="form-control" id="username" placeholder="Name" name="username" required>
+        </div>
+        <div class="mb-3">
+            <label for="exampleInputEmail1" class="form-label">Email address</label>
+            <input type="text" class="form-control" id="email"  placeholder="Email" name="email" required>
+        </div>
+        <div class="mb-3">
+            <label for="exampleInputPassword1" class="form-label">Password</label>
+            <input type="password" class="form-control" id="password" placeholder="Password" name="password" required>
+        </div>
+        <div class="mb-3">
+          <label for="referralCode" class="form-label">Referral ID (Optional)</label>
+          <input type="text" class="form-control" id="referralCode" placeholder="Referral ID" name="referralCode">
+      </div>
+        <br>
+        <button type="button" class="btn btn-primary" onclick="validateForm()">Sign Up</button>
+    </form>
+    
+      <hr>
+      <p style="text-align: center;">Or</p>
+      
+      <div class="buttons">
+        <div class="google">
+          <button type="button" class="btn btn-light" style="border: 1px solid #d1cfcf;"><img src=\styles\user\login_pic\google.png style="width: 23px; height: 23px;margin-right: 3px;">Sign In with Google</button>
+        </div>
+        <div class="apple">
+          <button type="button" class="btn btn-light" style="border: 1px solid #d1cfcf;"><img src=\styles\user\login_pic\apple.png style="width: 23px; height: 23px;margin-right: 3px;">Sign In with Apple</button>
+        </div>
+      </div>
+      <br>
+        <p style="text-align: center;">Already have an account?<a href="/user/user_login" style="color: blue; text-decoration: none;">Sign In</a></p>
+
+    </div>
+</div>
+
+  </div>
+  <div class="content2">
+    
+<img src="\styles\user\login_pic\login_pic.png" class="pict1">  
+
+  </div>
+</div>
+</div>
+
+
+
+
+<script>
+ async function validateForm() {
+  console.log('validate form hit');
+
+  // Get form field values
+  const username = document.getElementById("username").value.trim();
+  const email = document.getElementById("email").value.trim();
+  const password = document.getElementById("password").value;
+  const referralCode = document.getElementById("referralCode").value.trim();
+
+  // Validate email
+  const emailPattern = /^[a-zA-Z0-9]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,6}$/;
+  if (!emailPattern.test(email)) {
+    Swal.fire({
+      icon: 'error',
+      title: 'Invalid Email',
+      text: 'Please enter a valid email address.',
+    });
+    return; // Stop further execution
+  }
+
+  // Validate password length
+  if (password.length < 4) {
+    Swal.fire({
+      icon: 'error',
+      title: 'Password too short',
+      text: 'Password must be at least 4 characters long.',
+    });
+    return;
+  }
+
+  // Prepare data for submission
+  const data = {
+    username,
+    email,
+    password,
+    referralCode,
+  };
+
+  try {
+    // Send a POST request to the server
+    const response = await fetch('/user/sent-otp', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(data),
+    });
+
+    // Handle the response
+    const result = await response.json();
+
+    if (response.ok) {
+      // Success response
+      Swal.fire({
+        icon: 'success',
+        title: 'OTP Sent',
+        text: result.message || 'OTP sent successfully. Please verify.',
+      }).then(() => {
+        window.location.href = '/user/load-otp';
+      });
+    } else {
+      // Error response
+      Swal.fire({
+        icon: 'error',
+        title: 'Error',
+        text: result.message || 'Something went wrong. Please try again.',
+      });
+    }
+  } catch (error) {
+    // Handle unexpected errors
+    console.error(error);
+    Swal.fire({
+      icon: 'error',
+      title: 'Error',
+      text: 'An unexpected error occurred. Please try again later.',
+    });
+  }
+}
+
+</script>
+
+
+
+
+
+
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js" integrity="sha384-IQsoLXl5PILFhosVNubq5LC7Qb9DXgDA9i+tQ8Zj3iwWAwPtgFTxbJ8NT4GN1R8p" crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.min.js" integrity="sha384-cVKIPhGWiC2Al4u+LWgxfKTRIcfu0JTxR+EQDz/bgldoEyl4H0zUF0QKbrJ0EcQF" crossorigin="anonymous"></script>
+    
+</body>
+</html>

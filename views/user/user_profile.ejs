@@ -1,0 +1,911 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Profile page</title>
+    <link rel="stylesheet" href="\styles\user\user_profile.css">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css" integrity="sha512-Kc323vGBEqzTmouAECnVceyQqyqdsSiqLQISBL29aUW4U/M7pSPA/gEUZQqv1cwx4OnYxTxve5UMg5GT6L4JJg==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+  </head>
+<body>
+
+
+    <!----         navbar    ----->
+
+    <nav class="navbar navbar-expand-lg bg-body-tertiary">
+        <div class="container-fluid">
+          <a class="navbar-brand" href="#">HavenCraft</a>
+          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"><i class="fa-solid fa-list"  style="color: rgb(155, 153, 153);"></i></span>
+          </button>
+          <div class="collapse navbar-collapse" id="navbarSupportedContent">
+            <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+              <li class="nav-item">
+                <a class="nav-link active" aria-current="page" href="/user/user_home">Home</a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link" href="/user/about">About</a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link" href="/user/store">Store</a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link" href="/user/contact">Contact Us</a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link" href="/user/user_login">Login</a>
+              </li>
+            </ul>
+            <form class="d-flex" role="search" style="position: relative;">
+              <i class="fa-solid fa-magnifying-glass" style="position: absolute; top: 50%; left: 10px; transform: translateY(-50%); color: gray;"></i>
+              <input class="form-control me-2" type="search" placeholder="Search for products" aria-label="Search" style="padding-left: 40px;">
+              
+          </form>
+            <div class="icons">
+            <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+              <li class="nav-item">
+                <% if (session.user) { %> 
+                  <a class="nav-link" href="/user/wishlist"><i class="fa-solid fa-heart"></i></a>
+                  <% } else { %>
+                    <a class="nav-link" href="/user/user_login"><i class="fa-solid fa-heart"></i></a>
+                    <% } %>
+              </li>
+              <li class="nav-item">
+                <% if (session.user) { %> 
+                  <a class="nav-link" href="/user/user_addToCart"><i class="fa-solid fa-cart-shopping"></i></a>
+                  <% } else { %>
+                    <a class="nav-link" href="/user/user_login"><i class="fa-solid fa-cart-shopping"></i></a>
+                    <% } %>
+              </li>
+              <li class="nav-item">
+                <% if (session.user) { %>    
+                  <a class="nav-link" href="/user/user_profile"><i class="fa-solid fa-user"></i></a>
+                 <% } else { %>
+                    <a class="nav-link" href="/user/user_login"><i class="fa-solid fa-user"></i></a>
+                    <% } %>
+              </li>
+              </ul>
+            </div>                                                
+          </div>
+        </div>
+      </nav>
+    <!------------- section 1------------->
+      <div class="container-fluid">
+        <div class="section-1">
+
+
+          <div class="section-1-1">
+          <div class="sidebar">
+            <button type="button" class="btn" onclick="showSection('account')">My Account</button>
+            <button type="button" class="btn" onclick="showSection('address')">My Address</button>
+            <button type="button" class="btn" onclick="showSection('orders')">My Orders</button>
+            <button type="button" class="btn" onclick="showSection('wallet')">My Wallet</button> 
+            <button type="button" class="btn" onclick="showSection('referralcode')">Referral code</button>        
+            <form action="/user/logout" method="POST">
+              <button type="submit" class="btn">Log out</button>
+          </form>
+                
+          </div>
+        </div>
+
+        <!-----------------------------profile---------------------------------->
+        <div class="section-1-2" id="account">
+
+            <h3>Hai <%= username %></h3>
+            <br>
+        
+            <div class="email" style="display: flex; gap: 5px;">
+              <p>Email:</p>
+              <span class="placeholder col-6" style="width: 80%;"><%= email %></span>
+            </div>
+
+            <div class="email" style="display: flex; gap: 5px;">
+              <p>Username:</p>
+              <span class="placeholder col-6"><%= username %></span>
+            </div>
+
+            <div class="email" style="display: flex; gap: 5px;">
+                <p>Phone Number:</p>
+                <% if (phoneNumber) { %>
+                  <span class="placeholder col-6"><%= phoneNumber %></span>
+                <% } else { %>
+                  <span class="placeholder col-6">Not provided</span>
+                <% } %>
+              </div>
+
+            <div class="email" style="display: flex; gap: 5px; ">
+<button type="button" class="btn btn-secondary" data-bs-toggle="modal" data-bs-target="#exampleModal">
+  Edit
+</button>
+<button type="button" class="btn btn-secondary" onclick="changePassword()">Change Password</button>
+<div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h1 class="modal-title fs-5" id="exampleModalLabel">Edit profile</h1>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+
+        <form action="/user/updateProfile" method="POST">
+          <div class="mb-3">
+            <label for="editUsername" class="form-label">Username</label>
+            <input type="text" class="form-control" id="exampleInputPassword1" placeholder="Enter new username" name="username">
+          </div>
+          <div class="mb-3">
+            <label for="editPhoneNumber" class="form-label">Phone Number</label>
+            <input type="text" class="form-control" id="exampleInputPassword2" placeholder="Enter new Phone Number" name="phoneNumber" 
+            pattern="^\d{10}$" title="Phone number must be 10 digits" required>
+     
+          </div>         
+          <button type="submit" class="btn btn-secondary">Submit</button>
+        </form>
+
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+      </div>
+    </div>
+  </div>
+</div>
+            
+            </div>       
+          </div>
+    <!------------------------------------------address---------------------------------------------------->    
+ 
+<div class="section-1-2" id="address" style="display: none;">
+  <div class="address">
+    <% for (let i = 0; i < 2; i++) { %> 
+      <div class="address-<%= i + 1 %>">
+        <h4>Address <%= i + 1 %></h4>
+        <% if (addresses[i]) { %>
+              <p  style="line-height: 1.2;"><%= addresses[i].firstname%> <%= addresses[i].lastname%></p>
+              <p  style="line-height: 1.2;"><%= addresses[i].street %></p>
+              <p  style="line-height: 1.2;"><%= addresses[i].city %>, <%= addresses[i].state %></p>
+              <p  style="line-height: 1.2;"><%= addresses[i].pincode %></p>
+              <p  style="line-height: 1.2;"><%= addresses[i].country %></p>
+              <p  style="line-height: 1.2;"><%= addresses[i].contactno%></p>
+          <button type="button" class="btn btn-secondary" data-bs-toggle="modal" data-bs-target="#editAddressModal<%= i %>">Edit</button>
+         
+          <form action="/user/remove-address/<%= i %>" method="post" id="remove-address-form-<%= i %>"  style="display: inline;">
+            <button type="button" class="btn btn-outline-secondary" onclick="confirmRemoval('<%= i %>')">Remove</button>
+          </form>
+          <div class="modal fade" id="editAddressModal<%= i %>" tabindex="-1" aria-labelledby="editAddressModalLabel<%= i %>" aria-hidden="true">
+            <div class="modal-dialog">
+              <div class="modal-content">
+                <div class="modal-header">
+                  <h5 class="modal-title" id="editAddressModalLabel<%= i %>">Edit Address <%= i + 1 %></h5>
+                  <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                  <form action="/user/edit-address/<%= i %>" method="post">
+                    <div class="mb-3">
+                      <label for="firstname<%= i %>" class="form-label">First Name</label>
+                      <input type="text" class="form-control" id="firstname<%= i %>" name="firstname" value="<%= addresses[i].firstname %>" required>
+                    </div>
+                    <div class="mb-3">
+                      <label for="lastname<%= i %>" class="form-label">Last Name</label>
+                      <input type="text" class="form-control" id="lastname<%= i %>" name="lastname" value="<%= addresses[i].lastname %>" required>
+                    </div>
+                    <div class="mb-3">
+                      <label for="street<%= i %>" class="form-label">Street Address</label>
+                      <input type="text" class="form-control" id="street<%= i %>" name="street" value="<%= addresses[i].street %>" required>
+                    </div>
+                    <div class="mb-3">
+                      <label for="city<%= i %>" class="form-label">City</label>
+                      <input type="text" class="form-control" id="city<%= i %>" name="city" value="<%= addresses[i].city %>" required>
+                    </div>
+                    <div class="mb-3">
+                      <label for="state<%= i %>" class="form-label">State</label>
+                      <input type="text" class="form-control" id="state<%= i %>" name="state" value="<%= addresses[i].state %>" required>
+                    </div>
+                    <div class="mb-3">
+                      <label for="pincode<%= i %>" class="form-label">Pin Code</label>
+                      <input type="text" class="form-control" id="pincode<%= i %>" name="pincode" value="<%= addresses[i].pincode %>" required>
+                    </div>
+                    <div class="mb-3">
+                      <label for="country<%= i %>" class="form-label">Country</label>
+                      <input type="text" class="form-control" id="country<%= i %>" name="country" value="<%= addresses[i].country %>" required>
+                    </div>
+                    <div class="mb-3">
+                      <label for="contactno<%= i %>" class="form-label">Contact Number</label>
+                      <input type="text" class="form-control" id="contactno<%= i %>" name="contactno" value="<%= addresses[i].contactno %>" required>
+                    </div>
+                    <button type="submit" class="btn btn-primary">Save Changes</button>
+                  </form>
+                </div>
+              </div>
+            </div>
+          </div>
+        <% } else { %> 
+          <p>No address found. Please add one!</p>
+          <button type="button" class="btn btn-secondary" data-bs-toggle="modal" data-bs-target="#addAddressModal<%= i %>">Add</button>
+          <div class="modal fade" id="addAddressModal<%= i %>" tabindex="-1" aria-labelledby="addAddressModalLabel<%= i %>" aria-hidden="true">
+            <div class="modal-dialog">
+              <div class="modal-content">
+                <div class="modal-header">
+                  <h5 class="modal-title" id="addAddressModalLabel<%= i %>">Add Address <%= i + 1 %></h5>
+                  <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                  <form action="/user/add-address/<%= i %>" method="post">
+                    <div class="mb-3">
+                      <label for="fisrtname<%= i %>" class="form-label"> First Name</label>
+                      <input type="text" class="form-control" id="firstname<%= i %>" name="firstname" required>
+                    </div>
+                    <div class="mb-3">
+                      <label for="lastname<%= i %>" class="form-label"> Last Name</label>
+                      <input type="text" class="form-control" id="lastname<%= i %>" name="lastname" required>
+                    </div>
+                    <div class="mb-3">
+                      <label for="street<%= i %>" class="form-label">Street Address</label>
+                      <input type="text" class="form-control" id="street<%= i %>" name="street" required>
+                    </div>
+                    <div class="mb-3">
+                      <label for="city<%= i %>" class="form-label">City</label>
+                      <input type="text" class="form-control" id="city<%= i %>" name="city" required>
+                    </div>
+                    <div class="mb-3">
+                      <label for="state<%= i %>" class="form-label">State</label>
+                      <input type="text" class="form-control" id="state<%= i %>" name="state" required>
+                    </div>
+                    <div class="mb-3">
+                      <label for="pincode<%= i %>" class="form-label">Pin Code</label>
+                      <input type="text" class="form-control" id="pincode<%= i %>" name="pincode" required>
+                    </div>
+                    <div class="mb-3">
+                      <label for="country<%= i %>" class="form-label">Country</label>
+                      <input type="text" class="form-control" id="country<%= i %>" name="country" required>
+                    </div>
+                    <div class="mb-3">
+                      <label for="contactno<%= i %>" class="form-label">Contact Number</label>
+                      <input type="text" class="form-control" id="contactno<%= i %>" name="contactno" required>
+                    </div>
+                    <button type="submit" class="btn btn-primary">Add Address</button>
+                  </form>
+                </div>
+              </div>
+            </div>
+          </div>
+        <% } %>
+      </div>
+    <% } %>
+  </div>
+</div>
+
+<!---------------------------------orders------------------------------------------------>
+<div class="section-1-2" id="orders" style="display: none;">
+  <table class="table">
+    <thead>
+      <tr>
+        <th scope="col">Order Id</th>
+        <th scope="col">Date</th>        
+        <th scope="col"> Total Price</th>
+        <th scope="col">View</th>        
+      </tr>
+    </thead>
+    <tbody>
+      <% orders.forEach((order, index) => { %>
+          <tr>
+            <td><%= order.uniqueOrderId %></td>
+            <td><%= order.orderDate.toLocaleDateString('en-US') %></td>
+            <td>Rs.<%= order.totalPrice %></td>
+            <td>
+              <button type="button" class="btn btn-outline-secondary" data-bs-toggle="modal" data-bs-target="#exampleModal<%= order._id %>">
+                View
+              </button>
+    
+              <div class="modal fade" id="exampleModal<%= order._id %>" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                <div class="modal-dialog modal-xl">
+                  <div class="modal-content">
+                    <div class="modal-header" style="background-color: #d2cece;">
+                      <h1 class="modal-title fs-5" id="exampleModalLabel"><b>Order Details</b></h1>
+                      <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body" style="background-color: #d2cece; display: flex; justify-content: space-between; gap: 2%; padding: 2% 5%;">
+                      <div class="modal-section" style="background-color: #aaaaaa; width: 35%; height: auto; padding: 2% 2%;">
+                        <p><strong>Username : </strong><%= order.username %></p>
+                        <p><strong>Order Id : </strong><%= order.uniqueOrderId %></p>
+                        <p><strong>Payment Method : </strong><%= order.paymentMethod %></p>
+                        <p><strong>Shipping Address : </strong></p>
+                        <p>&nbsp;&nbsp;&nbsp;&nbsp;<%= order.address.firstname%> <%= order.address.lastname %></p>
+                        <p>&nbsp;&nbsp;&nbsp;&nbsp;<%= order.address.street %>, <%= order.address.city %></p>
+                        <p>&nbsp;&nbsp;&nbsp;&nbsp;<%= order.address.state %>, <%= order.address.pincode %></p>
+                        <p>&nbsp;&nbsp;&nbsp;&nbsp;<%= order.address.country %></p>
+                        <p>&nbsp;&nbsp;&nbsp;&nbsp;<%= order.address.contactno %></p>
+                        <p><strong>Order Status : </strong><%= order.status %></p>
+                        <% if (order.status === 'Pending') { %>
+                          <button class="btn btn-secondary"  onclick="cancelOrder('<%= order._id %>', this)">Cancel Order </button>
+                        <% } else if (order.status === 'Delivered' || order.status === 'Shipped' ) { %>
+                          <!-- Button trigger modal -->
+                          <button type="button" class="btn btn-secondary" onclick="toggleReturnForm('<%= order._id %>')">Return</button>
+                          
+                          <div id="returnForm<%= order._id %>" style="display: none; margin-top: 10px;">
+                            <form action="/user/return-order" method="post">
+                              <input type="hidden" name="orderId" value="<%= order._id %>">
+                              <div class="mb-3">
+                                <label for="reason" class="form-label">Reason</label>
+                                <textarea class="form-control" id="reason" name="reason" rows="3" required></textarea>
+                              </div>
+                              <button type="submit" class="btn btn-secondary">Submit</button>
+                            </form>
+                          </div>
+                        <% } %>
+                      </div>
+
+                      <div class="modal-section" style="background-color: #aaaaaa; width: 35%; height: auto; padding: 2% 2%;">
+                        <p><strong>Product:</strong></p>
+                        <ul>
+                          <% order.products.forEach((product) => { %>
+                            <p>Name : <%= product.productName %></p>
+                            <p>Quantity : <%= product.quantity %></p>
+                            <p>Price : Rs.<%= product.price %></p>
+                            <% if (product.productStatus === 'Cancelled') { %>
+                              <p>Status : <%= product.productStatus %></p>
+                            <% } %>
+                            
+                            <% if (product.productStatus === 'Pending' && order.products.length > 1) { %>
+                              <button class="btn btn-secondary" onclick="cancelProduct('<%= order._id %>', '<%= product._id %>', this)">Cancel</button>
+                            <% } %>
+                            
+                            <br><br>
+                          <% }) %>
+                        </ul>
+                        <p><strong>Total Price : </strong>Rs.<%= order.totalPrice %></p>
+                      </div>
+
+                      <div class="modal-section" style="background-color: #aaaaaa; width: 35%; height: auto; padding: 2% 2%;">
+                        <br>
+                        <% order.products.forEach(product => { %>
+                          <% if (product.imageBase64) { %>
+                            <img src="data:image/jpeg;base64,<%= product.imageBase64 %>" alt="<%= product.productName %>" style="width: 30vh; height: 30vh;">
+                          <% } else { %>
+                            <p>No image available</p>
+                          <% } %>
+                          <br><br>
+                          <% }); %>
+                        </div>
+
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </td>
+          </tr>
+      <% }); %>
+    </tbody>    
+  </table>
+</div>
+
+<!------------------------wallet balance---------------------------------------->
+<div class="section-1-2" id="wallet" style="display: none;">
+  <div class="wallet">
+    <p style="line-height: 0.4;">Available Balance</p>
+    <h3>&#8377;<%= walletBalance %></h3>
+  </div>
+  <br>
+  <div class="addMoney">
+    <form id="addMoneyForm" method="post" style="color: rgb(103, 102, 100);">
+      <div class="mb-3">
+        <div class="input-group" style="width: 100%; display: flex; align-items: center;">
+          <input type="number" id="amount" class="form-control" name="amount" style="flex: 1; margin-right: 5px;" required >
+          <button style="margin-right: 5px;" type="submit" class="btn btn-secondary">Add Money</button>
+          <button type="button" class="btn btn-secondary" onclick="fetchWalletHistory(); showSection('walletHistory')">View History</button>
+
+        </div>
+      </div>
+    </form>
+  </div>
+</div>
+
+<!----------------------------------------wallet history------------------------------------------------------>
+<div class="section-1-2" id="walletHistory" style="display: none;">  
+  <h4>Wallet History</h4>
+  <table class="table">
+    <thead>
+      <tr>
+        <th scope="col">Date</th>
+        <th scope="col">Transaction Id</th>
+        <th scope="col">Description</th>
+        <th scope="col">Type</th>
+        <th scope="col">Amount</th>
+      </tr>
+    </thead>
+    <tbody>     
+    </tbody>
+  </table>
+</div>
+
+<!-----------------------------------refferal offer------------------------------------------>
+<div class="section-1-2" id="referralcode" style="display: none;">
+  <div class="wallet">
+    <h3>Get Referral Offers!</h3>
+  </div>
+  <br>
+  <p> Your Referral Code: <strong><%= referralCode %>  </strong></p>  
+</div>
+<!--------------------------------------------------------------------------------------->
+
+
+
+
+</div>
+</div> 
+
+<!------section-6 ----->
+  <div class="container-fluid">
+    <div class="section-6">
+
+      <div class="cat6-1">
+        <h2>HavenCraft</h2>
+        <p>Transform your space into a stylish sanctuary with our curated home decor collections.</p>
+  
+        <p><i class="fa-solid fa-location-dot" style="color: #905454; margin-right: 5px;"></i>Kinfra, Calicut</p>
+        <p><i class="fa-solid fa-envelope"  style="color: #905454; margin-right: 5px;"></i>havencraft@gmail.com</p>
+        <p><i class="fa-solid fa-phone"  style="color: #905454; margin-right: 5px;"></i>+91-9123428910</p>
+         
+      </div>
+      <div class="cat6-2">
+        <h5>Quick Links</h5>
+        <a href="#" style="color: black; text-decoration: none;">Home</a><br>
+        <a href="#" style="color: black; text-decoration: none;">Contact us</a><br>
+        <a href="#" style="color: black; text-decoration: none;">Our shop</a><br>
+        <a href="#" style="color: black; text-decoration: none;">Cart</a><br>
+        <a href="#" style="color: black; text-decoration: none;">Checkout</a><br>
+        
+      </div>
+      <div class="cat6-3">
+        <h5>Help</h5>
+        <a href="#" style="color: black; text-decoration: none;">Track Order</a><br>
+        <a href="#" style="color: black; text-decoration: none;">Returns</a><br>
+        <a href="#" style="color: black; text-decoration: none;">Shipping</a><br>
+        <a href="#" style="color: black; text-decoration: none;">FAQs</a><br>
+        <br>
+        <h5>Connect</h5>
+        <div class="social_media">
+        <div class="g">
+          <i class="fa-brands fa-youtube"></i>
+        </div>
+        <div class="f">
+          <i class="fa-brands fa-facebook-f"></i>
+        </div>
+        <div class="t">
+          <i class="fa-brands fa-twitter"></i>
+        </div>
+        <div class="i">
+          <i class="fa-brands fa-instagram"></i>
+        </div>
+      </div>
+                
+      </div>
+      <div class="cat6-4">
+        <h5>Updates & Offers</h5>
+        <br>
+        <form>
+          <div class="mb-3">
+            
+            <input type="email" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp" placeholder="Your Name">
+          </div>
+          <div class="mb-3">
+            
+            <input type="password" class="form-control" id="exampleInputPassword1" placeholder="Your Email">
+          </div>
+         
+          <button type="submit" class="btn btn-primary">Subscribe Now</button>
+        </form>
+        
+      </div>
+      
+
+    </div>
+   
+  </div>
+  <div class="container-fluid">
+  <div class="copy">
+  <p><b>&copy;2024 HavenCraft.</b>All Rights Reserved.</p>
+    
+  </div>
+</div>
+
+
+
+<script>
+  function generateReferralCode() {
+      const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+      let referralCode = '';
+      for (let i = 0; i < 8; i++) {
+          const randomIndex = Math.floor(Math.random() * characters.length);
+          referralCode += characters[randomIndex];
+      }
+      document.getElementById('referralCode').value = referralCode;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+<script>
+
+
+
+
+document.getElementById("applyForm").addEventListener("submit", async function (event) {
+    event.preventDefault(); // Prevent default form submission
+
+    const referralCode = document.getElementById("applyreferralCode").value.trim();
+
+    if (!referralCode) {
+      Swal.fire({
+        icon: "warning",
+        title: "Empty Field",
+        text: "Please enter a referral code.",
+      });
+      return;
+    }
+
+    try {
+      const response = await fetch("/user/apply-referralcode", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ referralCode }),
+      });
+
+      const result = await response.json();
+
+      if (result.swal) {
+        Swal.fire({
+          icon: result.swal.icon,
+          title: result.swal.title,
+          text: result.swal.text,
+        });
+      } else {
+        Swal.fire({
+          icon: "error",
+          title: "Unexpected Error",
+          text: "An unexpected error occurred. Please try again later.",
+        });
+      }
+    } catch (error) {
+      console.error(error);
+      Swal.fire({
+        icon: "error",
+        title: "Request Failed",
+        text: "Could not apply the referral code. Please check your connection and try again.",
+      });
+    }
+  });
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+function showSection(sectionId) {
+  const sections = document.querySelectorAll('.section-1-2');
+  sections.forEach(section => {
+    section.style.display = 'none';
+  });
+  const selectedSection = document.getElementById(sectionId);
+  if (selectedSection) {
+    selectedSection.style.display = 'block';
+  }
+}
+
+
+
+
+
+
+async function changePassword() {
+  const { value: currentPassword } = await Swal.fire({
+    title: "Current Password",
+    input: "password",
+    inputPlaceholder: "Enter your current password",
+    inputAttributes: { autocapitalize: "off" },
+    showCancelButton: true,
+    confirmButtonText: "Next",
+    cancelButtonText: "Cancel",
+  });
+
+  if (!currentPassword) {
+    Swal.fire("Error", "Please enter your current password.", "error");
+    return;
+  }
+  const { value: newPassword } = await Swal.fire({
+    title: "New Password",
+    input: "password",
+    inputPlaceholder: "Enter your new password",
+    inputAttributes: { autocapitalize: "off" },
+    showCancelButton: true,
+    confirmButtonText: "Next",
+    cancelButtonText: "Cancel",
+  });
+
+  if (!newPassword) {
+    Swal.fire("Error", "Please enter the new password.", "error");
+    return;
+  }
+  const { value: confirmPassword } = await Swal.fire({
+    title: "Confirm Password",
+    input: "password",
+    inputPlaceholder: "Confirm your new password",
+    inputAttributes: { autocapitalize: "off" },
+    showCancelButton: true,
+    confirmButtonText: "Submit",
+    cancelButtonText: "Cancel",
+  });
+  if (newPassword !== confirmPassword) {
+    Swal.fire("Error", "The new passwords do not match. Please try again.", "error");
+    return;
+  }
+  Swal.fire("Success", "Your password has been changed successfully.", "success");
+}
+
+
+function confirmRemoval(id) {
+    Swal.fire({
+      title: 'Are you sure?',
+      text: 'Do you want to remove this address?',
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonColor: '#d33',
+      cancelButtonColor: '#3085d6',
+      confirmButtonText: 'Yes, remove it!',
+      cancelButtonText: 'Cancel'
+    }).then((result) => {
+      if (result.isConfirmed) {
+        document.getElementById(`remove-address-form-${id}`).submit();
+      }
+    });
+  }
+
+
+  function cancelProduct(orderId, productId, buttonElement) {
+    console.log(`orderID in cancelProduct ${orderId}`)
+    console.log(`productId ${productId}`)
+    Swal.fire({
+        title: 'Are you sure?',
+        text: "Do you want to cancel this product?",
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonText: 'Yes, cancel it!',
+        cancelButtonText: 'No, keep it'
+    }).then((result) => {
+        if (result.isConfirmed) {
+            fetch(`/user/cancel-product/${orderId}/${productId}`, {
+                method: 'POST',
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    Swal.fire(
+                        'Cancelled!',
+                        'The product has been cancelled.',
+                        'success'
+                    );
+                    buttonElement.textContent = "Cancelled";  
+                    buttonElement.disabled = true;
+                    window.location.href = '/user/user_profile';          
+                } else {
+                    Swal.fire(
+                        'Error!',
+                        'Failed to cancel the product.',
+                        'error'
+                    );
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                Swal.fire(
+                    'Error!',
+                    'An error occurred while cancelling the product.',
+                    'error'
+                );
+            });
+        }
+    });
+}
+
+
+
+
+
+function cancelOrder(orderId, button) {
+    Swal.fire({
+        title: 'Are you sure?',
+        text: "Do you want to cancel this order?",
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonText: 'Yes, cancel it!',
+        cancelButtonText: 'No, keep it'
+    }).then((result) => {
+        if (result.isConfirmed) {
+            // Send the request to the server to cancel the order
+            fetch(`/user/cancel-order/${orderId}`, {
+                method: 'POST',
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    Swal.fire(
+                        'Cancelled!',
+                        'Your order has been cancelled.',
+                        'success'
+                    );
+                    button.disabled = true;
+                    button.innerText = "Cancelled"; 
+                    window.location.href = '/user/user_profile';
+                } else {
+                    Swal.fire(
+                        'Error!',
+                        'Failed to cancel the order.',
+                        'error'
+                    );
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                Swal.fire(
+                    'Error!',
+                    'An error occurred while cancelling the order.',
+                    'error'
+                );
+            });
+        }
+    });
+}
+
+
+function toggleReturnForm(orderId) {
+    const returnForm = document.getElementById('returnForm' + orderId);
+    if (returnForm.style.display === 'none') {
+      returnForm.style.display = 'block'; // Show the form
+    } else {
+      returnForm.style.display = 'none'; // Hide the form
+    }
+  }
+
+
+
+  
+  async function fetchWalletHistory() {
+  try {
+    const response = await fetch('/user/wallet-history'); 
+    const data = await response.json();
+
+    if (data.success) {
+      const transactions = data.transactions;
+      const tableBody = document.querySelector('#walletHistory tbody');
+
+      // Clear existing rows
+      while (tableBody.firstChild) {
+        tableBody.removeChild(tableBody.firstChild);
+      }
+
+      // Populate table rows with transactions
+      transactions.forEach(transaction => {
+        const row = document.createElement('tr');
+
+        const dateCell = document.createElement('td');
+        dateCell.textContent = new Date(transaction.date).toLocaleDateString();
+
+        const idCell = document.createElement('td');
+        idCell.textContent = transaction.uniqueTransactionId || 'N/A';
+
+        const descriptionCell = document.createElement('td');
+        descriptionCell.textContent = transaction.description || 'N/A';
+
+        const typeCell = document.createElement('td');
+        typeCell.textContent =
+          transaction.type.charAt(0).toUpperCase() + transaction.type.slice(1);
+
+        const amountCell = document.createElement('td');
+        amountCell.textContent = transaction.amount.toFixed(2);
+
+        // Append cells to the row
+        row.appendChild(dateCell);
+        row.appendChild(idCell);
+        row.appendChild(descriptionCell);
+        row.appendChild(typeCell);
+        row.appendChild(amountCell);
+
+        // Append row to the table body
+        tableBody.appendChild(row);
+      });
+
+      // Show the wallet history section
+      document.getElementById('walletHistory').style.display = 'block';
+    } else {
+      alert('No wallet history found');
+    }
+  } catch (error) {
+    console.error('Error fetching wallet history:', error);
+    alert('Unable to fetch wallet history');
+  }
+}
+
+
+</script>
+<script>
+  document.getElementById('addMoneyForm').addEventListener('submit', async (event) => {
+    event.preventDefault(); // Prevent default form submission
+
+    const amount = document.getElementById('amount').value;
+
+    try {
+      const response = await fetch('/user/add-money', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ amount: parseFloat(amount) }),
+      });
+
+      if (response.ok) {
+        // If the backend returns a success response
+        Swal.fire({
+          icon: 'success',
+          title: 'Success',
+          text: 'Money added to your wallet!',
+        }).then(() => {
+          // Redirect to the user profile after the alert is closed
+          window.location.href = '/user/user_profile';
+        });
+      } else {
+        // Handle invalid amount or other errors
+        const errorMessage = await response.text();
+        Swal.fire({
+          icon: 'error',
+          title: 'Error',
+          text: errorMessage,
+        });
+      }
+    } catch (error) {
+      console.error('Error:', error);
+      Swal.fire({
+        icon: 'error',
+        title: 'Error',
+        text: 'An error occurred while adding money to your wallet. Please try again.',
+      });
+    }
+  });
+</script>
+
+
+
+
+
+
+
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+
+
+</body>
+</html>

@@ -1,0 +1,251 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin dashboard</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+    <link rel="stylesheet" href="\styles\admin\admin_coupon.css">
+
+</head>
+<body>
+    <!------Navbar------->
+    <nav class="navbar navbar-expand-lg bg-body-tertiary">
+        <div class="container-fluid">
+          <a class="navbar-brand" href="#">HavenCraft</a>
+         </div>        
+    </nav>
+    
+
+    <!---------SideBar------>
+
+    
+  <div class="container-fluid">
+    <div class="section-1">
+      <div class="sidebar">
+        <button type="button" class="btn" onclick="window.location.href='/admin/admin_home'">Dashboard</button>   
+        <button type="button" class="btn" onclick="window.location.href='/admin/admin_user'">User Management</button>
+        <button type="button" class="btn" onclick="window.location.href='/admin/admin_product'">Product Management</button>
+        <button type="button" class="btn" onclick="window.location.href='/admin/admin_category'">Category Management</button>
+        <button type="button" class="btn" onclick="window.location.href='/admin/admin_order'">Order Management</button>
+        <button type="button" class="btn" onclick="window.location.href='/admin/admin_stock'">Stock Management</button>
+        <button type="button" class="btn" onclick="window.location.href='/admin/coupon'">Coupon Management</button>
+        <button type="button" class="btn" onclick="window.location.href='/admin/salesReport'">Sales Report</button>
+        <button type="button" class="btn" onclick="window.location.href='/admin/logout'">Logout</button>    
+      </div>
+      <div class="content1">
+        <div class="content1-section1">
+            <h3>Offers</h3>
+            <br>
+            <div class="container-fluid">
+                <div class="content1-section2 d-flex">
+                    <input type="text" class="form-control me-2" placeholder="Search">
+                    <button type="button" class="btn btn-primary me-2">Search</button>
+                    <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#createModal">Create</button>
+                </div>
+            </div><br>
+
+            <!-- Create Modal -->
+            <div class="modal fade" id="createModal" data-bs-backdrop="static" tabindex="-1">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title">Add Offer</h5>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                        </div>
+                        <div class="modal-body">
+                    <!--        <form action="/admin/add-offer" method="POST" id="uploadForm" >
+                                <div class="mb-3">
+                                    <label for="offerName" class="form-label">Offer Name</label>
+                                    <input type="text" id="offerName" class="form-control" name="offerName" placeholder="Offer name"  required>
+                                </div> 
+                                
+                                <div class="mb-3">
+                                    <label for="type" class="form-label">Type</label>
+                                    <select id="type" class="form-control" name="type" aria-label="Default select example" required>
+                                        <option selected>Category</option>
+                                        <option value="Product">Product</option>
+                                      </select>
+                                </div>
+                                
+         
+                              <div class="mb-3">
+                                <label for="discountType" class="form-label">Discount Type</label>
+                                <select id="discountType" class="form-control" name="discountType" aria-label="Default select example" required>
+                                    <option selected>Percentage</option>
+                                    <option value="Fixed">Fixed</option>
+                                  </select>
+                            </div>
+
+                            <div class="mb-3">
+                              <label for="discountValue" class="form-label">Discount Value</label>
+                              <input type="text" id="discountValue" class="form-control" name="discountValue" placeholder="Discount Value"  required>
+                          </div>
+                          
+                        <div class="mb-3">
+                            <label for="startDate" class="form-label">Start Date</label>
+                            <input type="date" id="startDate" class="form-control" name="startDate" required>
+                        </div>
+                        <div class="mb-3">
+                          <label for="endDate" class="form-label">End Date</label>
+                          <input type="date" id="endDate" class="form-control" name="endDate" required>
+                      </div>
+                      
+
+                         
+                                <hr>
+                                <button type="submit" class="btn btn-outline-secondary">Submit</button>
+                            </form>    -->
+
+                            <form action="/admin/add-offer" method="POST" id="uploadForm">
+                                <div class="mb-3">
+                                    <label for="offerName" class="form-label">Offer Name</label>
+                                    <input type="text" id="offerName" class="form-control" name="offerName" placeholder="Offer name" required>
+                                </div>
+                            
+                                <div class="mb-3">
+                                    <label for="type" class="form-label">Type</label>
+                                    <select id="type" class="form-control" name="type" aria-label="Default select example" required>
+                                        <option value="Category" selected>Category</option>
+                                        <option value="Product">Product</option>
+                                    </select>
+                                </div>
+                            
+                                <div class="mb-3">
+                                    <label for="offerItem" class="form-label">Select Category/Product</label>
+                                    <input type="text" id="offerName" class="form-control" name="offerItem" placeholder="Category/Product" required>
+                                </div>
+                            
+                                <div class="mb-3">
+                                    <label for="discountType" class="form-label">Discount Type</label>
+                                    <select id="discountType" class="form-control" name="discountType" aria-label="Default select example" required>
+                                        <option selected>Percentage</option>
+                                        <option value="Fixed">Fixed</option>
+                                    </select>
+                                </div>
+                            
+                                <div class="mb-3">
+                                    <label for="discountValue" class="form-label">Discount Value</label>
+                                    <input type="text" id="discountValue" class="form-control" name="discountValue" placeholder="Discount Value" required>
+                                </div>
+                            
+                                <div class="mb-3">
+                                    <label for="startDate" class="form-label">Start Date</label>
+                                    <input type="date" id="startDate" class="form-control" name="startDate" required>
+                                </div>
+                                <div class="mb-3">
+                                    <label for="endDate" class="form-label">End Date</label>
+                                    <input type="date" id="endDate" class="form-control" name="endDate" required>
+                                </div>
+                            
+                                <hr>
+                                <button type="submit" class="btn btn-outline-secondary">Submit</button>
+                            </form>
+                            
+                           
+                            
+
+
+
+
+
+
+
+
+
+
+
+
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+
+
+
+
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th scope="col">Offer</th>
+                        <th scope="col">Type</th>
+                        <th scope="col" id="dynamic-header">Category</th>
+                        <th scope="col">Discount Type</th>
+                        <th scope="col">Value</th>
+                        <th scope="col">Start Date</th>
+                        <th scope="col">End Date</th>
+                        <th scope="col">Status</th>
+                        <th scope="col">Action</th>
+                        <th scope="col">Delete</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <% if (offers && offers.length > 0) { %>
+                        <% offers.forEach((offer) => { %>
+                            <tr>
+                                <td><%= offer.offerName %></td>
+                                <td><%= offer.type %></td>
+                                <td><%= offer.categoryOrProduct %></td>
+                                <td><%= offer.discountType %></td>
+                                <td>
+                                    <%= offer.discountType === "Percentage" ? `${offer.discountValue}%` : `₹${offer.discountValue}` %>
+                                </td>
+                                <td><%= offer.startDate.toISOString().slice(0, 10) %></td>
+                                <td><%= offer.endDate.toISOString().slice(0, 10) %></td>
+                                <td><%= offer.status %></td>
+                                <td>
+                                    <a href="/admin/edit-offer/<%= offer._id %>" class="btn btn-outline-secondary">Activate</a>
+                                </td>
+                                <td>
+                                    <form action="/admin/delete-offer/<%= offer._id %>" method="POST" style="display:inline;">
+                                        <button type="submit" class="btn btn-outline-secondary">Delete</button>
+                                    </form>
+                                </td>
+                            </tr>
+                        <% }); %>
+                    <% } else { %>
+                        <tr>
+                            <td colspan="9" class="text-center">No offers available</td>
+                        </tr>
+                    <% } %>
+                </tbody>
+            </table>
+            
+               
+            
+        </div>
+        </div>
+
+
+
+
+      </div>
+      </div>
+
+<script>
+    function updateHeader(selectElement) {
+    const header = document.getElementById("dynamic-header");
+    if (selectElement.value === "product") {
+        header.textContent = "Product";
+    } else {
+        header.textContent = "Category";
+    }
+}
+</script>
+
+
+
+
+
+
+
+
+
+        <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+      <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>
+      <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js" integrity="sha384-IQsoLXl5PILFhosVNubq5LC7Qb9DXgDA9i+tQ8Zj3iwWAwPtgFTxbJ8NT4GN1R8p" crossorigin="anonymous"></script>
+      <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.min.js" integrity="sha384-cVKIPhGWiC2Al4u+LWgxfKTRIcfu0JTxR+EQDz/bgldoEyl4H0zUF0QKbrJ0EcQF" crossorigin="anonymous"></script>
+</body>
+</html>

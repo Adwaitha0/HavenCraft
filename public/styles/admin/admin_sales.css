@@ -1,0 +1,106 @@
+*{
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body{
+    margin: 0;
+    padding: 0;
+    background-color: rgb(26, 26, 40);
+}
+
+.navbar-brand{
+  
+    color: rgb(113, 103, 90);
+}
+
+
+/*     navbar  completed    */
+
+
+.section-1{
+    width: 100%;
+    height: 100vh;
+    display:flex;
+}
+
+.sidebar{
+    width:20%;
+    /*height:100vh;  */
+    height: auto;
+    margin:0;
+}
+.sidebar button{
+    width:100%;
+    height:8vh;
+    margin:0;
+    text-align: left;
+    padding-left: 5%;
+    color: rgb(113, 103, 90);
+   /* border-bottom: 1px solid rgb(113, 103, 90); */
+   /* background-color: rgb(128, 107, 75); */
+}
+
+/*   Sidebar completed   */
+
+.content1{
+    width: 100%;
+    background-color: #000;
+    display: flex;
+    justify-content: center;
+    color: rgb(113, 103, 90);
+}
+.content1-section1{
+    width: 98%;
+    padding: 2%;
+    background-color: rgb(26, 26, 40);
+
+}
+
+.cat button{
+    width: 100%;
+    background-color: rgb(26, 26, 40);
+    color: rgb(113, 103, 90);
+    border: none;
+    border-bottom: 1px solid;
+    text-align: left;
+}
+
+.display{
+    width: 500px;
+    height: 18vh;
+    border-radius: 15px;
+    border: 1px solid rgb(113, 103, 90);
+    display: grid;
+    align-items: center;
+    justify-content: center;
+    padding: 6%;
+}
+.main{
+    display: flex;
+    width: 100%;
+    gap: 5%  ;
+}
+.form{
+    display: flex;
+    width: 50%;
+    height: auto;
+}
+.cat{
+    width: 50%;
+    height: auto;
+    display: flex;
+    gap: 5%;
+}
+.form .form-control{
+    background-color: rgb(26, 26, 40);
+    border: 1px solid rgb(113, 103, 90);
+}
+
+.form button{
+    border: 1px solid rgb(113, 103, 90);
+}
+.table{
+    color: rgb(113, 103, 90); 
+}

@@ -1,0 +1,291 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cart Page</title>
+    <link rel="stylesheet" href="\styles\user\user_wishlist.css">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css" integrity="sha512-Kc323vGBEqzTmouAECnVceyQqyqdsSiqLQISBL29aUW4U/M7pSPA/gEUZQqv1cwx4OnYxTxve5UMg5GT6L4JJg==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+  </head>
+<body>
+
+
+    <!----         navbar    ----->
+
+    <nav class="navbar navbar-expand-lg bg-body-tertiary">
+        <div class="container-fluid">
+          <a class="navbar-brand" href="#">HavenCraft</a>
+          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"><i class="fa-solid fa-list"  style="color: rgb(155, 153, 153);"></i></span>
+          </button>
+          <div class="collapse navbar-collapse" id="navbarSupportedContent">
+            <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+              <li class="nav-item">
+                <a class="nav-link active" aria-current="page" href="/user/user_home">Home</a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link" href="/user/about">About</a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link" href="/user/store">Store</a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link" href="/user/contact">Contact Us</a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link" href="/user/user_login">Login</a>
+              </li>
+            </ul>
+            <form class="d-flex" role="search" style="position: relative;">
+              <i class="fa-solid fa-magnifying-glass" style="position: absolute; top: 50%; left: 10px; transform: translateY(-50%); color: gray;"></i>
+              <input class="form-control me-2" type="search" placeholder="Search for products" aria-label="Search" style="padding-left: 40px;">
+              
+          </form>
+            <div class="icons">
+            <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+              <li class="nav-item">
+                <% if (session.user) { %> 
+                  <a class="nav-link" href="/user/wishlist"><i class="fa-solid fa-heart"></i></a>
+                  <% } else { %>
+                    <a class="nav-link" href="/user/user_login"><i class="fa-solid fa-heart"></i></a>
+                    <% } %>
+              </li>
+              <li class="nav-item">
+                <% if (session.user) { %> 
+                  <a class="nav-link" href="/user/user_addToCart"><i class="fa-solid fa-cart-shopping"></i></a>
+                  <% } else { %>
+                    <a class="nav-link" href="/user/user_login"><i class="fa-solid fa-cart-shopping"></i></a>
+                    <% } %>
+              </li>
+              <li class="nav-item">
+                <% if (session.user) { %>    
+                  <a class="nav-link" href="/user/user_profile"><i class="fa-solid fa-user"></i></a>
+                 <% } else { %>
+                    <a class="nav-link" href="/user/user_login"><i class="fa-solid fa-user"></i></a>
+                    <% } %>
+              </li>
+              </ul>
+            </div>                                                
+          </div>
+        </div>
+      </nav>
+    <!------------- section 1------------->
+
+    <div class="container-fluid">
+        <div class="section-1">
+            <h3>Wishlist</h3>
+            <nav style="--bs-breadcrumb-divider: '>';" aria-label="breadcrumb">
+                <ol class="breadcrumb">
+                  <li class="breadcrumb-item"><a href="/user/user_home" style="color: rgb(116, 116, 116);">Home</a></li>
+                  <li class="breadcrumb-item active" aria-current="page">Wishlist</li>
+                </ol>
+              </nav>
+              <p> Add your favorites to the cart and proceed with your purchase!</p>
+
+        </div>
+    </div>
+
+    <!----------------- section 2  ------------------>
+    <div class="container-fluid grid gap-3 wishlist" >
+      <% if (wishlist.length > 0) { %>
+          <% wishlist.forEach(item => { %>
+              <div class="card w-50 mb-3 g-col-6">
+                  <div class="card-body" style="display: flex; gap: 3%;">
+                      <div class="image">
+                          <% if (item.imageUrl) { %>
+                              <img src="<%= item.imageUrl %>" width="150px" height="150px" alt="<%= item.name %>">
+                          <% } else { %>
+                              <p>No image available</p>
+                          <% } %>
+                      </div>
+                      <div class="content">
+                          <h5 class="card-title"><%= item.name %></h5>
+                          <p class="card-text">Price: &#8377;<%= item.discountPrice || item.originalPrice %></p>
+                          <a href="javascript:void(0);" class="btn btn-outline-secondary" data-bs-toggle="modal" data-bs-target="#addToCartModal_<%= item.productId %>">Add to Cart</a>
+                       
+<!-- Modal -->
+<div class="modal fade" id="addToCartModal_<%= item.productId %>" tabindex="-1" aria-labelledby="addToCartModalLabel_<%= item.productId %>" aria-hidden="true">
+  <div class="modal-dialog modal-md">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="addToCartModalLabel_<%= item.productId %>">Select Size</h5>
+        <button
+          type="button"
+          class="btn-close"
+          data-bs-dismiss="modal"
+          aria-label="Close"
+        ></button>
+      </div>
+      <div class="modal-body">
+        <p>Select size to see available stock!</p>
+        <div class="size-option" data-size="Small" onclick="fetchStockAndUpdateLink('Small', '<%= item.productId %>')">
+          <p>Small</p>
+        </div>
+        <div class="size-option" data-size="Large" onclick="fetchStockAndUpdateLink('Large', '<%= item.productId %>')">
+          <p>Large</p>
+        </div>
+        <p><span id="stock-quantity_<%= item.productId %>"></span></p>
+      </div>
+      <div class="modal-footer">
+        <!-- Optional footer content -->
+      </div>
+    </div>
+  </div>
+</div>
+
+
+                          <a href="javascript:void(0);" class="btn btn-outline-secondary" onclick="confirmRemove('<%= item.productId %>')">Remove</a>
+                      </div>
+                  </div>
+              </div>
+          <% }); %>
+      <% } else { %>
+          <p>Your wishlist is empty!</p>
+      <% } %>
+    </div>
+    
+
+  
+
+<!------section-6 ----->
+  <div class="container-fluid">
+    <div class="section-6">
+
+      <div class="cat6-1">
+        <h2>HavenCraft</h2>
+        <p>Transform your space into a stylish sanctuary with our curated home decor collections.</p>
+  
+        <p><i class="fa-solid fa-location-dot" style="color: #905454; margin-right: 5px;"></i>Kinfra, Calicut</p>
+        <p><i class="fa-solid fa-envelope"  style="color: #905454; margin-right: 5px;"></i>havencraft@gmail.com</p>
+        <p><i class="fa-solid fa-phone"  style="color: #905454; margin-right: 5px;"></i>+91-9123428910</p>
+         
+      </div>
+      <div class="cat6-2">
+        <h5>Quick Links</h5>
+        <a href="#" style="color: black; text-decoration: none;">Home</a><br>
+        <a href="#" style="color: black; text-decoration: none;">Contact us</a><br>
+        <a href="#" style="color: black; text-decoration: none;">Our shop</a><br>
+        <a href="#" style="color: black; text-decoration: none;">Cart</a><br>
+        <a href="#" style="color: black; text-decoration: none;">Checkout</a><br>
+        
+      </div>
+      <div class="cat6-3">
+        <h5>Help</h5>
+        <a href="#" style="color: black; text-decoration: none;">Track Order</a><br>
+        <a href="#" style="color: black; text-decoration: none;">Returns</a><br>
+        <a href="#" style="color: black; text-decoration: none;">Shipping</a><br>
+        <a href="#" style="color: black; text-decoration: none;">FAQs</a><br>
+        <br>
+        <h5>Connect</h5>
+        <div class="social_media">
+        <div class="g">
+          <i class="fa-brands fa-youtube"></i>
+        </div>
+        <div class="f">
+          <i class="fa-brands fa-facebook-f"></i>
+        </div>
+        <div class="t">
+          <i class="fa-brands fa-twitter"></i>
+        </div>
+        <div class="i">
+          <i class="fa-brands fa-instagram"></i>
+        </div>
+      </div>
+        
+        
+        
+      </div>
+      <div class="cat6-4">
+        <h5>Updates & Offers</h5>
+        <br>
+        <form>
+          <div class="mb-3">
+            
+            <input type="email" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp" placeholder="Your Name">
+          </div>
+          <div class="mb-3">
+            
+            <input type="password" class="form-control" id="exampleInputPassword1" placeholder="Your Email">
+          </div>
+         
+          <button type="submit" class="btn btn-primary">Subscribe Now</button>
+        </form>
+        
+      </div>
+      
+
+    </div>
+   
+  </div>
+  <div class="container-fluid">
+  <div class="copy">
+  <p><b>&copy;2024 HavenCraft.</b>All Rights Reserved.</p>
+    
+  </div>
+</div>
+
+
+
+<script>
+  function confirmRemove(productId) {
+    Swal.fire({
+      title: 'Are you sure?',
+      text: 'You will not be able to recover this item!',
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonColor: '#d33',
+      cancelButtonColor: '#3085d6',
+      confirmButtonText: 'Yes, remove it!',
+      cancelButtonText: 'Cancel'
+    }).then((result) => {
+      if (result.isConfirmed) {
+        // If confirmed, redirect to the route to remove the item
+        window.location.href = `/user/removeFromWishlist/${productId}`;
+      }
+    });
+  }
+
+  function fetchStockAndUpdateLink(size, productId) {
+   
+    fetch(`/user/getStock?productId=${productId}&size=${size}`)
+      .then(response => response.json())
+      .then(data => {
+        if (data.stock === 'Out of stock') {
+          Swal.fire({
+            icon: 'error',
+            title: 'Oops...',
+            text: 'Product is out of stock!',
+          });
+        } else {
+          window.location.href = `/user/addToCart?productId=${productId}&size=${size}`;
+        }
+      })
+      .catch(error => {
+        console.error('Error fetching stock:', error);
+        Swal.fire({
+          icon: 'error',
+          title: 'Error',
+          text: 'An error occurred while checking the stock!',
+        });
+      });
+  }
+
+
+</script>
+
+
+
+
+
+
+
+
+
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>
+
+
+
+</body>
+</html>

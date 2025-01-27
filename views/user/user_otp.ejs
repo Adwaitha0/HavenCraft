@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>OTP</title>
+    <link rel="stylesheet" href="\styles\user\user_otp.css">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+   
+
+</head>
+<body>
+<div class="container-fluid">
+    <div class="content">
+  <div class="content1">
+    <div class="container">
+    <div class="login">
+      <h3 style="text-align: center;">Verify your account</h3>
+      <br>
+      <p style="text-align: center;">The One-Time Password sends to your account. Please Enter your OTP.</p>
+      <br>
+      <!--<form action="/user/verifyOTP" method="post">
+        <div class="mb-3">
+          <input type="email" class="form-control" id="email"  placeholder="Enter your email" name="email">
+        </div>
+        <div class="mb-3">
+          <input type="text" class="form-control" id="otp"  placeholder="Enter OTP here" name="otp">
+        </div>
+        <div class="p" style="display: flex; justify-content: space-between;" >
+          <p id="timer">2:00</p>
+            <a  style="text-decoration: none;"  href="/user/resend-otp">
+            <p style="color: black;">Resend OTP</p></a>
+    </div> 
+        <div class="otpverify"  style="text-align: center;">     
+        <button type="submit" class="btn btn-primary" id="otp_btn">Verify</button>
+    </div>
+      </form>-->
+      <form action="/user/verifyForgotOTP" method="post">
+        <div class="mb-3">
+          <input type="text" class="form-control" id="otp" placeholder="Enter OTP here" name="otp">
+        </div>
+      
+        <div class="p" style="display: flex; justify-content: space-between;">
+          <p id="timer">2:00</p>
+          <a style="text-decoration: none;" href="/user/resend-otp">
+            <p style="color: black;">Resend OTP</p>
+          </a>
+        </div>
+      
+        <!-- Message display section -->
+        <div id="message" style="text-align: center; color: red;">
+          <% if (message) { %>
+            <p><%= message %></p>
+          <% } %>
+        </div>
+      
+        <div class="otpverify" style="text-align: center;">
+          <button type="submit" class="btn btn-primary" id="otp_btn">Verify</button>
+        </div>
+      </form>
+      
+
+
+
+
+
+
+
+
+
+
+    </div>
+</div>
+  </div>
+  <div class="content2">   
+<img src="\styles\user\login_pic\login_pic.png" class="pict1">  
+  </div>
+</div>
+</div>
+
+
+
+
+<script>
+  function startTimer() {
+      let duration = 2 * 60; // 5 minutes in seconds
+      const timerElement = document.getElementById('timer');
+
+      const interval = setInterval(() => {
+          const minutes = Math.floor(duration / 60);
+          const seconds = duration % 60;
+
+          // Format timer display
+          timerElement.textContent = `${minutes}:${seconds < 10 ? '0' : ''}${seconds}`;
+          duration--;
+
+          // Stop timer when duration reaches 0
+          if (duration < 0) {
+              clearInterval(interval);
+              timerElement.textContent = "Time's up!";
+          }
+      }, 1000);
+  }
+
+
+  window.onload = startTimer;
+</script>
+
+
+
+
+
+
+
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js" integrity="sha384-IQsoLXl5PILFhosVNubq5LC7Qb9DXgDA9i+tQ8Zj3iwWAwPtgFTxbJ8NT4GN1R8p" crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.min.js" integrity="sha384-cVKIPhGWiC2Al4u+LWgxfKTRIcfu0JTxR+EQDz/bgldoEyl4H0zUF0QKbrJ0EcQF" crossorigin="anonymous"></script>
+    
+</body>
+</html>

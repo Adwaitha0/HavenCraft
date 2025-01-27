@@ -1,0 +1,357 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin dashboard</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+    <link rel="stylesheet" href="\styles\admin\admin_coupon.css">
+
+</head>
+<body>
+    <!------Navbar------->
+    <nav class="navbar navbar-expand-lg bg-body-tertiary">
+        <div class="container-fluid">
+          <a class="navbar-brand" href="#">HavenCraft</a>
+         </div>        
+    </nav>
+    
+
+    <!---------SideBar------>
+
+    
+  <div class="container-fluid">
+    <div class="section-1">
+      <div class="sidebar">
+        <button type="button" class="btn" onclick="window.location.href='/admin/admin_home'">Dashboard</button>   
+        <button type="button" class="btn" onclick="window.location.href='/admin/admin_user'">User Management</button>
+        <button type="button" class="btn" onclick="window.location.href='/admin/admin_product'">Product Management</button>
+        <button type="button" class="btn" onclick="window.location.href='/admin/admin_category'">Category Management</button>
+        <button type="button" class="btn" onclick="window.location.href='/admin/admin_order'">Order Management</button>
+        <button type="button" class="btn" onclick="window.location.href='/admin/admin_stock'">Stock Management</button>
+        <button type="button" class="btn" onclick="window.location.href='/admin/coupon'">Coupon Management</button>
+        <button type="button" class="btn" onclick="window.location.href='/admin/salesReport'">Sales Report</button>
+        <button type="button" class="btn" onclick="window.location.href='/admin/logout'">Logout</button>    
+      </div>
+      <div class="content1">
+        <div class="content1-section1">
+            <h3>Coupons</h3>
+            <br>
+            <div class="container-fluid">
+                <div class="content1-section2 d-flex">
+                   <!--  <input type="text" class="form-control me-2" placeholder="Search">-->
+                    <!-- <button type="button" class="btn btn-primary me-2">Search</button>-->
+                    <!-- Button trigger modal for Create -->
+                    <button type="button" class="btn btn-outline-secondary" data-bs-toggle="modal" data-bs-target="#createModal">Create</button>
+                </div>
+                <br>
+            </div>
+
+            <!-- Create Modal -->
+            <div class="modal fade" id="createModal" data-bs-backdrop="static" tabindex="-1">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title">Add Coupon</h5>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                        </div>
+                        <div class="modal-body">
+                            <form action="/admin/add_coupon" method="POST" id="uploadForm" >
+                                  <div class="mb-3">
+                                    <label for="CouponCode" class="form-label">Coupon Code</label>
+                                    <div class="input-group" style="width: 85%; display: flex; align-items: center;">
+                                        <input type="text" id="couponCode" class="form-control" name="couponCode" placeholder="Coupon Code" style="flex: 1; margin-right: 5px;" required>
+                                        <button type="button" class="btn btn-secondary" id="generateCode">Generate</button>
+                                    </div>
+                                </div>   
+                                
+         
+                              <div class="mb-3">
+                                <label for="discountType" class="form-label">Discount Type</label>
+                                <select id="discountType" class="form-control" name="discountType" aria-label="Default select example" required>
+                                    <option selected>Percentage</option>
+                                    <option value="Fixed">Fixed</option>
+                                  </select>
+                            </div>
+                            <div class="mb-3">
+                              <label for="discountValue" class="form-label">Discount Value</label>
+                              <input type="text" id="discountValue" class="form-control" name="discountValue" required>
+                          </div>
+                          <div class="mb-3">
+                            <label for="minimumPurchase" class="form-label">Minimum Purchase</label>
+                            <input type="text" id="minimumPurchase" class="form-control" name="minimumPurchase" required>
+                        </div>
+                        <div class="mb-3">
+                          <label for="maximumPurchase" class="form-label">Maximum Purchase</label>
+                          <input type="text" id="maximumPurchase" class="form-control" name="maximumPurchase" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="startDate" class="form-label">Start Date</label>
+                            <input type="date" id="startDate" class="form-control" name="startDate" required>
+                        </div>
+                        <div class="mb-3">
+                          <label for="endDate" class="form-label">End Date</label>
+                          <input type="date" id="endDate" class="form-control" name="endDate" required>
+                      </div>
+                      <div class="mb-3">
+                        <label for="usageLimit" class="form-label">Usage Limit</label>
+                        <input type="text" id="usageLimit" class="form-control" name="usageLimit" required>
+                      </div>
+
+                         
+                                <hr>
+                                <button type="submit" class="btn btn-outline-secondary">Submit</button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+
+
+
+
+            <table class="table">
+                <thead>
+                  <tr>
+                    <th scope="col">Coupon Code</th>
+                    <th scope="col">Discount Type</th>
+                    <th scope="col">Value</th>
+                    <th scope="col">Min. Purchase</th>
+                    <th scope="col">Max. Purchase</th>
+                    <th scope="col">Start Date</th>
+                    <th scope="col">End Date</th>
+                    <th scope="col">Limit</th>
+                    <th scope="col">Status</th>
+                    <th scope="col">Action</th>
+                    <th scope="col">Delete</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <% coupons.forEach(function(coupon) { %>
+                    <tr>
+                      <td><%= coupon.couponCode %></td>
+                      <td><%= coupon.discountType %></td>
+                      <td><%= coupon.discountValue %></td>
+                      <td><%= coupon.minimumPurchase %></td>
+                      <td><%= coupon.maximumPurchase %></td>
+                      <td><%= coupon.startDate %></td>
+                      <td><%= coupon.expiryDate %></td>
+                      <td><%= coupon.usageLimit %></td>
+                      <td><%= coupon.isActive ? 'Active' : 'Inactive' %></td>
+                      <td>
+                        <button class="btn btn-outline-secondary" 
+                                data-id="<%= coupon._id %>" 
+                                data-status="<%= coupon.isActive %>" 
+                                id="toggleStatusBtn">
+                          <%= coupon.isActive ? 'Deactivate' : 'Activate' %>
+                        </button>
+                      </td>
+                      <td><form action="/admin/delete-coupon/<%= coupon._id %>" method="POST" style="display: inline;">
+                        <button type="submit" class="btn btn-outline-secondary">Delete</button>
+                    </form></td>
+                    </tr>
+                  <% }) %>
+                </tbody>
+              </table>
+              
+               
+            
+        </div>
+        </div>
+
+
+
+
+      </div>
+      </div>
+
+
+
+
+      <script>
+
+document.getElementById('generateCode').addEventListener('click', function () {
+    const randomCode = generateCouponCode(); 
+    document.getElementById('couponCode').value = randomCode;
+});
+function generateCouponCode() {
+    const prefix = 'COUPON';
+    const randomNumber = Math.floor(1000 + Math.random() * 9000); 
+    return `${prefix}${randomNumber}`;
+}
+
+</script>
+<script>
+    document.getElementById('endDate').addEventListener('change', function () {
+      const startDate = new Date(document.getElementById('startDate').value);
+      const endDate = new Date(this.value);
+  
+      // Check if end date is after start date
+      if (endDate <= startDate) {
+        // Show SweetAlert error
+        Swal.fire({
+          icon: 'error',
+          title: 'Invalid Date',
+          text: 'End date must be after the start date.',
+          confirmButtonText: 'Okay'
+        }).then(() => {
+          this.value = ''; 
+        });
+      }
+    });
+  </script>
+  <script>
+    // Handle click event on the "Activate/Deactivate" button
+    document.querySelectorAll('#toggleStatusBtn').forEach(function(button) {
+      button.addEventListener('click', function() {
+        const couponId = this.getAttribute('data-id');
+        const currentStatus = this.getAttribute('data-status') === 'true';  // Convert string to boolean
+  
+        // Check if the current status is active, if so, ask for confirmation to deactivate
+        if (currentStatus) {
+          Swal.fire({
+            title: 'Are you sure?',
+            text: 'Do you want to deactivate this coupon?',
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonText: 'Yes, deactivate',
+            cancelButtonText: 'No, keep active'
+          }).then((result) => {
+            if (result.isConfirmed) {
+              // Toggle the status (true -> false)
+              const newStatus = !currentStatus;
+  
+              // Make an AJAX request to update the coupon status
+              fetch(`/admin/toggle-status/${couponId}`, {
+                method: 'PUT',
+                headers: {
+                  'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ isActive: newStatus })
+              })
+              .then(response => response.json())
+              .then(data => {
+                if (data.success) {
+                  // Show SweetAlert message
+                  Swal.fire({
+                    icon: 'success',
+                    title: 'Success',
+                    text: `Coupon has been deactivated.`,
+                    confirmButtonText: 'Okay'
+                  }).then(() => {
+                    // Refresh the page to reflect changes
+                    location.reload();
+                  });
+                } else {
+                  Swal.fire({
+                    icon: 'error',
+                    title: 'Error',
+                    text: 'There was an issue updating the coupon status.',
+                    confirmButtonText: 'Okay'
+                  });
+                }
+              })
+              .catch(error => {
+                Swal.fire({
+                  icon: 'error',
+                  title: 'Error',
+                  text: 'There was an issue with the request.',
+                  confirmButtonText: 'Okay'
+                });
+              });
+            }
+          });
+        } else {
+          // If the current status is not active, just toggle it directly
+          const newStatus = !currentStatus;
+  
+          // Make an AJAX request to update the coupon status
+          fetch(`/admin/toggle-status/${couponId}`, {
+            method: 'PUT',
+            headers: {
+              'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({ isActive: newStatus })
+          })
+          .then(response => response.json())
+          .then(data => {
+            if (data.success) {
+              // Show SweetAlert message
+              Swal.fire({
+                icon: 'success',
+                title: 'Success',
+                text: `Coupon has been activated.`,
+                confirmButtonText: 'Okay'
+              }).then(() => {
+                // Refresh the page to reflect changes
+                location.reload();
+              });
+            } else {
+              Swal.fire({
+                icon: 'error',
+                title: 'Error',
+                text: 'There was an issue updating the coupon status.',
+                confirmButtonText: 'Okay'
+              });
+            }
+          })
+          .catch(error => {
+            Swal.fire({
+              icon: 'error',
+              title: 'Error',
+              text: 'There was an issue with the request.',
+              confirmButtonText: 'Okay'
+            });
+          });
+        }
+      });
+    });
+
+  
+  
+  function deleteCoupon(couponId) {
+  swal({
+    title: "Are you sure?",
+    text: "Once deleted, this coupon cannot be recovered!",
+    icon: "warning",
+    buttons: true,
+    dangerMode: true,
+  }).then((willDelete) => {
+    if (willDelete) {
+      fetch(`/admin/delete-coupon/${couponId}`, {
+        method: 'DELETE',
+      })
+        .then((response) => response.json())
+        .then((data) => {
+          if (data.success) {
+            swal("Success", data.message, "success");
+            // Optionally remove the coupon row from the table
+            document.getElementById(`coupon-row-${couponId}`).remove();
+          } else {
+            swal("Error", `Error: ${data.message}`, "error");
+          }
+        })
+        .catch((error) => {
+          console.error('Error:', error);
+          swal("Error", "An error occurred while deleting the coupon.", "error");
+        });
+    } else {
+      swal("Cancelled", "The coupon is safe!", "info");
+    }
+  });
+}
+
+
+
+
+  </script>
+
+
+
+        <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+      <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>
+      <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js" integrity="sha384-IQsoLXl5PILFhosVNubq5LC7Qb9DXgDA9i+tQ8Zj3iwWAwPtgFTxbJ8NT4GN1R8p" crossorigin="anonymous"></script>
+      <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.min.js" integrity="sha384-cVKIPhGWiC2Al4u+LWgxfKTRIcfu0JTxR+EQDz/bgldoEyl4H0zUF0QKbrJ0EcQF" crossorigin="anonymous"></script>
+</body>
+</html>

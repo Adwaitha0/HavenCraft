@@ -1,0 +1,304 @@
+*{
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    
+}
+
+body{
+    margin: 0;
+    padding: 0;
+    background-color: #a48383;
+}
+
+.navbar{
+    background-color: #653434;
+    width: 100%;
+    height: 65px;
+    color: aliceblue;
+    padding: 0% 5%;
+}
+
+.d-flex .form-control {
+    width: 100%;
+    border-radius: 10px;
+    
+}
+.d-flex{
+    margin-right: 40px;
+    /*background-color: aqua;     */
+
+}
+.navbar a{
+    color: aliceblue;
+}
+
+
+
+.section-1{
+    width: 100%;
+    height: 150px;
+    background-color: #F0E3E3;
+    padding: 2% 5%;
+    margin-bottom: 2%;
+}
+
+.section-2{
+    width: 100%;
+    height: auto;
+    background-color: #f5f2f2;
+    padding: 2% 14%;
+}
+.section-3{
+    width: 100%;
+    height: 54vh;
+    /*background-color: #564646;   */
+    padding: 3% 10%;
+    display: flex;
+    justify-content: center;
+    gap: 6%;
+}
+.section-3-1 {
+    width: 40%;
+    height: 50vh;
+}
+.section-3-1 img{
+    width: 100%;
+    height: 80%;
+}
+.section-3-2{
+    width: 40%;
+    height: auto;
+    padding-top: 2%;
+    background-color: #f5f2f2; 
+
+}
+
+.total{
+    width: 100%; 
+    height: 16%; 
+    margin-top: 1%;
+    /*background-color: rgb(87, 131, 131);     */
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 17px;
+}
+.total-price{
+    width: 100%; 
+    height: 18%; 
+   /* background-color: rgb(62, 228, 228);  */
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 17px;
+
+}
+.proceed{
+    background-color: #b77d7d;
+    width: 100%;
+    height: 18%; 
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+
+
+
+
+
+
+
+
+/*            section 6 starting         */
+.section-6{
+    width: 100%;
+    height: auto;
+    padding: 2% 1%;
+    background-color: rgb(222, 220, 218);
+    margin-top: 30px;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    align-items: center;
+    gap: 30px;
+    border-bottom: #f5f2f2;
+}
+
+
+.cat6-1{
+    /*background-color: aquamarine; */
+    width: 45vh;
+    height: 270px;
+}
+.cat6-2{
+    /*background-color: aquamarine; */
+    width: 37vh;
+    height:  250px;
+}
+.cat6-3{
+    /*background-color: aquamarine; */
+    width: 37vh;
+    height:  250px;
+}
+.cat6-4{
+    /*background-color: aquamarine; */
+    width:  40vh;
+    height:  250px;
+}
+.social_media{
+    display: flex;
+    gap: 5px;
+}
+.g {
+    height: 30px; 
+    width: 30px;
+    border-radius: 50px; 
+    background-color: rgb(158, 156, 156);
+    display: flex;
+    justify-content: center; 
+    align-items: center; 
+}
+.f {
+    height: 30px; 
+    width: 30px;
+    border-radius: 50px; 
+    background-color: rgb(158, 156, 156);
+    display: flex;
+    justify-content: center; 
+    align-items: center; 
+}
+.t {
+    height: 30px; 
+    width: 30px;
+    border-radius: 50px; 
+    background-color: rgb(158, 156, 156);
+    display: flex;
+    justify-content: center; 
+    align-items: center; 
+}
+.i {
+    height: 30px; 
+    width: 30px;
+    border-radius: 50px; 
+    background-color: rgb(158, 156, 156);
+    display: flex;
+    justify-content: center; 
+    align-items: center; 
+}
+.cat6-4 button{
+    width: 100%;
+    background-color: #905454;
+    border: none;
+}
+.copy{
+    width: 100%;
+    height: 50px;
+    background-color: rgb(222, 220, 218);
+    border-top: 1px solid #fff;
+    padding-left: 120px;
+    padding-top: 8px;
+
+}
+
+
+
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 10px 0;
+}
+
+table th, table td {
+    padding: 8px;
+    text-align: left;
+}
+
+table th {
+    background-color: #f4f4f4;
+    font-weight: bold;
+}
+
+/* Table container for scrollability */
+.table-container {
+    width: 100%;
+    overflow-x: auto; /* Enables horizontal scrolling */
+}
+.card-body{
+    display: flex; 
+    gap: 3%;
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+@media (max-width: 768px) {
+
+    .container {
+        flex-direction: column; /* Stack the elements vertically */
+    }
+    
+    .cat6-1, .cat6-2, .cat6-3, .cat6-4 {
+        width: 100%;  
+        height: auto;
+        margin-bottom: 10px; 
+        margin-left: 10px;
+    }
+    .cat6-1 {
+        order: 1;
+    }
+    
+    .cat6-2 {
+        order: 2;
+    }
+    
+    .cat6-3 {
+        order: 3;
+    }
+    
+    .cat6-4 {
+        order: 4;
+    }
+    .copy{
+        width: 100%;
+        height: 50px;
+        display: flex;
+        justify-content: center;
+        padding-left: 2%;
+    }
+        .section-3 {
+            flex-direction: column;
+            align-items: center;
+            gap: 0;
+        }
+    
+        .section-3-1 {
+            display: none; /* Hide the image section */
+        }
+    
+        .section-3-2 {
+            width: 100%; /* Full width for smaller screens */
+        }
+        .card-body{
+            display: block;
+        }
+        .remove{
+            display: block;
+            gap: 0;
+        }
+
+    
+
+}

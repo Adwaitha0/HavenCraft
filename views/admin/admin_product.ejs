@@ -1,0 +1,487 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Products</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="/styles/admin/admin_product.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.5.13/cropper.min.css">
+
+
+</head>
+<body>
+    <!-- Navbar -->
+    <nav class="navbar navbar-expand-lg bg-body-tertiary">
+        <div class="container-fluid">
+            <a class="navbar-brand" href="#">HavenCraft</a>
+        </div>
+    </nav>
+
+    <!-- Sidebar and Content -->
+    <div class="container-fluid">
+        <div class="section-1 d-flex">
+            <div class="sidebar">
+                <button type="button" class="btn" onclick="window.location.href='/admin/admin_home'">Dashboard</button>   
+                <button type="button" class="btn" onclick="window.location.href='/admin/admin_user'">User Management</button>
+                <button type="button" class="btn" onclick="window.location.href='/admin/admin_product'">Product Management</button>
+                <button type="button" class="btn" onclick="window.location.href='/admin/admin_category'">Category Management</button>
+                <button type="button" class="btn" onclick="window.location.href='/admin/admin_order'">Order Management</button>
+                <button type="button" class="btn" onclick="window.location.href='/admin/admin_stock'">Stock Management</button>
+                <button type="button" class="btn" onclick="window.location.href='/admin/coupon'">Coupon Management</button>
+                <button type="button" class="btn" onclick="window.location.href='/admin/salesReport'">Sales Report</button>
+                <button type="button" class="btn" onclick="window.location.href='/admin/logout'">Logout</button>      
+            </div>
+
+            <div class="content1 flex-grow-1">
+                <div class="content1-section1">
+                    <h3>Products</h3>
+                    <div class="container-fluid">
+                        <div class="content1-section2 d-flex">
+                            <input type="text" class="form-control me-2" id="searchInput"  placeholder="Search">
+                            <button type="submit" class="btn btn-primary me-2" onclick="searchProduct()">Search</button>
+                            <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#createModal">Create</button>
+                        </div>
+                    </div>
+
+      <!-----------------------------Add Product Modal---------------------------->
+                    <div class="modal fade" id="createModal" data-bs-backdrop="static" tabindex="-1">
+                        <div class="modal-dialog">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <h5 class="modal-title">Add Product</h5>
+                                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                                </div>
+                                <div class="modal-body">
+                                    <form action="/admin/add_product" method="POST" id="uploadForm" enctype="multipart/form-data">
+                                        <div class="mb-3">
+                                            <label for="productName" class="form-label">Product Name</label>
+                                            <input type="text" id="productName" class="form-control" name="name" placeholder="Name"  required>
+                                        </div>
+                                    <div class="mb-3">
+                                      <label for="productName" class="form-label">Category</label>
+                                      <select id="category" class="form-control" name="category" required>
+                                        <option value="" disabled selected>Category</option>
+                                        <% categories.forEach(category => { %>
+                                            <option value="<%= category.name %>"><%= category.name %></option>
+                                        <% }) %>
+                                    </select>
+                                  </div>
+                                  <div class="mb-3">
+                                    <label for="productName" class="form-label">Original Price</label>
+                                    <input type="text" id="originalPrice" class="form-control" name="originalPrice" placeholder="Original Price" required>
+                                </div>
+                                <div class="mb-3">
+                                  <label for="offerPercentage" class="form-label">Offer Percentage</label>
+                                  <input type="text" id="offerPercentage" class="form-control" name="offerPercentage" placeholder="Offer Percentage">
+                              </div>
+                            <div class="mb-3">
+                              <label for="productName" class="form-label">Description</label>
+                              <input type="text" id="description" class="form-control" name="description" placeholder="Description" required>
+                            </div> 
+
+                            <div class="mb-3">
+                              <label for="image1" class="form-label">Images</label>
+                              <input type="file" id="image1" class="form-control" onchange="previewAndCrop(event, 0)" name="images" multiple required>
+                              <div id="cropPreviewSection0" style="display: none; margin-top: 20px;">
+                                  <img id="cropPreview0" style="max-width: 100%; height: auto;">
+                                  <button type="button" class="btn btn-secondary mt-2" onclick="startCropping(0)">Crop</button>
+                              </div>
+                          </div>
+                      
+                          <div class="mb-3">
+                              <input type="file" id="image2" class="form-control" onchange="previewAndCrop(event, 1)" name="images" multiple required>
+                              <div id="cropPreviewSection1" style="display: none; margin-top: 20px;">
+                                  <img id="cropPreview1" style="max-width: 100%; height: auto;">
+                                  <button type="button" class="btn btn-secondary mt-2" onclick="startCropping(1)">Crop</button>
+                              </div>
+                          </div>
+                          <div class="mb-3">
+                            <input type="file" id="image3" class="form-control" onchange="previewAndCrop(event, 2)" name="images" multiple required>
+                            <div id="cropPreviewSection2" style="display: none; margin-top: 20px;">
+                                <img id="cropPreview2" style="max-width: 100%; height: auto;">
+                                <button type="button" class="btn btn-secondary mt-2" onclick="startCropping(2)">Crop</button>
+                            </div>
+                        </div>
+                        
+                        <div class="mb-3">
+                            <input type="file" id="image4" class="form-control" onchange="previewAndCrop(event, 3)" name="images" multiple>
+                            <div id="cropPreviewSection3" style="display: none; margin-top: 20px;">
+                                <img id="cropPreview3" style="max-width: 100%; height: auto;">
+                                <button type="button" class="btn btn-secondary mt-2" onclick="startCropping(3)">Crop</button>
+                            </div>
+                        </div>
+                        
+                            <hr>
+                            <button type="button" class="btn btn-outline-secondary" onclick="validateAndSubmit()">Submit</button>
+
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <hr>
+
+     <!-------------------------- Products Table ------------------------------------->
+                    <table class="table">
+                        <thead>
+                            <tr>
+                                <th scope="col">No.</th>
+                                <th scope="col">Name</th>
+                                <th scope="col">Category</th>
+                                <th scope="col">Original Price</th>
+                                <th scope="col">Discount Price</th>
+                                <th scope="col">Offer</th>
+                                <th scope="col">View</th>
+                                <th scope="col">Update</th>
+                                <th scope="col">Delete</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <% products.forEach((product, index) => { %>
+                            <tr>
+                              <td><%= (currentPage - 1) * 6 + index + 1 %></td>
+                                <td><%= product.name %></td>
+                                <td><%= product.category %></td>
+                                <td><%= product.originalPrice %></td>
+                                <td><%= product.discountPrice %></td>
+                                <td><%= product.offerPercentage %>%</td>
+                                <td>
+                                    <button class="btn btn-outline-secondary" data-bs-toggle="modal" data-bs-target="#viewModal<%= product.id %>">View</button>
+    <!----------------------------- View Modal --------------------------->
+                                    <div class="modal fade" id="viewModal<%= product.id %>" tabindex="-1">
+                                        <div class="modal-dialog">
+                                            <div class="modal-content">
+                                                <div class="modal-header">
+                                                    <h5 class="modal-title">Product Details</h5>
+                                                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                                                </div>
+                                                <div class="modal-body">
+                                                    <div class="product-images">
+                                                        <% if (product.images && product.images.length > 0) { %>
+                                                            <% product.images.forEach(image => { %>
+                                                                <img src="data:image/jpeg;base64,<%= image %>" alt="Product Image" style="width: 50%; height: 50%; margin-bottom: 10px;" />
+                                                            <% }) %>
+                                                        <% } else { %>
+                                                            <p>No images available.</p>
+                                                        <% } %>
+                                                    </div>
+                                                    <p><strong>Name:</strong> <%= product.name %></p>
+                                                    <p><strong>Category:</strong> <%= product.category %></p>
+                                                    <p><strong>Original Price:</strong> <%= product.originalPrice %></p>
+                                                    <p><strong>Discount Price:</strong> <%= product.discountPrice %></p>
+                                                    <p><strong>Stock:</strong> <%= product.stock %></p>
+                                                    <p><strong>Description:</strong> <%= product.description %></p>
+                                                    
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </td>
+                                <td>
+                                    <button class="btn btn-outline-secondary" data-bs-toggle="modal" data-bs-target="#updateModal<%= product.id %>">Update</button>
+       <!-------------------------------Update Modal--------------------------------------------- -->
+                                    <div class="modal fade" id="updateModal<%= product.id %>" tabindex="-1">
+                                        <div class="modal-dialog">
+                                            <div class="modal-content">
+                                                <div class="modal-header">
+                                                    <h5 class="modal-title">Update Product</h5>
+                                                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                                                </div>
+                                                <div class="modal-body">
+                                                  <form action="/admin/update_product" method="POST" id="form" >
+                                                    <input type="hidden" name="id" value="<%= product._id %>">
+                                                        <div class="mb-3">
+                                                            <label for="productName" class="form-label">Product Name</label>
+                                                            <input type="text" id="productName" class="form-control" name="name" placeholder="Name"  value="<%= product.name %>">
+                                                        </div>
+                                                      <div class="mb-3">
+                                                        <label for="productName" class="form-label">Category</label>
+                                                        <select id="category" class="form-control" name="category" required>
+                                                          <option value="" disabled selected>Category</option>
+                                                          <% categories.forEach(category => { %>
+                                                              <option value="<%= category.name %>"><%= category.name %></option>
+                                                          <% }) %>
+                                                      </select>
+                                                    </div>
+                                                    <div class="mb-3">
+                                                      <label for="productName" class="form-label">Original Price</label>
+                                                      <input type="text" id="originalPrice" class="form-control" name="originalPrice" placeholder="Original Price" value="<%= product.originalPrice %>">
+                                                  </div>
+                                                  <div class="mb-3">
+                                                    <label for="offerPercentage" class="form-label">Offer Percentage</label>
+                                                    <input type="text" id="offerPercentage" class="form-control" name="offerPercentage" placeholder="Offer Price" value="<%= product.discountPrice %>">
+                                                </div>
+                                              <div class="mb-3">
+                                                <label for="productName" class="form-label">Description</label>
+                                                <input type="text" id="description" class="form-control" name="description" placeholder="Description" value="<%= product.description %>">
+                                              </div>
+
+                                               <div class="mb-3">
+                                                <label for="formFile0" class="form-label">Images</label>
+                                                <input class="form-control" type="file" id="formFile0" name="images" onchange="previewAndCrop(event, 0)">
+                                              </div>
+                                              <div id="cropPreviewSection0" style="display:none;">
+                                                <img id="cropPreview0" src="" alt="Image Preview">
+                                                <button type="button" class="btn btn-secondary" onclick="startCropping(0)">Crop Image</button>
+                                              </div>
+                                              
+                                              <div class="mb-3">
+                                                <input class="form-control" type="file" id="formFile1" name="images" onchange="previewAndCrop(event, 1)">
+                                              </div>
+                                              <div id="cropPreviewSection1" style="display:none;">
+                                                <img id="cropPreview1" src="" alt="Image Preview">
+                                                <button type="button" class="btn btn-secondary" onclick="startCropping(1)">Crop Image</button>
+                                              </div>
+                                              
+                                              <div class="mb-3">
+                                                <input class="form-control" type="file" id="formFile2" name="images" onchange="previewAndCrop(event, 2)">
+                                              </div>
+                                              <div id="cropPreviewSection2" style="display:none;">
+                                                <img id="cropPreview2" src="" alt="Image Preview">
+                                                <button type="button" class="btn btn-secondary" onclick="startCropping(2)">Crop Image</button>
+                                              </div>
+                                              
+                                              <div class="mb-3">
+                                                <input class="form-control" type="file" id="formFile3" name="images" onchange="previewAndCrop(event, 3)">
+                                              </div>
+                                              <div id="cropPreviewSection3" style="display:none;">
+                                                <img id="cropPreview3" src="" alt="Image Preview">
+                                                <button type="button" class="btn btn-secondary" onclick="startCropping(3)">Crop Image</button>
+                                              </div>
+                                                 
+                                              <button type="submit" class="btn btn-primary">Submit</button>
+                                                    </form>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </td>
+                                <td>
+                                    <form action="/admin/delete_product" method="POST">
+                                        <input type="hidden" name="id" value="<%= product._id %>">
+                                        <button class="btn btn-outline-secondary">Delete</button>
+                                    </form>
+                                </td>
+                            </tr>
+                            <% }); %>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-------------pagination -------------->
+    <div class="page">
+        <nav aria-label="Page navigation example">
+          <ul class="pagination">
+            <li class="page-item <%= currentPage === 1 ? 'disabled' : '' %>">
+              <a class="page-link"  style="background-color: rgb(26, 26, 40);"  href="/admin/items?page=<%= currentPage - 1 %>" aria-label="Previous">
+                <span aria-hidden="true">&laquo;</span>
+              </a>
+            </li>
+            <% for (let i = 1; i <= totalPages; i++) { %>
+              <li class="page-item <%= currentPage === i ? 'active' : '' %>">
+                <a class="page-link" style="background-color: rgb(26, 26, 40);"  href="/admin/items?page=<%= i %>"><%= i %></a>
+              </li>
+            <% } %>
+            <li class="page-item <%= currentPage === totalPages ? 'disabled' : '' %>">
+              <a class="page-link" style="background-color: rgb(26, 26, 40);"   href="/admin/items?page=<%= currentPage + 1 %>" aria-label="Next">
+                <span aria-hidden="true">&raquo;</span>
+              </a>
+            </li>
+          </ul>
+        </nav>
+      </div>
+      
+
+
+
+    
+<script>
+let cropperInstances = [];
+let croppedImages = [];
+function previewAndCrop(event, index) {
+  const file = event.target.files[0];
+  if (!file) return;
+  const applicable = ["image/jpeg", "image/png", "image/gif", "image/webp"];
+  if (!applicable.includes(file.type)) {
+    event.target.value = "";
+    swal.fire({
+      title: "Error!",
+      text: "Invalid file type",
+      icon: "error",
+    });
+    return;
+  }
+
+  const cropPreview = document.getElementById(`cropPreview${index}`);
+  const cropPreviewSection = document.getElementById(`cropPreviewSection${index}`);
+
+  cropPreview.src = URL.createObjectURL(file);
+  cropPreviewSection.style.display = "block";
+  if (cropperInstances[index]) {
+    cropperInstances[index].destroy();
+    cropperInstances[index] = null;
+  }
+  cropperInstances[index] = new Cropper(cropPreview, {
+    aspectRatio: 1,
+    viewMode: 1,
+    autoCropArea: 1,
+    scalable: true,
+    zoomable: true,
+    movable: true,
+  });
+}
+
+
+function startCropping(index) {
+  if (cropperInstances[index]) {
+    const cropper = cropperInstances[index];
+    const canvas = cropper.getCroppedCanvas();
+
+    if (canvas) {
+      canvas.toBlob((blob) => {
+        const croppedImageFile = new File([blob], `croppedImage${index + 1}.png`, {
+          type: "image/png",
+          lastModified: Date.now(),
+        });
+        croppedImages[index] = croppedImageFile;
+        document.getElementById(`cropPreviewSection${index}`).style.display = "none";
+        
+      });
+    } else {
+      swal.fire(`Could not retrieve the cropped canvas for index: ${index}`);
+    }
+  } else {
+    swal.fire("Please select an image to crop.");
+  }
+}
+
+   
+
+function isValidProductName(name) {
+    const regex = /^[a-zA-Z&\s-]+$/; 
+    return regex.test(name);
+}
+
+
+function checkProductNameExistence(name) {
+  console.log('checkProductName hit')
+    return fetch(`/admin/check_product_exists?name=${name}`, {
+        method: 'GET',
+        headers: { 'Content-Type': 'application/json' }
+    })
+    .then(response => response.json());
+}
+
+
+
+function searchProduct() {
+    const searchInput = document.getElementById('searchInput').value.trim(); 
+    if (searchInput) {
+        window.location.href = `/admin/admin_product?search=${encodeURIComponent(searchInput)}`;
+    } else {
+        Swal.fire({
+            icon: 'warning',
+            title: 'Oops!',
+            text: 'Please enter a product name to search.',
+            confirmButtonText: 'OK'
+        });
+    }
+}
+
+
+
+
+
+
+
+
+
+
+
+function validateAndSubmit() {
+    console.log('validateAndSubmit hit');
+    const productName =document.querySelector('input[name="name"]').value.trim()
+    const offerPercentage = document.getElementById('offerPercentage').value.trim();
+    const category = document.getElementById('category').value.trim();  
+    const originalPrice = document.getElementById('originalPrice').value.trim();  
+    const description = document.getElementById('description').value.trim(); 
+    const imageInputs = document.querySelectorAll('input[type="file"][name="images"]');
+    let images = [];
+    imageInputs.forEach(input => {
+        if (input.files.length > 0) {
+            images.push(input.files[0]); 
+        }
+    });
+    if (!productName || !category || !originalPrice || !description) {
+        Swal.fire({
+            icon: 'error',
+            title: 'Missing Fields',
+            text: 'Please fill in all the required fields.'
+        });
+        return;
+    }
+    if (!isValidProductName(productName)) {
+        Swal.fire({
+            icon: 'error',
+            title: 'Invalid Product Name',
+            text: 'Product name should only contain letters and spaces.'
+        });
+        return;
+    }
+    if (!isValidOfferPercentage(offerPercentage)) {
+        Swal.fire({
+            icon: 'error',
+            title: 'Invalid Offer Percentage',
+            text: 'Offer percentage must be a number less than 100.'
+        });
+        return;
+    }
+    if (images.length < 3) {
+        Swal.fire({
+            icon: 'error',
+            title: 'Insufficient Images',
+            text: 'You must upload at least 3 images.'
+        });
+        return;
+    }
+    checkProductNameExistence(productName).then(response => {
+        if (response.exists) {
+            Swal.fire({
+                icon: 'error',
+                title: 'Product Exists',
+                text: `The product name "${productName}" already exists in the database.`
+            });
+        } else {
+            document.getElementById('uploadForm').submit();
+        }
+    }).catch(error => {
+        Swal.fire({
+            icon: 'error',
+            title: 'Error',
+            text: 'An error occurred while checking the product name.'
+        });
+    });
+}
+
+
+function isValidOfferPercentage(offerPercentage) {
+    const percentage = parseFloat(offerPercentage);
+    return !isNaN(percentage) && percentage >= 0 && percentage < 100;
+}
+
+
+
+
+
+
+</script>
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.5.13/cropper.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"></script>
+<script src="https://unpkg.com/cropperjs/dist/cropper.min.js"></script>
+</body>
+</html>

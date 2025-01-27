@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Admin Login</title>
+  <link rel="stylesheet" href="\styles\admin\admin_login.css">
+</head>
+<body>
+  <div class="container">
+    <div class="login-box">
+      <h1>ADMIN LOGIN</h1>
+      <form action="/admin/login" method="post">
+        <div class="input-field">
+          <label for="username">Username</label>
+          <input type="text" id="username" name="username" required>
+        </div>
+        <div class="input-field">
+          <label for="password">Password</label>
+          <input type="password" id="password" name="password" required pattern=".{4,}" title="Password must be at least 4 characters long">
+        </div>
+        <button type="submit" class="login-btn">LOGIN</button>
+        <% if (message) { %>
+          <p class="error-message" style="color: rgb(232, 69, 69); margin-top: 10px;"><%= message %></p>
+        <% } %>
+      </form>
+    </div>
+  </div>
+</body>
+</html>

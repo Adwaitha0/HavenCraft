@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin dashboard</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+    <link rel="stylesheet" href="\styles\admin\admin_stock.css">
+
+</head>
+<body>
+    <!------Navbar------->
+    <nav class="navbar navbar-expand-lg bg-body-tertiary">
+        <div class="container-fluid">
+          <a class="navbar-brand" href="#">HavenCraft</a>
+         </div>
+         
+    </nav>
+    
+
+    <!---------SideBar------>
+
+    
+  <div class="container-fluid">
+    <div class="section-1">
+      <div class="sidebar">
+        <button type="button" class="btn" onclick="window.location.href='/admin/admin_home'">Dashboard</button>   
+        <button type="button" class="btn" onclick="window.location.href='/admin/admin_user'">User Management</button>
+        <button type="button" class="btn" onclick="window.location.href='/admin/admin_product'">Product Management</button>
+        <button type="button" class="btn" onclick="window.location.href='/admin/admin_category'">Category Management</button>
+        <button type="button" class="btn" onclick="window.location.href='/admin/admin_order'">Order Management</button>
+        <button type="button" class="btn" onclick="window.location.href='/admin/admin_stock'">Stock Management</button>
+        <button type="button" class="btn" onclick="window.location.href='/admin/coupon'">Coupon Management</button>
+        <button type="button" class="btn" onclick="window.location.href='/admin/salesReport'">Sales Report</button>
+        <button type="button" class="btn" onclick="window.location.href='/admin/logout'">Logout</button>    
+      </div>
+      <div class="content1">
+        <div class="content1-section1">
+            <h3>Stock</h3>
+           <div class="container-fluid">
+           <br>
+        <table class="table">
+          <thead>
+              <tr>
+                  <th scope="col">No.</th>
+                  <th scope="col">Product Name</th>
+                  <th scope="col">Large</th>
+                  <th scope="col">Small</th>
+                  <th scope="col">Edit</th>
+              </tr>
+          </thead>
+          <tbody>
+              <% if (stocks && stocks.length > 0) { %>
+                  <% stocks.forEach((stock, index) => { %>
+                      <tr>
+                        <td><%= (currentPage - 1) * 8 + index + 1 %></td>
+                          <td><%= stock.productId.name%></td> <!-- Access the product name  ._id   ''-->
+                          <td><%= stock.large %></td> <!-- Access the large quantity -->
+                          <td><%= stock.small %></td> <!-- Access the small quantity -->
+                          <td>
+                              <button class="btn btn-outline-secondary" data-bs-toggle="modal" data-bs-target="#editModal"
+                                      onclick="populateModal('<%= stock.productId._id %>','<%= stock.productId.name %>' ,  '<%= stock.large %>', '<%= stock.small %>')">
+                                  Edit
+                              </button>
+                          </td>
+                      </tr>
+                  <% }); %>
+              <% } else { %>
+                  <tr>
+                      <td colspan="5" class="text-center">No stock data found</td>
+                  </tr>
+              <% } %>
+          </tbody>
+      </table>
+        
+        
+        <!-- Edit Modal -->
+        <div class="modal fade" id="editModal" tabindex="-1" aria-labelledby="editModalLabel" aria-hidden="true">
+          <div class="modal-dialog">
+            <div class="modal-content">
+              <div class="modal-header">
+                <h5 class="modal-title" id="editModalLabel">Edit Stock</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+              </div>
+              <div class="modal-body">
+                <form id="editStockForm" action="/admin/update-stock" method="POST">
+                  <input type="hidden" name="productId" id="productId">
+                  <div class="mb-3">
+                    <label for="productName" class="form-label">Product Name</label>
+                    <input type="text" class="form-control" id="productName" disabled>
+                  </div>
+                  <div class="mb-3">
+                    <label for="largeQuantity" class="form-label">Large Quantity</label>
+                    <input type="number" class="form-control" id="largeQuantity" name="largeQuantity" min="0">
+                  </div>
+                  <div class="mb-3">
+                    <label for="smallQuantity" class="form-label">Small Quantity</label>
+                    <input type="number" class="form-control" id="smallQuantity" name="smallQuantity" min="0">
+                  </div>
+                  <button type="submit" class="btn btn-outline-secondary">Save Changes</button>
+                </form>
+              </div>
+            </div>
+          </div>
+        </div>
+
+
+<!-------------------pagination--------------------------------->
+
+
+
+<div class="page">
+  <nav aria-label="Page navigation example">
+    <ul class="pagination">
+      <li class="page-item <%= currentPage === 1 ? 'disabled' : '' %>">
+        <a class="page-link"  style="background-color: rgb(26, 26, 40);"  href="/admin/stocks?page=<%= currentPage - 1 %>" aria-label="Previous">
+          <span aria-hidden="true">&laquo;</span>
+        </a>
+      </li>
+      <% for (let i = 1; i <= totalPages; i++) { %>
+        <li class="page-item <%= currentPage === i ? 'active' : '' %>">
+          <a class="page-link" style="background-color: rgb(26, 26, 40);"  href="/admin/stocks?page=<%= i %>"><%= i %></a>
+        </li>
+      <% } %>
+      <li class="page-item <%= currentPage === totalPages ? 'disabled' : '' %>">
+        <a class="page-link" style="background-color: rgb(26, 26, 40);"   href="/admin/stocks?page=<%= currentPage + 1 %>" aria-label="Next">
+          <span aria-hidden="true">&raquo;</span>
+        </a>
+      </li>
+    </ul>
+  </nav>
+</div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+        
+        <script>
+          function populateModal(id, name, large, small) {
+            console.log('Product ID:', id); // Check if id is being passed correctly
+            document.getElementById('productId').value = id; // Fix this line
+            document.getElementById('productName').value = name;
+            document.getElementById('largeQuantity').value = large;
+            document.getElementById('smallQuantity').value = small;
+          }
+        </script>
+        
+  
+
+
+      <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>
+      <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js" integrity="sha384-IQsoLXl5PILFhosVNubq5LC7Qb9DXgDA9i+tQ8Zj3iwWAwPtgFTxbJ8NT4GN1R8p" crossorigin="anonymous"></script>
+      <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.min.js" integrity="sha384-cVKIPhGWiC2Al4u+LWgxfKTRIcfu0JTxR+EQDz/bgldoEyl4H0zUF0QKbrJ0EcQF" crossorigin="anonymous"></script>
+</body>
+</html>

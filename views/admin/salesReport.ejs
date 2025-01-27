@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Dashboard</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+    <link rel="stylesheet" href="\styles\admin\admin_sales.css">
+</head>
+<body>
+    <!-- Navbar -->
+    <nav class="navbar navbar-expand-lg bg-body-tertiary">
+        <div class="container-fluid">
+          <a class="navbar-brand" href="#">HavenCraft</a>
+        </div>
+    </nav>
+
+    <!-- Sidebar and Content -->
+    <div class="container-fluid">
+        <div class="section-1">
+            <div class="sidebar">
+              <button type="button" class="btn" onclick="window.location.href='/admin/admin_home'">Dashboard</button>   
+              <button type="button" class="btn" onclick="window.location.href='/admin/admin_user'">User Management</button>
+              <button type="button" class="btn" onclick="window.location.href='/admin/admin_product'">Product Management</button>
+              <button type="button" class="btn" onclick="window.location.href='/admin/admin_category'">Category Management</button>
+              <button type="button" class="btn" onclick="window.location.href='/admin/admin_order'">Order Management</button>
+              <button type="button" class="btn" onclick="window.location.href='/admin/admin_stock'">Stock Management</button>
+              <button type="button" class="btn" onclick="window.location.href='/admin/coupon'">Coupon Management</button>
+              <button type="button" class="btn" onclick="window.location.href='/admin/salesReport'">Sales Report</button>
+              <button type="button" class="btn" onclick="window.location.href='/admin/logout'">Logout</button>
+            </div>
+            <div class="content1">
+                <div class="content1-section1">
+                    <h3>Sales Report</h3>
+                    <hr style="border: 1px solid;"><br>
+                    <div class="main">
+                       
+                        <div class="cat">
+                            <div>
+                                <form action="/admin/filter-sales" method="GET" style="display: inline;">
+                                    <input type="hidden" name="filter" value="daily">
+                                    <button type="submit" class="btn btn-secondary">Daily</button>
+                                </form>
+                                <form action="/admin/filter-sales" method="GET" style="display: inline;">
+                                    <input type="hidden" name="filter" value="weekly">
+                                    <button type="submit" class="btn btn-secondary">Weekly</button>
+                                </form>
+                                <form action="/admin/filter-sales" method="GET" style="display: inline;">
+                                    <input type="hidden" name="filter" value="monthly">
+                                    <button type="submit" class="btn btn-secondary">Monthly</button>
+                                </form>
+                            </div>
+                            <div class="display">
+                                <h3>&#8377;<%= totalSales || 0 %></h3>    
+                                <p>Total Sales</p>
+                            </div>
+                        </div>
+
+                        <div class="form">
+                            <form style="display: flex; gap: 5%;" action="/admin/filter-sales" method="GET">
+                                <div class="mb-3">
+                                    <label for="startDate" class="form-label">Start Date</label>
+                                    <input type="date" id="startDate" name="startDate" class="form-control">
+                                </div>
+                                <div class="mb-3">
+                                    <label for="endDate" class="form-label">End Date</label>
+                                    <input type="date" id="endDate" name="endDate" class="form-control">
+                                </div>
+                                <button style="height: 30%; margin-top: 8%;" type="submit" class="btn btn-outline-secondary">Filter</button>
+                            </form>
+                        </div>
+
+
+                    </div>
+                    <br><br>
+   <!-------------------------------Table ----------------------------------------------->
+                    <div class="table">
+                        <table class="table">
+                            <thead>
+                                <tr>
+                                    <th scope="col">OrderId</th>
+                                    <th scope="col">Username</th>
+                                    <th scope="col">Order Date</th>
+                                    <th scope="col">Total Price</th>
+                                    <th scope="col">Discount Price</th>
+                                    <th scope="col">Total Discount</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <% if (orders.length === 0) { %>
+                                  <tr>
+                                    <td colspan="6" style="text-align: center;">No orders found for the selected filter.</td>
+                                  </tr>
+                                <% } else { %>
+                                  <% orders.forEach(order => { %>
+                                    <tr>
+                                      <th><%= order.orderId %></th>
+                                      <td><%= order.username %></td>
+                                      <td><%= order.orderDate%></td>
+                                      <td>₹<%= order.totalSales %></td>
+                                      <td>₹<%= order.discountPrice || 0 %></td>
+                                      <td>₹<%= (order.totalSales - (order.discountPrice || 0)) %></td>
+                                    </tr>
+                                  <% }) %>
+                                <% } %>
+                              </tbody>
+                              
+                        </table>
+                    </div>
+                    <div class="buttons" style="display: flex; align-items: flex-end; justify-content: flex-end; gap: 1%;">
+                        <button class="btn btn-outline-secondary" id="downloadExcelBtn">Excel</button>
+                        <button id="pdfButton" type="button" style="width: 5%;" class="btn btn-outline-secondary" onclick="generatePdf()">Pdf</button>
+                      </div>
+
+                </div>
+            </div>
+
+
+
+
+        </div>
+    </div>
+
+
+
+<script>
+
+async function generatePdf() {
+    const { jsPDF } = window.jspdf;
+    const pdf = new jsPDF({
+        format: "a4",
+        unit: "mm"
+    });
+    const headingFontSize = 16;
+    const contentFontSize = 12;
+    pdf.setFont("helvetica", "bold");
+    pdf.setFontSize(headingFontSize);
+    pdf.setTextColor(128, 128, 128)
+    pdf.text("HavenCraft", 105, 15, { align: "center" }); 
+
+    pdf.setFontSize(contentFontSize);
+    pdf.setFont("helvetica", "normal");
+    pdf.text("Sales Report", 105, 25, { align: "center" });
+
+    const today = new Date();
+    pdf.setTextColor(128, 128, 128)
+    pdf.text(`Generated on: ${today.toLocaleDateString()}`, 10, 35);
+
+    const table = document.querySelector('.table');
+
+    if (table) {
+        table.style.color = "black"; 
+         
+        pdf.html(table, {
+            callback: function (doc) {
+                doc.save('sales_report.pdf');
+            },
+            x: 10,
+            y: 40, 
+            width: 180,
+            windowWidth: table.scrollWidth
+        });
+    } else {
+        console.error('Table not found.');
+    }
+}
+
+
+document.getElementById("downloadExcelBtn").addEventListener("click", function() {
+            const table = document.querySelector('.table');
+            if (table) {
+                const wb = XLSX.utils.table_to_book(table, { sheet: "Sheet1" });
+                XLSX.writeFile(wb, "sales_report.xlsx");
+            } else {
+                console.error("Table not found.");
+            }
+        });
+
+
+</script>
+
+
+
+
+
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.17.0/xlsx.full.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js" integrity="sha384-IQsoLXl5PILFhosVNubq5LC7Qb9DXgDA9i+tQ8Zj3iwWAwPtgFTxbJ8NT4GN1R8p" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.min.js" integrity="sha384-cVKIPhGWiC2Al4u+LWgxfKTRIcfu0JTxR+EQDz/bgldoEyl4H0zUF0QKbrJ0EcQF" crossorigin="anonymous"></script>
+</body>
+</html>

@@ -1,0 +1,449 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Home Page</title>
+    <link rel="stylesheet" href="\styles\user\user_home.css">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css" integrity="sha512-Kc323vGBEqzTmouAECnVceyQqyqdsSiqLQISBL29aUW4U/M7pSPA/gEUZQqv1cwx4OnYxTxve5UMg5GT6L4JJg==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+  </head>
+<body>
+
+
+    <!----         navbar    ----->
+
+    <nav class="navbar navbar-expand-lg bg-body-tertiary">
+        <div class="container-fluid">
+          <a class="navbar-brand" href="#">HavenCraft</a>
+          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"><i class="fa-solid fa-list" style="color: rgb(236, 227, 227);"></i>
+            </span>
+          </button>
+          <div class="collapse navbar-collapse" id="navbarSupportedContent">
+            <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+              <li class="nav-item">
+                <a class="nav-link active" aria-current="page" href="/user/user_home">Home</a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link" href="/user/about">About</a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link" href="/user/store">Store</a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link" href="/user/contact">Contact Us</a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link" href="/user/user_login">Login</a>
+              </li>
+            </ul>
+            <form class="d-flex" role="search" style="position: relative;" id="search-form">
+              <i class="fa-solid fa-magnifying-glass" style="position: absolute; top: 50%; left: 10px; transform: translateY(-50%); color: gray;"></i>
+              <input class="form-control me-2" type="search" id="search-input" placeholder="Search for products" aria-label="Search" style="padding-left: 40px;">
+            </form>
+            
+          <div class="icons">
+            <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+              <li class="nav-item">
+                <% if (session.user) { %> 
+                  <a class="nav-link" href="/user/wishlist"><i class="fa-solid fa-heart"></i></a>
+                  <% } else { %>
+                    <a class="nav-link" href="/user/user_login"><i class="fa-solid fa-heart"></i></a>
+                    <% } %>
+              </li>
+              <li class="nav-item">
+                <% if (session.user) { %> 
+                <a class="nav-link" href="/user/user_addToCart"><i class="fa-solid fa-cart-shopping"></i></a>
+                <% } else { %>
+                  <a class="nav-link" href="/user/user_login"><i class="fa-solid fa-cart-shopping"></i></a>
+                  <% } %>  
+              </li>
+              <li class="nav-item">
+                <% if (session.user) { %>    
+                <a class="nav-link" href="/user/user_profile"><i class="fa-solid fa-user"></i></a>
+               <% } else { %>
+                  <a class="nav-link" href="/user/user_login"><i class="fa-solid fa-user"></i></a>
+                  <% } %>      
+              </li>
+              </ul>
+            </div>
+                         
+          </div>
+        </div>
+      </nav>
+    
+
+
+      <!---      categories   ---->
+      <div class="category">
+      <nav class="navbar2 navbar-expand-lg bg-body-tertiary">
+        <div class="container-fluid">
+          
+          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNavDropdown" aria-controls="navbarNavDropdown" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"><i class="fa-solid fa-list" style="color: rgb(155, 153, 153);"></i>
+            </span>
+          </button>
+          <div class="collapse navbar-collapse" id="navbarNavDropdown">
+            <ul class="navbar-nav">
+
+
+              <li class="nav-item dropdown">
+                <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="true">
+                  Decorative Lights
+                </a>
+                <ul class="dropdown-menu">
+                  <li><a class="dropdown-item" href="#">Pendant Lights</a></li>
+                  <li><a class="dropdown-item" href="#">Chendeliers</a></li>
+                  <li><a class="dropdown-item" href="#">Outdoor Lights</a></li>
+                </ul>
+              </li>
+
+
+              <li class="nav-item dropdown">
+                <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="true">
+                  Ceiling Fan
+                </a>
+                <ul class="dropdown-menu">
+                  <li><a class="dropdown-item" href="#">Crystal Ceiling Fan</a></li>
+                  <li><a class="dropdown-item" href="#">Classic Ceiling Fan</a></li>
+                </ul>
+              </li>
+
+              <li class="nav-item dropdown">
+                <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="true">
+                  Wall Lights
+                </a>
+                <ul class="dropdown-menu">
+                  <li><a class="dropdown-item" href="/user/tableLamp">Table Lights</a></li>
+                  <li><a class="dropdown-item" href="#">Ceiling Lights</a></li>
+                  <li><a class="dropdown-item" href="#">Wall Lights</a></li>
+                </ul>
+              </li>
+
+
+              <li class="nav-item dropdown">
+                <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="true">
+                  Home Decor
+                </a>
+                <ul class="dropdown-menu">
+                  <li><a class="dropdown-item" href="/user/artifact">Artifacts</a></li>
+                  <li><a class="dropdown-item" href="/user/sculpture">Sculptures</a></li>
+                  <li><a class="dropdown-item" href="#">Decorative Boxes</a></li>
+                </ul>
+              </li>
+
+
+              <li class="nav-item dropdown">
+                <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="true">
+                Home Accessories
+                </a>
+                <ul class="dropdown-menu">
+                  <li><a class="dropdown-item" href="#">Planters</a></li>
+                  <li><a class="dropdown-item" href="/user/vase">Vases</a></li>
+                  <li><a class="dropdown-item" href="/user/candleHolder">Candle holders</a></li>
+                </ul>
+              </li>              
+            </ul>
+          </div>
+        </div>
+      </nav>
+    </div>
+
+
+
+
+
+
+
+
+
+
+
+
+    <!----    section-1    ---->
+    <div class="home_section1 container-fluid">
+      <div class="section-1">
+    <div id="carouselExample" class="carousel slide">
+      <div class="carousel-inner">
+        <div class="carousel-item active">
+          <img src="\styles\user\home_pic\home_pic1.png" class="d-block w-100" alt="...">
+        </div>
+        <!--<div class="carousel-item">
+          <img src="\styles\user\home_pic\home_pic2.png" class="d-block w-100" alt="...">
+        </div>   -->
+        <div class="carousel-item">
+          <img src="\styles\user\home_pic\home_pic3.png" class="d-block w-100" alt="...">
+        </div>
+      </div>
+      <button class="carousel-control-prev" type="button" data-bs-target="#carouselExample" data-bs-slide="prev">
+        <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+        <span class="visually-hidden">Previous</span>
+      </button>
+      <button class="carousel-control-next" type="button" data-bs-target="#carouselExample" data-bs-slide="next">
+        <span class="carousel-control-next-icon" aria-hidden="true"></span>
+        <span class="visually-hidden">Next</span>
+      </button>
+    </div>
+  </div>
+  </div>
+
+
+  <!---------     section-2   ------------>
+  <div class="container-fluid">
+    <div class="section-2">
+
+      <div class="cat-1">
+          <img src="\styles\user\home_pic\home_candle.png" class="responsive-img" >
+          <br>
+          <br class="responsive-break">
+          <p>Candle holders</p>
+          <p><a class="link-opacity-25" style="text-decoration: none;" href="/user/candleHolder">View All</a></p>
+      </div>
+      <div class="cat-2">
+        <img src="\styles\user\home_pic\home_vase.png" class="responsive-img" >
+        <br>
+        <br class="responsive-break">
+        <p>Vases</p>
+        <p><a class="link-opacity-25" style="text-decoration: none;" href="/user/vase">View All</a></p>
+        
+      </div>
+      <div class="cat-3">
+        <img src="\styles\user\home_pic\home_table.png" class="responsive-img" >
+        <br>
+        <br class="responsive-break">
+        <p>Table Lights</p>
+        <p><a class="link-opacity-25" style="text-decoration: none;" href="/user/tableLamp">View All</a></p>
+        
+      </div>
+    </div>
+  </div>
+
+  <!---------section-3----------->
+  <div class="section-3">
+  
+    <div class="section3-list">
+      <div class="list1">
+        <h6>Pendant Lights</h6>
+        <p class="placeholder-glow">
+          <span class="placeholder col-12">Elegant pendant lights that illuminate your space with style and sophistication.</span>
+        </p>
+      </div>
+      
+      <div class="list2">
+        <h6>Chandeliers</h6>
+        <p class="placeholder-glow">
+          <span class="placeholder col-12">Illuminate your space with elegance and charm using our stunning chandeliers.</span>
+        </p>
+      </div>
+      <div class="list3">
+        <h6>Ceiling Lights</h6>
+        <p class="placeholder-glow">
+          <span class="placeholder col-12">Elevate your ambiance with our stylish and functional ceiling lights.</span>
+        </p>
+      </div>
+      <div class="list4">
+        <h6>Outdoor Lights</h6>
+        <p class="placeholder-glow">
+          <span class="placeholder col-12">Illuminate your outdoors with stylish and durable lighting solutions.</span>
+        </p>
+      </div>
+
+    </div>
+    <div class="section3-pendent">
+      <img src="\styles\user\home_pic\home_pendent.png">
+
+
+    </div>
+
+
+
+
+
+
+  </div>
+
+
+  <!--------------section-4-------------->
+  <div class="container-fluid">
+    <div class="section-4">
+
+      <div class="cat-1">
+          <img src="\styles\user\home_pic\home_artifacts.png">
+          <br>
+          <br class="responsive-break">
+          <p>Artifacts</p>
+          <p><a class="link-opacity-25" style="text-decoration: none;" href="/user/artifact">View All</a></p>
+
+      </div>
+      <div class="cat-2">
+        <img src="\styles\user\home_pic\home_sculptures.png" >
+        <br>
+        <br class="responsive-break">
+        <p>Sculptures</p>
+        <p><a class="link-opacity-25" style="text-decoration: none;"href="/user/sculpture">View All</a></p>
+        
+      </div>
+      <div class="cat-3">
+        <img src="\styles\user\home_pic\home_box.png">
+        <br>
+        <br class="responsive-break">
+        <p>Decorative Boxes</p>
+        <p><a class="link-opacity-25" style="text-decoration: none;"href="#">View All</a></p>
+        
+      </div>
+    </div>
+  </div>
+
+  <!--------section-5------------->
+  <div class="container-fluid">
+    <div class="section-5">
+
+      <div class="cat-1">
+          <img src="\styles\user\home_pic\home_planters.png">
+          <br>
+          <br class="responsive-break">
+          <p>Planters</p>
+          <p><a class="link-opacity-25" style="text-decoration: none;" href="#">View All</a></p>
+      </div>
+      <div class="cat-2">
+        <img src="\styles\user\home_pic\home_crystal.png" >
+        <br>
+        <br class="responsive-break">
+        <p>Crystal Ceiling Fan</p>
+        <p><a class="link-opacity-25" style="text-decoration: none;" href="#">View All</a></p>
+        
+      </div>
+      <div class="cat-3">
+        <img src="\styles\user\home_pic\home_wall.png" >
+        <br>
+        <br class="responsive-break">
+        <p>Wall Lights</p>
+        <p><a class="link-opacity-25" style="text-decoration: none;" href="#">View All</a></p>
+        
+      </div>
+    </div>
+  </div>
+
+
+<!------section-6 ----->
+  <div class="container-fluid">
+    <div class="section-6">
+
+      <div class="cat6-1">
+        <h2>HavenCraft</h2>
+        <p>Transform your space into a stylish sanctuary with our curated home decor collections.</p>
+  
+        <p><i class="fa-solid fa-location-dot" style="color: #905454; margin-right: 5px;"></i>Kinfra, Calicut</p>
+        <p><i class="fa-solid fa-envelope"  style="color: #905454; margin-right: 5px;"></i>havencraft@gmail.com</p>
+        <p><i class="fa-solid fa-phone"  style="color: #905454; margin-right: 5px;"></i>+91-9123428910</p>
+         
+      </div>
+      <div class="cat6-2">
+        <h5>Quick Link</h5>
+        <a href="#" style="color: black; text-decoration: none;">Home</a><br>
+        <a href="#" style="color: black; text-decoration: none;">Contact us</a><br>
+        <a href="#" style="color: black; text-decoration: none;">Our shop</a><br>
+        <a href="#" style="color: black; text-decoration: none;">Cart</a><br>
+        <a href="#" style="color: black; text-decoration: none;">Checkout</a><br>
+        
+      </div>
+      <div class="cat6-3">
+        <h5>Help</h5>
+        <a href="#" style="color: black; text-decoration: none;">Track Order</a><br>
+        <a href="#" style="color: black; text-decoration: none;">Returns</a><br>
+        <a href="#" style="color: black; text-decoration: none;">Shipping</a><br>
+        <a href="#" style="color: black; text-decoration: none;">FAQs</a><br>
+        <br>
+        <h5>Connect</h5>
+        <div class="social_media">
+        <div class="g">
+          <i class="fa-brands fa-youtube"></i>
+        </div>
+        <div class="f">
+          <i class="fa-brands fa-facebook-f"></i>
+        </div>
+        <div class="t">
+          <i class="fa-brands fa-twitter"></i>
+        </div>
+        <div class="i">
+          <i class="fa-brands fa-instagram"></i>
+        </div>
+      </div>
+        
+        
+        
+      </div>
+      <div class="cat6-4">
+        <h5>Updates & Offers</h5>
+        <br>
+        <form>
+          <div class="mb-3">
+            
+            <input type="email" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp" placeholder="Your Name">
+          </div>
+          <div class="mb-3">
+            
+            <input type="password" class="form-control" id="exampleInputPassword1" placeholder="Your Email">
+          </div>
+         
+          <button type="submit" class="btn btn-primary">Subscribe Now</button>
+        </form>
+        
+      </div>
+      
+
+    </div>
+   
+  </div>
+  <div class="container-fluid">
+  <div class="copy">
+  <p><b>&copy;2024 HavenCraft.</b>All Rights Reserved.</p>
+    
+  </div>
+</div>
+
+
+
+<script>
+
+document.getElementById('search-form').addEventListener('submit', function(event) {
+  event.preventDefault();  
+
+  let query = document.getElementById('search-input').value.trim().toLowerCase();
+  const categories = {
+      'candle holder': '/user/candleHolder',
+      'vase': '/user/vase',
+      'table lamp': '/user/tableLamp',
+      'artifact' : '/user/artifact',
+      'sculpture' : '/user/sculpture',
+      'decorative box' : '/user/decorativeBox',
+      'planter' : '/user/planter',
+      'crystal ceiling fan' : '/user/crystalCeiling fan',
+      'wall light' : '/user/wallLight',
+      
+  };
+
+ 
+  if (categories[query.toLowerCase()]) {
+      window.location.href = categories[query.toLowerCase()];
+  } else {
+      alert('Category not found');
+  }
+});
+
+  </script>
+
+
+
+
+
+
+
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>
+
+
+
+</body>
+</html>
