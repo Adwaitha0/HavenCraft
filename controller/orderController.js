@@ -178,45 +178,6 @@ const adminUpdateOrderStatus = async (req, res) => {
 
 
 
-
-
-
-/*
-const returnOrder = async (req, res) => {
-  const { orderId, reason } = req.body;
-  console.log(req.body)
-  if (!orderId ||!reason) {
-    return res.status(400).send('Invalid request. Please provide all required details.');
-  }
-
-  try {
-    const orderObjectId = new mongoose.Types.ObjectId(orderId);
-    const result = await order.updateOne(
-      { _id: orderObjectId},
-      {
-        $set: {
-          'status': 'Returning',
-          'reason': reason, 
-          'products.$.productStatus': 'Returning' 
-        },
-      }
-    );
-
-    if (result.nModified === 0) {
-      return res.status(404).send('Order or product not found.');
-    }
-
-    console.log(`Order ID: ${orderId},  Return Reason: ${reason}`);
-    res.redirect('/user/user_profile');
-  } catch (error) {
-    console.error('Error processing return:', error);
-    res.status(500).send('An error occurred while processing the return request.');
-  }
-};
-*/
-
-
-
 const returnOrder = async (req, res) => {
   const { orderId, reason } = req.body;
   console.log(req.body);
