@@ -54,14 +54,48 @@
                   <% stocks.forEach((stock, index) => { %>
                       <tr>
                         <td><%= (currentPage - 1) * 8 + index + 1 %></td>
-                          <td><%= stock.productId.name%></td> <!-- Access the product name  ._id   ''-->
-                          <td><%= stock.large %></td> <!-- Access the large quantity -->
-                          <td><%= stock.small %></td> <!-- Access the small quantity -->
+                          <td><%= stock.name %></td> 
+                          <td><%= stock.large %></td> 
+                          <td><%= stock.small %></td> 
                           <td>
                               <button class="btn btn-outline-secondary" data-bs-toggle="modal" data-bs-target="#editModal"
-                                      onclick="populateModal('<%= stock.productId._id %>','<%= stock.productId.name %>' ,  '<%= stock.large %>', '<%= stock.small %>')">
+                                      onclick="populateModal('<%= stock._id %>','<%= stock.name %>' ,  '<%= stock.large %>', '<%= stock.small %>')">
                                   Edit
                               </button>
+                              <div class="modal fade" id="editModal" tabindex="-1" aria-labelledby="editModalLabel" aria-hidden="true">
+                                <div class="modal-dialog">
+                                  <div class="modal-content">
+                                    <div class="modal-header">
+                                      <h5 class="modal-title" id="editModalLabel">Edit Stock</h5>
+                                      <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                    </div>
+                                    <div class="modal-body">
+                                      <form id="editStockForm" action="/admin/update-stock" method="POST">
+                                        <input type="hidden" name="productId" id="productId">
+                                        <input type="hidden" name="stockId" id="stockId">
+                                        <div class="mb-3">
+                                          <label for="productName" class="form-label">Product Name</label>
+                                          <input type="text" class="form-control" id="productName" disabled>
+                                        </div>
+                                        <div class="mb-3">
+                                          <label for="largeQuantity" class="form-label">Large Quantity</label>
+                                          <input type="number" class="form-control" id="largeQuantity" name="largeQuantity" min="0">
+                                        </div>
+                                        <div class="mb-3">
+                                          <label for="smallQuantity" class="form-label">Small Quantity</label>
+                                          <input type="number" class="form-control" id="smallQuantity" name="smallQuantity" min="0">
+                                        </div>
+                                        <button type="submit" class="btn btn-outline-secondary">Save Changes</button>
+                                      </form>
+                                    </div>
+                                  </div>
+                                </div>
+                              </div>
+                      
+
+
+
+
                           </td>
                       </tr>
                   <% }); %>
@@ -75,35 +109,7 @@
         
         
         <!-- Edit Modal -->
-        <div class="modal fade" id="editModal" tabindex="-1" aria-labelledby="editModalLabel" aria-hidden="true">
-          <div class="modal-dialog">
-            <div class="modal-content">
-              <div class="modal-header">
-                <h5 class="modal-title" id="editModalLabel">Edit Stock</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-              </div>
-              <div class="modal-body">
-                <form id="editStockForm" action="/admin/update-stock" method="POST">
-                  <input type="hidden" name="productId" id="productId">
-                  <div class="mb-3">
-                    <label for="productName" class="form-label">Product Name</label>
-                    <input type="text" class="form-control" id="productName" disabled>
-                  </div>
-                  <div class="mb-3">
-                    <label for="largeQuantity" class="form-label">Large Quantity</label>
-                    <input type="number" class="form-control" id="largeQuantity" name="largeQuantity" min="0">
-                  </div>
-                  <div class="mb-3">
-                    <label for="smallQuantity" class="form-label">Small Quantity</label>
-                    <input type="number" class="form-control" id="smallQuantity" name="smallQuantity" min="0">
-                  </div>
-                  <button type="submit" class="btn btn-outline-secondary">Save Changes</button>
-                </form>
-              </div>
-            </div>
-          </div>
-        </div>
-
+        
 
 <!-------------------pagination--------------------------------->
 

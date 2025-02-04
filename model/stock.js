@@ -7,6 +7,10 @@ const stockSchema = new mongoose.Schema(
       ref: 'product', 
       required: true 
     },
+    name: { 
+      type: String, 
+      required: true, 
+    },
     small: { 
       type: Number, 
       required: true, 

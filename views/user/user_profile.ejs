@@ -254,7 +254,7 @@
                     </div>
                     <div class="mb-3">
                       <label for="pincode<%= i %>" class="form-label">Pin Code</label>
-                      <input type="text" class="form-control" id="pincode<%= i %>" name="pincode" required>
+                      <input type="text" class="form-control" id="pincode<%= i %>" name="pincode" pattern="^[0-9]{6}$" title="Pin Code must be exactly 6 digits"  required>
                     </div>
                     <div class="mb-3">
                       <label for="country<%= i %>" class="form-label">Country</label>
@@ -262,7 +262,7 @@
                     </div>
                     <div class="mb-3">
                       <label for="contactno<%= i %>" class="form-label">Contact Number</label>
-                      <input type="text" class="form-control" id="contactno<%= i %>" name="contactno" required>
+                      <input type="text" class="form-control" id="contactno<%= i %>" name="contactno" pattern="^[0-9]{10}" title="Phone number should be 10 digits" required>
                     </div>
                     <button type="submit" class="btn btn-primary">Add Address</button>
                   </form>
@@ -292,7 +292,7 @@
           <tr>
             <td><%= order.uniqueOrderId %></td>
             <td><%= order.orderDate.toLocaleDateString('en-US') %></td>
-            <td>Rs.<%= order.totalPrice %></td>
+            <td><%= order.totalPrice.toLocaleString('en-IN',{style:"currency",currency:"INR"}) %></td>
             <td>
               <button type="button" class="btn btn-outline-secondary" data-bs-toggle="modal" data-bs-target="#exampleModal<%= order._id %>">
                 View
@@ -301,13 +301,13 @@
               <div class="modal fade" id="exampleModal<%= order._id %>" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
                 <div class="modal-dialog modal-xl">
                   <div class="modal-content">
-                    <div class="modal-header" style="background-color: #d2cece;">
+                    <div class="modal-header" style="background-color: #aaaaaa;">
                       <h1 class="modal-title fs-5" id="exampleModalLabel"><b>Order Details</b></h1>
                       <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                     </div>
-                    <div class="modal-body" style="background-color: #d2cece; display: flex; justify-content: space-between; gap: 2%; padding: 2% 5%;">
-                      <div class="modal-section" style="background-color: #aaaaaa; width: 35%; height: auto; padding: 2% 2%;">
-                        <p><strong>Username : </strong><%= order.username %></p>
+                    <div class="modal-body modal-style">
+                      <div class="modal-section" style=" width: 30%; height: auto; padding: 2% 2%; border: solid 1px whitesmoke;">
+                        <p><strong>Username : </strong><%= username %></p>
                         <p><strong>Order Id : </strong><%= order.uniqueOrderId %></p>
                         <p><strong>Payment Method : </strong><%= order.paymentMethod %></p>
                         <p><strong>Shipping Address : </strong></p>
@@ -316,12 +316,17 @@
                         <p>&nbsp;&nbsp;&nbsp;&nbsp;<%= order.address.state %>, <%= order.address.pincode %></p>
                         <p>&nbsp;&nbsp;&nbsp;&nbsp;<%= order.address.country %></p>
                         <p>&nbsp;&nbsp;&nbsp;&nbsp;<%= order.address.contactno %></p>
-                        <p><strong>Order Status : </strong><%= order.status %></p>
-                        <% if (order.status === 'Pending') { %>
-                          <button class="btn btn-secondary"  onclick="cancelOrder('<%= order._id %>', this)">Cancel Order </button>
-                        <% } else if (order.status === 'Delivered' || order.status === 'Shipped' ) { %>
-                          <!-- Button trigger modal -->
-                          <button type="button" class="btn btn-secondary" onclick="toggleReturnForm('<%= order._id %>')">Return</button>
+                        <p><strong>Order Status : </strong>
+                          <%= order.isPaid ? order.status : "Payment Pending" %>
+                        </p>
+                        <% if (!order.isPaid ) { %>
+                          <a href="/user/Payment/<%= order._id %>" class="btn btn-secondary">Pay </a>
+                        <% } else if (order.isPaid && order.status === 'Pending') { %>
+                          <button class="btn btn-secondary"  onclick="cancelOrder('<%= order._id %>', this)">Cancel Order </button>       
+                        <% } else if ( order.isPaid && (order.status === 'Delivered' || order.status === 'Shipped')) { %>
+                           <!----------------return button------------------->
+                         
+                          <button type="button" class="btn btn-secondary return-btn" id="return-btn-<%= order._id %>" data-order-date="<%= order.createdAt %>"onclick="toggleReturnForm('<%= order._id %>')">Return</button>
                           
                           <div id="returnForm<%= order._id %>" style="display: none; margin-top: 10px;">
                             <form action="/user/return-order" method="post">
@@ -331,18 +336,27 @@
                                 <textarea class="form-control" id="reason" name="reason" rows="3" required></textarea>
                               </div>
                               <button type="submit" class="btn btn-secondary">Submit</button>
-                            </form>
+                            </form><br>
                           </div>
+                      
                         <% } %>
+                        <!----------------invoice button------------------->
+                        <% if(order.isPaid && order.status === 'Delivered'){  %>
+                          <a href="/user/invoice?orderId=<%=order._id %>" class="btn btn-secondary">Invoices</a>
+                          <% } %>
                       </div>
 
-                      <div class="modal-section" style="background-color: #aaaaaa; width: 35%; height: auto; padding: 2% 2%;">
+
+                      <div class="modal-section" style=" width: 70%; height: auto; padding: 2% 2%; border: solid 1px whitesmoke;">
                         <p><strong>Product:</strong></p>
                         <ul>
                           <% order.products.forEach((product) => { %>
+                            <div style="display: flex; gap: 30%;">
+                            <div style="width: 500px;">
                             <p>Name : <%= product.productName %></p>
                             <p>Quantity : <%= product.quantity %></p>
-                            <p>Price : Rs.<%= product.price %></p>
+                            <p>Size : <%= product.size %></p>
+                            <p>Price : <%= product.price.toLocaleString('en-IN',{style:"currency",currency:"INR"}) %></p>
                             <% if (product.productStatus === 'Cancelled') { %>
                               <p>Status : <%= product.productStatus %></p>
                             <% } %>
@@ -350,24 +364,25 @@
                             <% if (product.productStatus === 'Pending' && order.products.length > 1) { %>
                               <button class="btn btn-secondary" onclick="cancelProduct('<%= order._id %>', '<%= product._id %>', this)">Cancel</button>
                             <% } %>
-                            
-                            <br><br>
+                          </div>
+                          <div>
+                            <img src="data:image/jpeg;base64,<%= product.imageBase64 %>" alt="<%= product.productName %>" style="width: 20vh; height: 20vh;">
+
+                          </div>
+                        </div>
+                            <br>
                           <% }) %>
                         </ul>
-                        <p><strong>Total Price : </strong>Rs.<%= order.totalPrice %></p>
+                        <p><strong>Total Price : </strong>
+                          <%= order.totalPrice === order.payableAmount 
+                              ? order.totalPrice.toLocaleString('en-IN', { style: "currency", currency: "INR" }) 
+                              : order.payableAmount.toLocaleString('en-IN', { style: "currency", currency: "INR" }) 
+                          %>
+                        </p>
+                        
                       </div>
 
-                      <div class="modal-section" style="background-color: #aaaaaa; width: 35%; height: auto; padding: 2% 2%;">
-                        <br>
-                        <% order.products.forEach(product => { %>
-                          <% if (product.imageBase64) { %>
-                            <img src="data:image/jpeg;base64,<%= product.imageBase64 %>" alt="<%= product.productName %>" style="width: 30vh; height: 30vh;">
-                          <% } else { %>
-                            <p>No image available</p>
-                          <% } %>
-                          <br><br>
-                          <% }); %>
-                        </div>
+                      
 
                     </div>
                   </div>
@@ -379,6 +394,13 @@
     </tbody>    
   </table>
 </div>
+
+
+
+
+
+
+
 
 <!------------------------wallet balance---------------------------------------->
 <div class="section-1-2" id="wallet" style="display: none;">
@@ -536,9 +558,9 @@
 
 
 
-
+/*
 document.getElementById("applyForm").addEventListener("submit", async function (event) {
-    event.preventDefault(); // Prevent default form submission
+    event.preventDefault(); 
 
     const referralCode = document.getElementById("applyreferralCode").value.trim();
 
@@ -585,7 +607,7 @@ document.getElementById("applyForm").addEventListener("submit", async function (
     }
   });
 
-
+*/
 
 
 
@@ -744,7 +766,6 @@ function cancelOrder(orderId, button) {
         cancelButtonText: 'No, keep it'
     }).then((result) => {
         if (result.isConfirmed) {
-            // Send the request to the server to cancel the order
             fetch(`/user/cancel-order/${orderId}`, {
                 method: 'POST',
             })
@@ -783,9 +804,9 @@ function cancelOrder(orderId, button) {
 function toggleReturnForm(orderId) {
     const returnForm = document.getElementById('returnForm' + orderId);
     if (returnForm.style.display === 'none') {
-      returnForm.style.display = 'block'; // Show the form
+      returnForm.style.display = 'block'; 
     } else {
-      returnForm.style.display = 'none'; // Hide the form
+      returnForm.style.display = 'none'; 
     }
   }
 
@@ -801,12 +822,9 @@ function toggleReturnForm(orderId) {
       const transactions = data.transactions;
       const tableBody = document.querySelector('#walletHistory tbody');
 
-      // Clear existing rows
       while (tableBody.firstChild) {
         tableBody.removeChild(tableBody.firstChild);
       }
-
-      // Populate table rows with transactions
       transactions.forEach(transaction => {
         const row = document.createElement('tr');
 
@@ -825,19 +843,14 @@ function toggleReturnForm(orderId) {
 
         const amountCell = document.createElement('td');
         amountCell.textContent = transaction.amount.toFixed(2);
-
-        // Append cells to the row
         row.appendChild(dateCell);
         row.appendChild(idCell);
         row.appendChild(descriptionCell);
         row.appendChild(typeCell);
         row.appendChild(amountCell);
-
-        // Append row to the table body
         tableBody.appendChild(row);
       });
 
-      // Show the wallet history section
       document.getElementById('walletHistory').style.display = 'block';
     } else {
       alert('No wallet history found');
@@ -849,10 +862,27 @@ function toggleReturnForm(orderId) {
 }
 
 
+document.addEventListener("DOMContentLoaded", function () {
+      document.querySelectorAll(".return-btn").forEach((button) => {
+          const orderDate = new Date(button.getAttribute("data-order-date"));
+          const currentDate = new Date();
+          
+          const timeDiff = currentDate - orderDate;
+          const daysDiff = timeDiff / (1000 * 60 * 60 * 24); 
+
+          if (daysDiff > 7) {
+              button.disabled = true;
+              button.classList.add("disabled"); 
+              button.innerText = "Return Expired";
+          }
+      });
+  });
+
+
 </script>
 <script>
   document.getElementById('addMoneyForm').addEventListener('submit', async (event) => {
-    event.preventDefault(); // Prevent default form submission
+    event.preventDefault(); 
 
     const amount = document.getElementById('amount').value;
 
@@ -866,17 +896,14 @@ function toggleReturnForm(orderId) {
       });
 
       if (response.ok) {
-        // If the backend returns a success response
         Swal.fire({
           icon: 'success',
           title: 'Success',
           text: 'Money added to your wallet!',
         }).then(() => {
-          // Redirect to the user profile after the alert is closed
           window.location.href = '/user/user_profile';
         });
       } else {
-        // Handle invalid amount or other errors
         const errorMessage = await response.text();
         Swal.fire({
           icon: 'error',
@@ -893,9 +920,15 @@ function toggleReturnForm(orderId) {
       });
     }
   });
+
+
+
+
+
+
+
+
 </script>
-
-
 
 
 

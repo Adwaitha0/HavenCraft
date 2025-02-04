@@ -54,7 +54,7 @@
               </li>
               <li class="nav-item">
                 <% if (session.user) { %> 
-                <a class="nav-link" href="/user/user_addToCart"><i class="fa-solid fa-cart-shopping"></i></a>
+                 <a class="nav-link" href="/user/user_addToCart"><i class="fa-solid fa-cart-shopping"></i></a>
                 <% } else { %>
                   <a class="nav-link" href="/user/user_login"><i class="fa-solid fa-cart-shopping"></i></a>
                   <% } %>  
@@ -94,21 +94,12 @@
                 </a>
                 <ul class="dropdown-menu">
                   <li><a class="dropdown-item" href="#">Pendant Lights</a></li>
-                  <li><a class="dropdown-item" href="#">Chendeliers</a></li>
+                  <li><a class="dropdown-item" href="/user/chendelier">Chendeliers</a></li>
                   <li><a class="dropdown-item" href="#">Outdoor Lights</a></li>
                 </ul>
               </li>
 
 
-              <li class="nav-item dropdown">
-                <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="true">
-                  Ceiling Fan
-                </a>
-                <ul class="dropdown-menu">
-                  <li><a class="dropdown-item" href="#">Crystal Ceiling Fan</a></li>
-                  <li><a class="dropdown-item" href="#">Classic Ceiling Fan</a></li>
-                </ul>
-              </li>
 
               <li class="nav-item dropdown">
                 <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="true">
@@ -117,7 +108,6 @@
                 <ul class="dropdown-menu">
                   <li><a class="dropdown-item" href="/user/tableLamp">Table Lights</a></li>
                   <li><a class="dropdown-item" href="#">Ceiling Lights</a></li>
-                  <li><a class="dropdown-item" href="#">Wall Lights</a></li>
                 </ul>
               </li>
 
@@ -139,7 +129,6 @@
                 Home Accessories
                 </a>
                 <ul class="dropdown-menu">
-                  <li><a class="dropdown-item" href="#">Planters</a></li>
                   <li><a class="dropdown-item" href="/user/vase">Vases</a></li>
                   <li><a class="dropdown-item" href="/user/candleHolder">Candle holders</a></li>
                 </ul>
@@ -162,31 +151,66 @@
 
 
     <!----    section-1    ---->
-    <div class="home_section1 container-fluid">
-      <div class="section-1">
-    <div id="carouselExample" class="carousel slide">
-      <div class="carousel-inner">
-        <div class="carousel-item active">
-          <img src="\styles\user\home_pic\home_pic1.png" class="d-block w-100" alt="...">
-        </div>
-        <!--<div class="carousel-item">
-          <img src="\styles\user\home_pic\home_pic2.png" class="d-block w-100" alt="...">
-        </div>   -->
-        <div class="carousel-item">
-          <img src="\styles\user\home_pic\home_pic3.png" class="d-block w-100" alt="...">
+
+  <div class="home_section1 container-fluid">
+    <div class="section-1">
+  <div id="carouselExampleCaptions" class="carousel slide">
+    <div class="carousel-indicators">
+      <button type="button" data-bs-target="#carouselExampleCaptions" data-bs-slide-to="0" class="active" aria-current="true" aria-label="Slide 1"></button>
+      <button type="button" data-bs-target="#carouselExampleCaptions" data-bs-slide-to="1" aria-label="Slide 2"></button>
+      <button type="button" data-bs-target="#carouselExampleCaptions" data-bs-slide-to="2" aria-label="Slide 3"></button>
+    </div>
+    <div class="carousel-inner">
+      <div class="carousel-item active">
+        <img src="\styles\user\home_pic\home_pic12.png" class="d-block w-100" alt="...">
+        <div class="image-overlay"></div>
+        <div class="carousel-caption d-none d-md-block" style="display: block; margin-bottom: 40px;">
+          <p style="font-size: 40px; color: rgb(225, 221, 217); "><strong></strong></p><!--Home Decor Transform your living space with our curated collection of stylish and affordable home décor solutions.-->
+          <p style="color: rgb(225, 221, 217);"></p>
         </div>
       </div>
-      <button class="carousel-control-prev" type="button" data-bs-target="#carouselExample" data-bs-slide="prev">
-        <span class="carousel-control-prev-icon" aria-hidden="true"></span>
-        <span class="visually-hidden">Previous</span>
-      </button>
-      <button class="carousel-control-next" type="button" data-bs-target="#carouselExample" data-bs-slide="next">
-        <span class="carousel-control-next-icon" aria-hidden="true"></span>
-        <span class="visually-hidden">Next</span>
-      </button>
+      
+      <div class="carousel-item">
+        <img src="\styles\user\home_pic\home_pic13.png" class="d-block w-100" alt="...">
+        <div class="image-overlay"></div>
+        <div class="carousel-caption d-none d-md-block" style="display: block; margin-bottom: 40px;">
+          <p style="font-size: 40px; color: rgb(194, 189, 183);"><strong>Home Decor</strong></p>
+          <p style="color: rgb(194, 189, 183);">Transform your living space with our curated collection of stylish and affordable home décor solutions.</p>
+        </div>
+      </div>
+      
     </div>
+    <button class="carousel-control-prev" type="button" data-bs-target="#carouselExampleCaptions" data-bs-slide="prev">
+      <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+      <span class="visually-hidden">Previous</span>
+    </button>
+    <button class="carousel-control-next" type="button" data-bs-target="#carouselExampleCaptions" data-bs-slide="next">
+      <span class="carousel-control-next-icon" aria-hidden="true"></span>
+      <span class="visually-hidden">Next</span>
+    </button>
   </div>
-  </div>
+</div>
+</div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
   <!---------     section-2   ------------>
@@ -201,7 +225,7 @@
           <p><a class="link-opacity-25" style="text-decoration: none;" href="/user/candleHolder">View All</a></p>
       </div>
       <div class="cat-2">
-        <img src="\styles\user\home_pic\home_vase.png" class="responsive-img" >
+        <img src="\styles\user\home_pic\image.png" class="responsive-img" >
         <br>
         <br class="responsive-break">
         <p>Vases</p>
@@ -295,35 +319,7 @@
     </div>
   </div>
 
-  <!--------section-5------------->
-  <div class="container-fluid">
-    <div class="section-5">
-
-      <div class="cat-1">
-          <img src="\styles\user\home_pic\home_planters.png">
-          <br>
-          <br class="responsive-break">
-          <p>Planters</p>
-          <p><a class="link-opacity-25" style="text-decoration: none;" href="#">View All</a></p>
-      </div>
-      <div class="cat-2">
-        <img src="\styles\user\home_pic\home_crystal.png" >
-        <br>
-        <br class="responsive-break">
-        <p>Crystal Ceiling Fan</p>
-        <p><a class="link-opacity-25" style="text-decoration: none;" href="#">View All</a></p>
-        
-      </div>
-      <div class="cat-3">
-        <img src="\styles\user\home_pic\home_wall.png" >
-        <br>
-        <br class="responsive-break">
-        <p>Wall Lights</p>
-        <p><a class="link-opacity-25" style="text-decoration: none;" href="#">View All</a></p>
-        
-      </div>
-    </div>
-  </div>
+  
 
 
 <!------section-6 ----->

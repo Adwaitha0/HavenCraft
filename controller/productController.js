@@ -1,54 +1,10 @@
 const product=require('../model/product')
 const Category=require('../model/category')
+const statusCode=require('../controller/statusCode')
+const message=require('../controller/statusCode')
+const {StatusCodes,Messages } = require("../controller/statusCode")
 
-/*
-const loadProducts = async (req, res) => {
-    const page = parseInt(req.query.page) || 1; 
-    const limit = 6; 
-    const skip = (page - 1) * limit; 
 
-    try {
-        const products = await product
-            .find(
-                { isDeleted: false },
-                {
-                    name: 1,
-                    size: 1,
-                    category: 1,
-                    originalPrice: 1,
-                    discountPrice: 1,
-                    offerPercentage:1,
-                    description:1,
-                    stock: 1,
-                    images: 1,
-                    _id: 1
-                }
-            )
-            .skip(skip)
-            .limit(limit);
-        products.forEach(product => {
-            product.images = product.images.map(image => image.toString('base64'));
-        });
-
-        const categories = await Category.find(
-            { isDeleted: false }, // Filter condition
-            { name: 1 } // Fields to include
-        );
-
-        const totalItems = await product.countDocuments({ isDeleted: false });
-        const totalPages = Math.ceil(totalItems / limit);
-        res.render('admin/admin_product', {
-            products, 
-            categories,        
-            currentPage: page, 
-            totalPages        
-        });
-    } catch (error) {
-        console.error('Error fetching products:', error);
-        res.status(500).send('Server Error');
-    }
-};
-*/
 
 const loadProducts = async (req, res) => {
     const page = parseInt(req.query.page) || 1; 
@@ -111,11 +67,6 @@ const loadProducts = async (req, res) => {
 
 
 
-
-
-
-
-
 const addProduct = async (req, res) => {
     try {
         const {
@@ -123,15 +74,14 @@ const addProduct = async (req, res) => {
             category,
             size,
             originalPrice,
-            offerPercentage,  // Offer percentage input
+            offerPercentage, 
             description,
             stock,           
         } = req.body;
-        
-        console.log(req.body)
+
         let images = [];
         if (req.files) {
-            images = req.files.map(file => file.buffer); // Store images as buffers
+            images = req.files.map(file => file.buffer); 
         }
 
         const originalPriceNum = parseFloat(originalPrice) || 0;
@@ -269,7 +219,7 @@ const loadCandleholderProducts = async (req, res) => {
         res.render('user/user_candle', { products: productsData, currentCategory: 'candleHolder'});
     } catch (error) {
         console.error('Error fetching products:', error);
-        res.render('user/error')
+        res.status(StatusCodes.INTERNAL_SERVER_ERROR).send(Messages.INTERNAL_ERROR);
     }
 };
 
@@ -307,7 +257,7 @@ const loadTableLampProducts = async (req, res) => {
         res.render('user/user_candle', { products: productsData, currentCategory:'tableLamp' });
     } catch (error) {
         console.error('Error fetching products:', error);
-        res.render('admin/error')
+        res.status(StatusCodes.INTERNAL_SERVER_ERROR).send(Messages.INTERNAL_ERROR);
     }
 };
 
@@ -344,7 +294,7 @@ const loadVaseProducts = async (req, res) => {
         res.render('user/user_candle', { products: productsData, currentCategory:'vase'});
     } catch (error) {
         console.error('Error fetching products:', error);
-        res.render('admin/error')
+        res.status(StatusCodes.INTERNAL_SERVER_ERROR).send(Messages.INTERNAL_ERROR);
     }
 };
 
@@ -381,7 +331,7 @@ const loadArtifactProducts = async (req, res) => {
         res.render('user/user_candle', { products: productsData, currentCategory: 'artifact' });
     } catch (error) {
         console.error('Error fetching products:', error);
-        res.render('admin/error')
+        res.status(StatusCodes.INTERNAL_SERVER_ERROR).send(Messages.INTERNAL_ERROR);
     }
 };
 
@@ -418,40 +368,48 @@ const loadSculptureProducts = async (req, res) => {
         res.render('user/user_candle', { products: productsData, currentCategory: 'sculpture' });
     } catch (error) {
         console.error('Error fetching products:', error);
-        res.render('admin/error')
+        res.status(StatusCodes.INTERNAL_SERVER_ERROR).send(Messages.INTERNAL_ERROR);
     }
 };
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-/*
-const loadCandleDetail = async (req, res) => {
-  const productId = req.params.id; 
-  try {
-    const products = await product.findById(productId); 
-    if (!products) {
-      return res.status(404).send("Product not found.");
+const loadChendelierProducts = async (req, res) => {
+    try {
+        const sortOption = req.query.sort || '';
+        let sortCriteria = {};
+        switch (sortOption) {
+            case 'priceLowToHigh':
+                sortCriteria = { originalPrice: 1 }; 
+                break;
+            case 'priceHighToLow':
+                sortCriteria = { originalPrice: -1 }; 
+                break;
+            case 'newArrivals':
+                sortCriteria = { _id: -1 };
+                break;
+            default:
+                sortCriteria = {}; 
+        }
+        const products = await product.find({ category: "Chendeliers", isDeleted: false })
+            .select('_id name category images originalPrice discountPrice offerPercentage')
+            .sort(sortCriteria); 
+        const productsData = products.map(prod => {
+            const firstImage = prod.images.length > 0 ? prod.images[0].toString('base64') : null;
+            return {
+                name: prod.name,
+                price: prod.originalPrice,
+                offerPercentage: prod.offerPercentage || 0 ,
+                image: firstImage,
+                id: prod._id
+            };
+        });
+        res.render('user/user_candle', { products: productsData, currentCategory: 'Chendeliers' });
+    } catch (error) {
+        console.error('Error fetching products:', error);
+        res.status(StatusCodes.INTERNAL_SERVER_ERROR).send(Messages.INTERNAL_ERROR);
     }
-
-    res.render("user/user_candleDetail", { products });
-  } catch (error) {
-    console.error(error);
-    res.status(500).send("Internal server error.");
-  }
 };
-*/
+
 
 
 
@@ -473,7 +431,8 @@ const loadCandleDetail = async (req, res) => {
     });
   } catch (error) {
     console.error(error);
-    res.status(500).send("Internal server error.");
+    //res.status(500).send("Internal server error.");
+    res.status(statusCode.INTERNAL_SERVER_ERROR).send(message.INTERNAL_ERROR);
   }
 };
 
@@ -488,5 +447,6 @@ module.exports = {loadProducts,updateProduct,addProduct,deleteProduct,
     loadTableLampProducts,
     loadArtifactProducts,
     loadSculptureProducts,
+    loadChendelierProducts,
     check_product_exists
 }

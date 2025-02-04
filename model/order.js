@@ -4,12 +4,8 @@ const mongoose = require('mongoose');
 const orderSchema = new mongoose.Schema({
   userId: {
     type: mongoose.Schema.Types.ObjectId,
-    ref: 'user_model', // Reference to your user model
+    ref: 'user_model',
     required: false,
-  },
-  username: {
-    type: String,
-    required: true, 
   },
   uniqueOrderId:{
     type: String,
@@ -25,18 +21,18 @@ const orderSchema = new mongoose.Schema({
         productName: {
           type: String,
           required: true,
-        },
+        }, 
         quantity: {
           type: Number,
           required: true,
         },
-        price: {
+         price: {
           type: Number,
           required: true,
-        },
+        }, 
         size: {
             type: String,
-            required: false,
+            required: true,
         },
         image: [{ type: Buffer }],
       
@@ -66,7 +62,14 @@ const orderSchema = new mongoose.Schema({
     country: { type: String, required: true },
     contactno: { type: String, required: false },
   },
-  
+  shipping :{
+    type:Number,
+    required:true
+  },
+  subtotal:{
+    type:Number,
+    required:true
+  },
   paymentMethod: {
     type: String,
     required: true,
@@ -74,7 +77,7 @@ const orderSchema = new mongoose.Schema({
   payableAmount: {
     type: Number,
     required: false
-},
+  },
   orderDate: {
     type: Date,
     default: Date.now,
@@ -82,10 +85,15 @@ const orderSchema = new mongoose.Schema({
   isDeleted: { 
     type: Boolean, 
     default: false,
-}, reason: { 
+  },
+  isPaid:{
+    type:Boolean,
+    default: false,
+  }, 
+  reason: { 
     type: String, 
     default: '' },
-},{timestamps:true});
+  },{timestamps:true});
 
 
 module.exports = mongoose.model('order', orderSchema,'order');

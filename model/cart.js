@@ -2,36 +2,22 @@ const mongoose = require('mongoose');
 
 const cartSchema = new mongoose.Schema({
   userId: {
-    type: mongoose.Schema.Types.ObjectId, // Reference to the user
-    ref: 'user_model', // Assuming there's a 'User' model
+    type: mongoose.Schema.Types.ObjectId, 
+    ref: 'user_model', 
     required: true,
   },
- /* productId: {
-    type: String, 
-    required: true,
-  },   */
-
   productId: {
     type: mongoose.Schema.Types.ObjectId,
     ref: 'product', 
     required: true,
   },   
-  name: {
-    type: String, 
-    required: true,
-  },
+ 
   size: {
     type: String,
     required: false,
   },
-  discountPrice: {
-    type: Number, 
-    required: false,
-  },
-  originalPrice: {
-    type: Number, 
-    required: false,
-  },
+  images:
+    [{ type: Buffer }], 
   quantity: {
     type: Number, 
     required: false,
@@ -42,9 +28,9 @@ const cartSchema = new mongoose.Schema({
     type: Number, 
     required: false
     },
-    shipping:{
+  shipping:{
       type: Number, 
-    required: false
+      required: false
     },
   total: {
     type: Number,
@@ -62,7 +48,7 @@ const cartSchema = new mongoose.Schema({
     type: Date,
     default: Date.now,
   },
-  images: [{ type: Buffer }],
+  
 });
 
 cartSchema.pre('save', function (next) {

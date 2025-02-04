@@ -48,12 +48,12 @@
             </div>
         
             <div class="content-subsection3">         
-                <h3 style="color: rgb(113, 113, 113);">&#8377; <%= totalSales %></h3>
+                <h3 style="color: rgb(113, 113, 113);"> <%= totalSales.toLocaleString('en-IN',{style:"currency",currency:"INR"}) %></h3>
                 <p style="line-height: 0.7;">Total Sales</p>
             </div>
         
             <div class="content-subsection4">         
-                <h3 style="color: rgb(113, 113, 113);">&#8377; <%= totalDiscounts %></h3>
+                <h3 style="color: rgb(113, 113, 113);"><%= totalDiscounts.toLocaleString('en-IN',{style:"currency",currency:"INR"}) %></h3>
                 <p style="line-height: 0.7;">Total Discounts</p>
             </div>
         </div>
@@ -92,31 +92,95 @@
             </div>
           </div>
         </div>
-          
-
-
-
-
-
-
-
-
-
-
-
-
-
-        </div>
-
-
-
+      </div>
        
 
-
-
-
+  <div class="section-4">
+    <div class="section-4-1">
+        <h3>Top Categories</h3>
+        <br>
+        <table class="table">
+            <thead>
+                <tr>
+                    <th scope="col"></th>
+                    <th scope="col">Category</th>
+                    <th scope="col">Total Sales</th>
+                </tr>
+            </thead>
+            <tbody>
+                <% topCategories.forEach((category, index) => { %>
+                    <tr>
+                        <td>
+                        <% if (category.image) { %>
+                            <img src="data:image/jpeg;base64,<%= category.image.toString('base64') %>" alt="Product Image" width="50">
+                        <% } else { %>
+                            No Image
+                        <% } %>
+                        </td>
+                        <td><%= category.name %></td>
+                        <td>₹<%= category.totalSales %></td>
+                        
+                    </tr>
+                <% }) %>
+            </tbody>
+        </table>
     </div>
+
+    <div class="section-4-2">
+        <h3>Top Products</h3>
+        <br>
+        <table class="table">
+            <thead>
+                <tr>
+                    <th scope="col"></th>
+                    <th scope="col">Name</th>
+                    <th scope="col">Price</th>
+                    <th scope="col">Quantity</th>
+                    <th scope="col">Sale Status</th>
+                </tr>
+            </thead>
+            <tbody>
+                <% topProducts.forEach((product, index) => { %>
+                    <tr>
+                      <td>
+                        <% if (product.image) { %>
+                            <img src="data:image/jpeg;base64,<%= product.image.toString('base64') %>" 
+                                alt="Product Image" width="50">
+                        <% } else { %>
+                            No Image
+                        <% } %>
+                    </td>
+                        <td><%= product.name %></td>
+                        <td>₹<%= product.price %></td>
+                        <td><%= product.totalQuantitySold %></td>
+                        <td>
+                            <% if (product.stock > 0) { %>
+                                <span class="badge bg-success">On Sale</span>
+                            <% } else { %>
+                                <span class="badge bg-danger">Out of Stock</span>
+                            <% } %>
+                        </td>
+                    </tr>
+                <% }) %>
+            </tbody>
+        </table>
+    </div>
+</div>
+
+
+
+
+
+
+  
+</div>
+
+
   </div>
+
+
+
+  
 
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
   <script>

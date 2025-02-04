@@ -94,21 +94,12 @@
                 </a>
                 <ul class="dropdown-menu">
                   <li><a class="dropdown-item" href="#">Pendant Lights</a></li>
-                  <li><a class="dropdown-item" href="#">Chendeliers</a></li>
+                  <li><a class="dropdown-item" href="/user/chendelier">Chendeliers</a></li>
                   <li><a class="dropdown-item" href="#">Outdoor Lights</a></li>
                 </ul>
               </li>
 
 
-              <li class="nav-item dropdown">
-                <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="true">
-                  Ceiling Fan
-                </a>
-                <ul class="dropdown-menu">
-                  <li><a class="dropdown-item" href="#">Crystal Ceiling Fan</a></li>
-                  <li><a class="dropdown-item" href="#">Classic Ceiling Fan</a></li>
-                </ul>
-              </li>
 
               <li class="nav-item dropdown">
                 <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="true">
@@ -194,32 +185,13 @@
   <div class="section-2">
 
 
+   
+
     <form class="d-flex" role="search" action="/user/store" method="get">
-      <input class="form-control me-2" type="search" placeholder="Search" name="search"  aria-label="Search">
+      <input class="form-control me-2" type="search" placeholder="Search" name="search" value="<%= searchQuery %>" aria-label="Search">
       <button class="btn btn-secondary" type="submit">Search</button>
-    </form>
-
-
     
-  <!--  <div class="dropdown" style="margin-right: 3%;">
-      <button class="btn btn-secondary dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
-        Filter
-      </button>
-      <ul class="dropdown-menu" style="padding: 0% 3%;">
-        <li>
-          <div class="form-check">
-            <input class="form-check-input" type="checkbox" value="category1" id="category1" name="categories">
-            <label class="form-check-label" for="category1">
-              Category
-            </label>
-          </div>
-        </li>
-        
-        
-      </ul>
-    </div>   -->
-    <form class="d-flex" role="search" action="/user/store" method="get">
-      <div class="dropdown" style="margin-right: 3%;">
+      <div class="dropdown" style="margin-right: 3%; margin-left: 3%;">
         <button class="btn btn-secondary dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
           Filter
         </button>
@@ -227,36 +199,31 @@
           <li>
             <% categories.forEach(category => { %>
               <div class="form-check">
-                <input class="form-check-input" type="checkbox" value="<%= category.name %>" id="category_<%= category.name %>" name="categories" <%= (selectedCategories.includes(category.name) ? 'checked' : '') %>>
+                <input class="form-check-input" type="checkbox" value="<%= category.name %>" id="category_<%= category.name %>" name="categories[]" 
+                <%= (selectedCategories.includes(category.name) ? 'checked' : '') %>>
                 <label class="form-check-label" for="category_<%= category.name %>">
                   <%= category.name %>
                 </label>
               </div>
             <% }) %>
           </li>
-          <li>
-          
+          <li>         
             <button type="submit" class="btn btn-secondary dropdown-item">Apply Filter</button>
+          </li>
+          <li>         
+            <a href="/user/store" class="btn btn-secondary dropdown-item">Clear Filter</a>
           </li>
         </ul>
       </div>
     </form>
-    
-    
-       
-    
-   
-    
-    
-    
-    
-    
-    
 
 
 
 
 
+
+    
+  
 
     <div class="sort">
       <div class="dropdown">
@@ -271,8 +238,6 @@
         </div>
   </div>
   
-  
-
 
   </div>
 </div>
@@ -370,28 +335,6 @@
       <% }); %>
 
 
-
-  <!--   <div class="pagination">
-        <div>
-        <nav aria-label="Page navigation example">
-          <ul class="pagination">
-            <li class="page-item">
-              <a class="page-link" href="#" aria-label="Previous">
-                <span aria-hidden="true">&laquo;</span>
-              </a>
-            </li>
-            <li class="page-item"><a class="page-link" href="#">1</a></li>
-            <li class="page-item"><a class="page-link" href="#">2</a></li>
-            <li class="page-item"><a class="page-link" href="#">3</a></li>
-            <li class="page-item">
-              <a class="page-link" href="#" aria-label="Next">
-                <span aria-hidden="true">&raquo;</span>
-              </a>
-            </li>
-          </ul>
-        </nav>
-      </div>
-</div> -->
 
 <div class="pagination">
   <div>

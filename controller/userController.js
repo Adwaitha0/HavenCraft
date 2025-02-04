@@ -3,6 +3,7 @@ const bcrypt = require('bcrypt');
 const Product=require('../model/product')
 const Wallet=require('../model/wallet')
 const Category=require('../model/category')
+const {StatusCodes,Messages } = require("../controller/statusCode");
 
 const loadLogin = async (req, res) => {
     res.render('user/user_login')
@@ -43,13 +44,6 @@ const login = async (req, res) => {
 }    
 
 
-
-
-
-
-
-
-
 const loadRegister=(req,res)=>{
     res.render('user/user_register')
 }
@@ -77,10 +71,8 @@ const loadCandle= async (req,res)=>{
 }
 
 const resetPassword=async (req, res) => {
-    const { email, newPassword } = req.body;
-    
-    const user = await user_model.findOne({ email: email });
-    
+    const { email, newPassword } = req.body;    
+    const user = await user_model.findOne({ email: email });   
     if (user) {
         user.password = newPassword;  
         await user.save();
@@ -94,12 +86,9 @@ const resetPassword=async (req, res) => {
 
 const checkEmail = async (req, res) => {
     const { email, newPassword } = req.body;
-    console.log(req.body)
-
     try {
         const user = await user_model.findOne({ email: email });
         console.log(user)
-
         if (user) {
             const hashedPassword = await bcrypt.hash(newPassword, 10); 
             user.password = hashedPassword;
@@ -117,13 +106,6 @@ const checkEmail = async (req, res) => {
 
 
 
-
-
-
-
-
-
-
 const logout=async (req, res) => {
     req.session.destroy(err => {
         if (err) {
@@ -135,209 +117,34 @@ const logout=async (req, res) => {
 }
 
 
-const saveRefferalcode=async (req, res) => {
-    try {
-        const { referralCode } = req.body;
-        const user = await user_model.findById(req.user._id); 
-        
-        if (user) {
-            user.referralCode = referralCode;
-            await user.save();
-            res.redirect('/user/user_profile')
-        } else {
-            res.status(404).send('User not found');
-        }
-    } catch (error) {
-        console.error(error);
-        res.status(500).send('Error saving referral code');
-    }
-}
-
-
-
-const applyRefferalcode = async (req, res) => {
-  try {
-    const { referralCode } = req.body;
-    const appliedUserId = req.session.user.id; 
-
-    const referredUser = await user_model.findOne({ referralCode });
-    if (!referredUser) {
-      return res.status(400).json({ swal: { icon: 'error', title: 'Invalid Referral Code', text: 'The referral code you entered is invalid.' } });
-    }
-    if (referredUser.isBlocked) {
-      return res.status(400).json({ swal: { icon: 'error', title: 'User Blocked', text: 'The user associated with this referral code is blocked.' } });
-    }
-    if (referredUser._id.toString() === appliedUserId) {
-      return res.status(400).json({ swal: { icon: 'error', title: 'Invalid Action', text: 'You cannot use your own referral code.' } });
-    }
-    let appliedUserWallet = await Wallet.findOne({ userId: appliedUserId });
-    if (!appliedUserWallet) {
-      appliedUserWallet = new Wallet({
-        userId: appliedUserId,
-        balance: 0,
-        transactions: [],
-      });
-      await appliedUserWallet.save();
-    }
-
-    let referredUserWallet = await Wallet.findOne({ userId: referredUser._id });
-    if (!referredUserWallet) {
-      referredUserWallet = new Wallet({
-        userId: referredUser._id,
-        balance: 0,
-        transactions: [],
-      });
-      await referredUserWallet.save();
-    }
-
-
-    await Wallet.findByIdAndUpdate(appliedUserWallet._id, {
-      $inc: { balance: 100 },
-      $push: {
-        transactions: {
-          type: 'credit',
-          amount: 100,
-          description: 'Referral code applied - credited 100',
-        },
-      },
-    });
-
-    await Wallet.findByIdAndUpdate(referredUserWallet._id, {
-      $inc: { balance: 100 },
-      $push: {
-        transactions: {
-          type: 'credit',
-          amount: 100,
-          description: 'Referral bonus for referred user - credited 100',
-        },
-      },
-    });
-
-    res.json({ swal: { icon: 'success', title: 'Referral Code Applied', text: 'Both users have been credited ₹100.' } });
-  } catch (error) {
-    console.error(error);
-    res.status(500).json({ swal: { icon: 'error', title: 'Error', text: 'An error occurred. Please try again later.' } });
-  }
-};
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 const loadAbout= async (req,res)=>{
     res.render('user/about')
 }
+
 
 const loadContact= async (req,res)=>{
     res.render('user/contact')
 }
 
-/*
-const loadStore = async (req, res) => {
-  try {
-    const searchQuery = req.query.search || ''; 
-    const sortQuery = req.query.sort || '';
-    const selectedCategories = req.query.categories || []; // Get selected categories from the query
-    let filter = {};
-
-    // Search functionality
-    if (searchQuery) {
-      filter = {
-        $or: [
-          { name: { $regex: searchQuery, $options: 'i' } },
-          { category: { $regex: searchQuery, $options: 'i' } }
-        ]
-      };
-    }
-
-    // Category filtering
-    if (selectedCategories.length > 0) {
-      filter.category = { $in: selectedCategories }; // Filter products by selected categories
-    }
-
-    // Sorting functionality
-    let sortCriteria = {};
-    switch (sortQuery) {
-      case 'priceLowToHigh':
-        sortCriteria = { originalPrice: 1 }; 
-        break;
-      case 'priceHighToLow':
-        sortCriteria = { originalPrice: -1 }; 
-        break;
-      case 'newArrivals':
-        sortCriteria = { createdAt: -1 }; 
-        break;
-      default:
-        sortCriteria = {}; 
-    }
-
-    // Fetch products based on the filter and sort criteria
-    const products = await Product.find({ ...filter, isDeleted: false })
-      .sort(sortCriteria)
-      .select('_id name category images originalPrice discountPrice offerPercentage');
-
-    // Map products for easier display
-    const productsData = products.map(prod => {
-      const firstImage = prod.images.length > 0 ? prod.images[0].toString('base64') : null;
-      return {
-        id: prod._id,
-        name: prod.name,
-        category: prod.category,
-        price: prod.originalPrice,
-        offerPercentage: prod.offerPercentage || 0,
-        image: firstImage
-      };
-    });
-
-    // Fetch all categories from the Category collection
-    const categories = await Category.find().select('_id name');
-
-    // Render the store page with the products and categories, passing the selected categories
-    res.render('user/store', { products: productsData, categories, selectedCategories });
-
-  } catch (error) {
-    console.error('Error loading store:', error);
-    res.status(500).send('Internal Server Error');
-  }
-};
-*/
-
 
 const loadStore = async (req, res) => {
   try {
+    const page = parseInt(req.query.page) || 1;
+    const limit = parseInt(req.query.limit) || 12;
+    const skip = (page - 1) * limit;
     const searchQuery = req.query.search || '';
+    const selectedCategories = Array.isArray(req.query.categories) ? req.query.categories : (req.query.categories ? [req.query.categories] : []);
     const sortQuery = req.query.sort || '';
-    const selectedCategories = req.query.categories || [];
-    const page = parseInt(req.query.page) || 1; // Current page
-    const limit = parseInt(req.query.limit) || 12; // Number of products per page
-    const skip = (page - 1) * limit; // Skip products for pagination
-    let filter = {};
-
-    // Search functionality
+    let filter = { isDeleted: false };
     if (searchQuery) {
-      filter = {
-        $or: [
-          { name: { $regex: searchQuery, $options: 'i' } },
-          { category: { $regex: searchQuery, $options: 'i' } }
-        ]
-      };
+      filter.$or = [
+        { name: { $regex: searchQuery, $options: 'i' } },
+        { category: { $regex: searchQuery, $options: 'i' } }
+      ];
     }
-
-    // Category filtering
     if (selectedCategories.length > 0) {
       filter.category = { $in: selectedCategories };
     }
-
-    // Sorting functionality
     let sortCriteria = {};
     switch (sortQuery) {
       case 'priceLowToHigh':
@@ -350,17 +157,13 @@ const loadStore = async (req, res) => {
         sortCriteria = { createdAt: -1 };
         break;
       default:
-        sortCriteria = {};
+        sortCriteria = {}; 
     }
-
-    // Fetch products with pagination
-    const products = await Product.find({ ...filter, isDeleted: false })
+    const products = await Product.find(filter)
       .sort(sortCriteria)
-      .skip(skip) // Skip products for the current page
-      .limit(limit) // Limit the number of products fetched
+      .skip(skip)
+      .limit(limit)
       .select('_id name category images originalPrice discountPrice offerPercentage');
-
-    // Map products for easier display
     const productsData = products.map(prod => {
       const firstImage = prod.images.length > 0 ? prod.images[0].toString('base64') : null;
       return {
@@ -372,18 +175,18 @@ const loadStore = async (req, res) => {
         image: firstImage
       };
     });
-
-    const totalProducts = await Product.countDocuments({ ...filter, isDeleted: false });
+    const totalProducts = await Product.countDocuments(filter);
     const totalPages = Math.ceil(totalProducts / limit);
-
-    // Render the store page with products and pagination data
     const categories = await Category.find().select('_id name');
+
     res.render('user/store', { 
-      products: productsData, 
-      categories, 
-      selectedCategories, 
-      totalPages, 
-      currentPage: page 
+      products: productsData,
+      categories,
+      selectedCategories,
+      searchQuery,
+      totalPages,
+      currentPage: page,
+      sortQuery
     });
   } catch (error) {
     console.error('Error loading store:', error);
@@ -391,9 +194,7 @@ const loadStore = async (req, res) => {
   }
 };
 
-
-
-
+  
 
 const changePassword=async (req, res)=> {
   try {
@@ -428,7 +229,7 @@ const changePassword=async (req, res)=> {
   } catch (error) {
     console.error('Error changing password:', error);
     return res.status(500).json({
-      message: 'An error occurred while changing the password. Please try again later.',
+      message: 'An error occurred while changing the password. Please try again later.'
     });
   }
 }
@@ -449,8 +250,6 @@ module.exports = {
     resetPassword,
     checkEmail,
     logout,
-    saveRefferalcode,
-    applyRefferalcode,
     loadAbout,
     loadContact,
     loadStore,

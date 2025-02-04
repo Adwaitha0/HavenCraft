@@ -69,13 +69,11 @@
  async function validateForm() {
   console.log('validate form hit');
 
-  // Get form field values
   const username = document.getElementById("username").value.trim();
   const email = document.getElementById("email").value.trim();
   const password = document.getElementById("password").value;
   const referralCode = document.getElementById("referralCode").value.trim();
 
-  // Validate email
   const emailPattern = /^[a-zA-Z0-9]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,6}$/;
   if (!emailPattern.test(email)) {
     Swal.fire({
@@ -83,10 +81,8 @@
       title: 'Invalid Email',
       text: 'Please enter a valid email address.',
     });
-    return; // Stop further execution
+    return; 
   }
-
-  // Validate password length
   if (password.length < 4) {
     Swal.fire({
       icon: 'error',
@@ -96,7 +92,6 @@
     return;
   }
 
-  // Prepare data for submission
   const data = {
     username,
     email,
@@ -105,7 +100,6 @@
   };
 
   try {
-    // Send a POST request to the server
     const response = await fetch('/user/sent-otp', {
       method: 'POST',
       headers: {
@@ -114,11 +108,9 @@
       body: JSON.stringify(data),
     });
 
-    // Handle the response
     const result = await response.json();
 
     if (response.ok) {
-      // Success response
       Swal.fire({
         icon: 'success',
         title: 'OTP Sent',
@@ -127,7 +119,6 @@
         window.location.href = '/user/load-otp';
       });
     } else {
-      // Error response
       Swal.fire({
         icon: 'error',
         title: 'Error',
@@ -135,7 +126,6 @@
       });
     }
   } catch (error) {
-    // Handle unexpected errors
     console.error(error);
     Swal.fire({
       icon: 'error',

@@ -90,7 +90,7 @@
                               <p>&nbsp;&nbsp;&nbsp;&nbsp;<%= order.address.city %>, <%= order.address.state %></p>        
                               <p>&nbsp;&nbsp;&nbsp;&nbsp;<%= order.address.pincode %></p>
                               <p>&nbsp;&nbsp;&nbsp;&nbsp;<%= order.address.country %></p>
-                              <p><strong>Total Price :</strong><%= order.totalPrice %></p>
+                              <p><strong>Total Price :</strong> <%= order.totalPrice.toLocaleString('en-IN',{style:"currency",currency:"INR"}) %></p>
 
 
                               
@@ -100,6 +100,8 @@
                                 <p><strong>Order Status: </strong>Cancelled</p>
                               <% } else if (order.status === 'Returned') { %>
                                 <p><strong>Order Status: </strong>Returned</p>
+                                <% } else if (!order.isPaid) { %>
+                                  <p><strong>Order Status: </strong>Payment Pending</p>
                                 <% } else if (order.status === 'Returning') { %>
                                   
                                   Returning
@@ -166,7 +168,7 @@
                               <% order.products.forEach((product) => { %>
                                <p>Name : <%= product.productName %></p>
                                <p>Quantity : <%= product.quantity %></p>
-                               <p>Price : <%= product.price %></p>
+                               <p>Price : <%= product.price.toLocaleString('en-IN',{style:"currency",currency:"INR"}) %></p>
                                
                            
                              

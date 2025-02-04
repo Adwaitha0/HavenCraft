@@ -1,18 +1,21 @@
-//const mongoose = require('mongoose');
-const Order = require('../model/order'); 
+const Order = require('../model/order');
+const statusCode=require('../controller/statusCode')
+const message=require('../controller/statusCode') 
+const {StatusCodes,Messages } = require("../controller/statusCode");
 
 const loadSalesReport = async (req, res) => {
     try {
         const orders = await Order.find({ isDeleted: false })
+            .populate('userId', 'username')
             .sort({ orderDate: -1 })
-            .select('orderId username totalPrice payableAmount uniqueOrderId orderDate'); 
+            .select('orderId totalPrice payableAmount uniqueOrderId orderDate'); 
 
         const totalSales = orders.reduce((sum, order) => sum + order.payableAmount, 0);
         const totalDiscount = orders.reduce((sum, order) => sum + (order.totalPrice - order.payableAmount), 0);
 
         const formattedOrders = orders.map(order => ({
             orderId: order.uniqueOrderId, 
-            username: order.username,
+            username: order.userId.username,
             orderDate: order.orderDate.toLocaleDateString(), 
             totalSales: order.totalPrice,
             discountPrice: order.payableAmount,
@@ -26,7 +29,7 @@ const loadSalesReport = async (req, res) => {
         });
     } catch (error) {
         console.error('Error loading sales report:', error);
-        res.status(500).send('An error occurred while loading the sales report.');
+        res.status(statusCode.INTERNAL_SERVER_ERROR).send(message.INTERNAL_ERROR);
     }
 };
 
@@ -120,7 +123,6 @@ const generatePDF=async (req, res) => {
 
 
 const getTopSellingProducts = async (req, res) => {
-    console.log('getTopSellingProducts hit');
     try {
       const topProducts = await Order.aggregate([
         { $unwind: "$products" },
@@ -158,7 +160,6 @@ const getTopSellingProducts = async (req, res) => {
 
 
   const getCategorySales = async (req, res) => {
-    console.log('getCategorySales hit');
     try {
       const categorySales = await Order.aggregate([
         { $unwind: "$products" },

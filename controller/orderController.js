@@ -2,16 +2,17 @@ const order= require('../model/order')
 const mongoose = require('mongoose');
 const Wallet= require('../model/wallet')
 const user_model = require('../model/user_model')
+const {StatusCodes,Messages } = require("../controller/statusCode");
 
 
 const loadOrder = async (req, res) => {
   try {
-    console.log('Fetching unique orders...');
-    const orders = await order
-      .find({ isDeleted: false })
+    const orders = await order.find({ isDeleted: false })
+      .populate('userId', 'username')
       .populate('products.productId')
+      .sort({ orderDate: -1 })
       .select(
-        '_id username totalPrice status reason products.productName products.quantity products.price products.productStatus products.image orderDate uniqueOrderId paymentMethod address.firstname address.lastname address.street address.city address.state address.pincode address.country'
+        '_id totalPrice isPaid status reason products.productName products.quantity products.price products.productStatus products.image orderDate uniqueOrderId paymentMethod address.firstname address.lastname address.street address.city address.state address.pincode address.country'
       )
       .exec();
     const uniqueOrders = orders.map((order) => {
@@ -24,6 +25,7 @@ const loadOrder = async (req, res) => {
 
       return {
         ...order._doc,
+        username: order.userId.username,
         products: productsWithImages,
       };
     });
@@ -32,7 +34,7 @@ const loadOrder = async (req, res) => {
     res.render('admin/admin_order', { orders: uniqueOrders });
   } catch (error) {
     console.error('Error fetching unique orders:', error);
-    res.status(500).json({ message: 'Server error' });
+    res.render('admin/error')
   }
 };
 
@@ -53,7 +55,7 @@ const loadOrder = async (req, res) => {
       res.redirect(`/admin/admin_order`); 
     } catch (error) {
       console.error('Error updating product status:', error);
-      res.status(500).send('Internal Server Error');
+      res.render('admin/error')
     }
   };
  
@@ -110,7 +112,7 @@ const adminUpdateIndividualOrder = async (req, res) => {
     res.redirect(`/admin/admin_order`);
   } catch (error) {
     console.error('Error updating product status:', error);
-    res.status(500).json({ success: false, message: 'Internal server error' });
+    res.render('admin/error')
   }
 };
 
@@ -172,7 +174,7 @@ const adminUpdateOrderStatus = async (req, res) => {
       res.redirect(`/admin/admin_order`);
   } catch (error) {
       console.error('Error updating order status:', error);
-      res.status(500).json({ success: false, message: 'Internal server error' });
+      res.render('admin/error')
   }
 };
 
@@ -203,7 +205,7 @@ const returnOrder = async (req, res) => {
     res.redirect('/user/user_profile');
   } catch (error) {
     console.error('Error processing return:', error);
-    res.status(500).send('An error occurred while processing the return request.');
+    res.render('admin/error')
   }
 };
 
@@ -309,7 +311,7 @@ const refundOrder = async (req, res) => {
     res.redirect('/admin/admin_order'); 
   } catch (err) {
     console.error(err);
-    res.status(500).json({ error: 'Internal server error' });
+    res.status(StatusCodes.INTERNAL_SERVER_ERROR).send(Messages.INTERNAL_ERROR);
   }
 };
 

@@ -274,9 +274,9 @@
                     <% cartItems.forEach(item => { %>
                         <div class="order-sum" style="display: flex; gap: 5%;">
                         <div class="order-name">
-                        <p><%= item.name %></p>
+                        <p><%= item.productId.name %></p>
                         <p style="line-height: 0;"><%= item.size || 'N/A' %></p>
-                        <p style="line-height: 1.5;">₹<%= item.discountPrice || 'N/A' %></p>
+                        <p style="line-height: 1.5;">Rs.<%= item.productId.discountPrice || 'N/A' %></p>
                         </div>
                         <div>
                         <% if (item.imageSrc) { %>
@@ -293,26 +293,17 @@
       
               <!-- Cart Summary -->
               <div class="summary-item">
-                <p>Subtotal: ₹<%= subtotal %></p>   
-                <p><b>Shipping Charge:</b> ₹<%= shipping %></p>
-    
-    
+                <p>Subtotal: Rs. <%= subtotal %></p>   
+                <p><b>Shipping Charge: </b> Rs.<%= shipping %></p>
                 <% if (payAmount) { %>
-                  <p><b>Payable Amount:</b> ₹<span id="payableAmount"><%= payAmount %></span></p>
+                  <p><b>Payable Amount: </b> <span id="payableAmount">Rs.<%= payAmount %></span></p>
                 <% } else { %>
-                  <p><b>Total Price:</b> ₹<span id="totalAmount"><%= total %></span></p>
+                  <p><b>Total Price: </b><span id="totalAmount">Rs.<%= total %></span></p>
                 <% } %>
-                
-     
-               
               </div>
-      
-
-              <button type="button" onclick="proceedToPlaceOrder()" class="btn btn-outline-secondary">Proceed</button>
-    
-              <!-- Place Order Button -->
-             
-      
+              
+              <button type="button" onclick="proceedToPlaceOrder()" class="btn btn-outline-secondary">Proceed</button>   
+              <!-- Place Order Button -->     
             </div>
           </div>
         </div>
@@ -371,12 +362,6 @@
   </div>
 </div>
 
-<!--
-<div class="get-payment">
-<button type="button" onclick="savePaymentMethod()" class="btn btn-outline-secondary">Save</button>
-<button type="button" onclick="placeOrder()" class="btn btn-outline-secondary">Place Order</button>
-</div>
--->
 
 </div>
 </div>
@@ -385,25 +370,6 @@
 
 
 </div><!------------payment secton ends--------------->
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 
@@ -422,15 +388,15 @@
         </div>               
         <div class=" total container-fluid">
           <p>Subtotal</p>
-          <p id="subtotal">Rs. <%= subtotal %></p>              
+          <p id="subtotal">Rs.<%= subtotal %></p>              
         </div>
         <div class="total container-fluid">
           <p>Shipping Price</p>
-          <p id="shipping">Rs. <%= shipping %></p>
+          <p id="shipping">Rs.<%= shipping %></p>
         </div><hr style="color: rgb(218, 209, 209);">
         <div class="total-price container-fluid">
           <p><b>Total Price</b></p>
-          <p id="payableAmount"><b>Rs. <%= payAmount ? payAmount : total %></b></p>
+          <p id="payableAmount"><b>Rs.<%= payAmount ? payAmount : total %></b></p>
           
         </div>
         <p id="couponMessage" style="display: none; color: green; font-weight: bold;">Coupon Applied!</p>
@@ -533,166 +499,6 @@
 <script>
 
 
-
-/*
-function placeOrder(paymentMethod) {
-    console.log('Button clicked with payment method:', paymentMethod);
-
-    if (paymentMethod === "RazorPay") {
-        Swal.fire({
-            title: "Confirm Order",
-            text: "Are you sure you want to proceed with RazorPay payment?",
-            icon: "question",
-            showCancelButton: true,
-            confirmButtonText: "Yes, Proceed",
-            cancelButtonText: "Cancel",
-        }).then((result) => {
-            if (result.isConfirmed) {
-                // If confirmed, proceed with RazorPay
-                openRazorPay()
-                    .then((paymentSuccess) => {
-                        if (paymentSuccess) {
-                            // Payment successful, place the order
-                            finalizeOrder(paymentMethod);
-                        } else {
-                            Swal.fire({
-                                title: "Payment Failed",
-                                text: "Unable to complete the payment. Please try again.",
-                                icon: "error",
-                                confirmButtonText: "OK",
-                            }).then(() => {
-                                window.location.href = '/user/user_checkout'; 
-                            });
-                        }
-                    })
-                    .catch((error) => {
-                        console.error('RazorPay Error:', error);
-                        Swal.fire({
-                            title: "Error",
-                            text: "An error occurred with RazorPay. Please try again later.",
-                            icon: "error",
-                            confirmButtonText: "OK",
-                        }).then(() => {
-                            window.location.href = '/user/user_checkout'; 
-                        });
-                    });
-            }
-        });
-    } else if (paymentMethod === "wallet" || paymentMethod === "cashOnDelivery") {
-        Swal.fire({
-            title: "Confirm Order",
-            text: "Are you sure you want to place this order?",
-            icon: "question",
-            showCancelButton: true,
-            confirmButtonText: "Yes, Place Order",
-            cancelButtonText: "Cancel",
-        }).then((result) => {
-            if (result.isConfirmed) {
-                finalizeOrder(paymentMethod);
-            }
-        });
-    } else {
-        Swal.fire({
-            title: "Error",
-            text: "Invalid payment method selected.",
-            icon: "error",
-            confirmButtonText: "OK",
-        });
-    }
-}
-
-
-
-
-function openRazorPay() {
-    return new Promise((resolve, reject) => {
-      const payableAmountElement = document.getElementById('payableAmount');
-        const payableAmountText = payableAmountElement ? payableAmountElement.textContent : '0';
-        const amount = parseInt(payableAmountText.replace('Rs.', '').trim()) * 100; 
-        const options = {
-            key: "rzp_test_KS1wwJqge5T9bF", 
-            amount: amount, 
-            currency: "INR",
-            name: "HavenCraft",
-            description: "Payment for order",
-            handler: function (response) {
-                console.log("RazorPay Payment Successful:", response);
-                resolve(true); 
-            },
-            prefill: {
-                name: "Adwaitha",
-                email: "adwaithapk2018@gmail.com",
-                contact: "9122424131",
-            },
-            theme: {
-                color: "#3399cc",
-            },
-        };
-
-        const rzp = new Razorpay(options);
-        rzp.open();
-
-        rzp.on("payment.failed", function (response) {
-            console.error("RazorPay Payment Failed:", response);
-            Swal.fire({
-                title: "Payment Failed",
-                text: "Payment was not completed. You can try again or choose another payment method.",
-                icon: "error",
-                confirmButtonText: "OK",
-            }).then(() => {
-                window.location.href = '/user/user_checkout';
-            });
-            resolve(false); 
-        });
-    });
-}
-
-
-
-
-
-function finalizeOrder(paymentMethod) {
-    fetch(`/user/place-order/${paymentMethod}`, {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json',
-        },
-    })
-    .then(response => response.json())
-    .then(data => {
-        if (data.success) {
-            Swal.fire({
-                title: "Order Placed!",
-                text: data.message,
-                icon: "success",
-                confirmButtonText: "OK",
-            }).then(() => {
-                window.location.href = "/user/order-success"; // Redirect to order success page
-            });
-        } else {
-            Swal.fire({
-                title: "Error",
-                text: data.message || "An error occurred. Please try again.",
-                icon: "error",
-                confirmButtonText: "OK",
-            });
-        }
-    })
-    .catch(error => {
-        console.error('Error placing order:', error);
-        Swal.fire({
-            title: "Error",
-            text: "Unable to process the request. Please try again later.",
-            icon: "error",
-            confirmButtonText: "OK",
-        });
-    });
-}
-
-
-*/
-
-
 function placeOrder(paymentMethod) {
     console.log('Button clicked with payment method:', paymentMethod);
 
@@ -743,18 +549,24 @@ function finalizeOrder(paymentMethod, isRazorPayFlow) {
     .then(response => response.json())
     .then(data => {
         if (data.success) {
+            const orderId = data.orderId; 
+            console.log(`orderId in front ${orderId}`)
+
             if (isRazorPayFlow) {
                 openRazorPay()
                     .then((paymentSuccess) => {
                         if (paymentSuccess) {
-                            Swal.fire({
-                                title: "Order Placed!",
-                                text: data.message,
-                                icon: "success",
-                                confirmButtonText: "OK",
-                            }).then(() => {
-                                window.location.href = "/user/order-success";
-                            });
+                            updateIsPaid(orderId, true) 
+                                .then(() => {
+                                    Swal.fire({
+                                        title: "Order Placed!",
+                                        text: data.message,
+                                        icon: "success",
+                                        confirmButtonText: "OK",
+                                    }).then(() => {
+                                        window.location.href = "/user/order-success";
+                                    });
+                                });
                         } else {
                             Swal.fire({
                                 title: "Payment Failed",
@@ -762,7 +574,7 @@ function finalizeOrder(paymentMethod, isRazorPayFlow) {
                                 icon: "error",
                                 confirmButtonText: "OK",
                             }).then(() => {
-                                window.location.href = '/user/user_checkout'; 
+                                window.location.href = '/user/user_profile'; 
                             });
                         }
                     })
@@ -774,19 +586,21 @@ function finalizeOrder(paymentMethod, isRazorPayFlow) {
                             icon: "error",
                             confirmButtonText: "OK",
                         }).then(() => {
-                            window.location.href = '/user/user_checkout'; 
+                            window.location.href = '/user/user_profile'; 
                         });
                     });
             } else {
-                // If it's wallet or cash on delivery, just show success and redirect
-                Swal.fire({
-                    title: "Order Placed!",
-                    text: data.message,
-                    icon: "success",
-                    confirmButtonText: "OK",
-                }).then(() => {
-                    window.location.href = "/user/order-success"; // Redirect to order success page
-                });
+                updateIsPaid(orderId, false)
+                    .then(() => {
+                        Swal.fire({
+                            title: "Order Placed!",
+                            text: data.message,
+                            icon: "success",
+                            confirmButtonText: "OK",
+                        }).then(() => {
+                            window.location.href = "/user/order-success"; 
+                        });
+                    });
             }
         } else {
             Swal.fire({
@@ -807,6 +621,34 @@ function finalizeOrder(paymentMethod, isRazorPayFlow) {
         });
     });
 }
+
+function updateIsPaid(orderId, isPaid) {
+    return fetch(`/user/update-isPaid/${orderId}`, {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ isPaid })
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (!data.success) {
+            console.error("Failed to update isPaid:", data.message);
+        }
+    })
+    .catch(error => {
+        console.error('Error updating isPaid:', error);
+    });
+}
+
+
+
+
+
+
+
+
+
 
 
 function openRazorPay() {
@@ -832,22 +674,26 @@ function openRazorPay() {
             theme: {
                 color: "#3399cc",
             },
+            
         };
-
+        console.log("Opening Razorpay payment modal...");
         const rzp = new Razorpay(options);
         rzp.open();
+        console.log('razorpay opened')
 
-        rzp.on("payment.failed", function (response) {
-            console.error("RazorPay Payment Failed:", response);
-            Swal.fire({
-                title: "Payment Failed",
-                text: "Payment was not completed. You can try again or choose another payment method.",
-                icon: "error",
+        rzp.on("payment.failed", async function () {
+            console.log("Razorpay modal closed by user");
+
+            await Swal.fire({
+                title: "Payment Cancelled",
+                text: "You closed the payment window. Please try again.",
+                icon: "warning",
                 confirmButtonText: "OK",
             }).then(() => {
-                window.location.href = '/user/user_checkout';
+                window.location.href = '/user/user_profile';
             });
-            resolve(false); 
+
+            resolve(false);
         });
     });
 }
@@ -872,14 +718,17 @@ function applyCoupon() {
   const couponCode = document.getElementById('couponCode').value;
   const subtotalText = document.getElementById('subtotal').textContent; 
   const shippingText = document.getElementById('shipping').textContent; 
-
+  console.log(`couponCode ${couponCode}`)
+  console.log(`subtotalText ${subtotalText}`)
+  console.log(`shippingText ${shippingText}`)
   if (!couponCode.trim()) {
     swal("Error", "Please enter a valid coupon code.", "error");
     return;
   }
-  const subtotal = parseFloat(subtotalText.replace('Rs. ', ''));
-  const shipping = parseFloat(shippingText.replace('Rs. ', ''));
-
+  const subtotal = parseFloat(subtotalText.replace('Rs.', ''));
+  const shipping = parseFloat(shippingText.replace('Rs.', ''));
+  console.log(subtotal)
+  console.log(shipping)
   
   fetch('/user/applyCoupon', {
     method: 'POST',
@@ -902,7 +751,7 @@ function applyCoupon() {
 
       const couponMessageElement = document.getElementById('couponMessage');
       if (couponMessageElement) {
-        couponMessageElement.style.display = 'block'; // Show the message
+        couponMessageElement.style.display = 'block'; 
       }
 
 
@@ -932,9 +781,8 @@ function nextPage() {
 function proceedToPlaceOrder() {
   const orderSummaryDiv = document.getElementById("order-summary");
   const paymentDiv = document.getElementById("paymentSection");
-  const codOption = document.getElementById("cashOnDelivery"); // The COD option element
+  const codOption = document.getElementById("cashOnDelivery"); 
 
-  // Use the passed values directly, no need to fetch from sessionStorage
   const payableAmount = '<%= payAmount %>';
   const totalPrice = '<%= total %>';
 
@@ -978,83 +826,6 @@ function enableCODOption(codOption) {
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-/*
-function placeOrder() {
-    console.log('Button clicked.');
-
-    Swal.fire({
-        title: "Confirm Order",
-        text: "Are you sure you want to place this order?",
-        icon: "question",
-        showCancelButton: true,
-        confirmButtonText: "Yes, Place Order",
-        cancelButtonText: "Cancel",
-    }).then((result) => {
-        if (result.isConfirmed) {
-            fetch('/user/place-order', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                }
-            })
-            .then(response => response.json())
-            .then(data => {
-                if (data.success) {
-                    // Success alert
-                    Swal.fire({
-                        title: "Order Placed!",
-                        text: data.message,
-                        icon: "success",
-                        confirmButtonText: "OK",
-                    }).then(() => {
-                        // Redirect or refresh the page
-                        window.location.href = "/user/order-success"; // Adjust if needed
-                    });
-                } else {
-                    // Handle various error cases
-                    Swal.fire({
-                        title: "Error",
-                        text: data.message || "An error occurred. Please try again.",
-                        icon: "error",
-                        confirmButtonText: "OK",
-                    });
-                }
-            })
-            .catch(error => {
-                console.error('Error placing order:', error);
-                // Handle network or unexpected errors
-                Swal.fire({
-                    title: "Error",
-                    text: "Unable to process the request. Please try again later.",
-                    icon: "error",
-                    confirmButtonText: "OK",
-                });
-            });
-        }
-    });
-}
-
-
-*/
-
-
-
-
-
-
-
-
   function saveAddress() {
     const selectedAddress = document.querySelector('input[name="address"]:checked');
     
@@ -1088,44 +859,12 @@ function placeOrder() {
   }
 
 
-/*
-  function savePaymentMethod() {
-  const selectedPaymentMethod = document.querySelector('input[name="paymentMethod"]:checked');
-  
-  if (!selectedPaymentMethod) {
-    swal('Please select a payment method.');
-    return;
-  }
-  fetch('/user/save-payment-method', {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
-    },
-    body: JSON.stringify({ paymentMethod: selectedPaymentMethod.id }),
-  })
-    .then(response => response.json())
-    .then(data => {
-        Swal.fire('PaymentMethod saved successfully!');
-        console.log(data);
-        
-      })
-    .catch(error => {
-      console.error('Error saving payment method:', error);
-    });
-}
-
-*/
-
-
-
-
-
   function validateForm(event) {
     const contactNumber = document.getElementById("contactno").value;
     const pinCode = document.getElementById("pincode").value;
 
-    const contactNumberRegex = /^\d{10}$/; // Matches exactly 10 digits
-    const pinCodeRegex = /^\d{6}$/;       // Matches exactly 6 digits
+    const contactNumberRegex = /^\d{10}$/; 
+    const pinCodeRegex = /^\d{6}$/;     
 
     if (!contactNumberRegex.test(contactNumber)) {
       Swal.fire({
@@ -1145,45 +884,12 @@ function placeOrder() {
       return false;
     }
 
-    return true; // Form is valid
+    return true; 
   }
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 </script>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>

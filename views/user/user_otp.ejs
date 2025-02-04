@@ -19,7 +19,7 @@
       <br>
       <p style="text-align: center;">The One-Time Password sends to your account. Please Enter your OTP.</p>
       <br>
-      <!--<form action="/user/verifyOTP" method="post">
+      <form action="/user/verifyOTP" method="post">
         <div class="mb-3">
           <input type="email" class="form-control" id="email"  placeholder="Enter your email" name="email">
         </div>
@@ -34,8 +34,8 @@
         <div class="otpverify"  style="text-align: center;">     
         <button type="submit" class="btn btn-primary" id="otp_btn">Verify</button>
     </div>
-      </form>-->
-      <form action="/user/verifyForgotOTP" method="post">
+      </form>
+    <!--  <form action="/user/verifyOTP" method="post">
         <div class="mb-3">
           <input type="text" class="form-control" id="otp" placeholder="Enter OTP here" name="otp">
         </div>
@@ -47,17 +47,13 @@
           </a>
         </div>
       
-        <!-- Message display section -->
-        <div id="message" style="text-align: center; color: red;">
-          <% if (message) { %>
-            <p><%= message %></p>
-          <% } %>
-        </div>
+        
+        
       
         <div class="otpverify" style="text-align: center;">
           <button type="submit" class="btn btn-primary" id="otp_btn">Verify</button>
         </div>
-      </form>
+      </form>  -->
       
 
 
@@ -83,18 +79,16 @@
 
 <script>
   function startTimer() {
-      let duration = 2 * 60; // 5 minutes in seconds
+      let duration = 2 * 60; //5
       const timerElement = document.getElementById('timer');
 
       const interval = setInterval(() => {
           const minutes = Math.floor(duration / 60);
           const seconds = duration % 60;
 
-          // Format timer display
           timerElement.textContent = `${minutes}:${seconds < 10 ? '0' : ''}${seconds}`;
           duration--;
 
-          // Stop timer when duration reaches 0
           if (duration < 0) {
               clearInterval(interval);
               timerElement.textContent = "Time's up!";

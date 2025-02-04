@@ -3,26 +3,24 @@ const bcrypt = require('bcrypt');
 const Address = require('../model/address');
 const order_model = require('../model/order')
 const wallet_model = require('../model/wallet')
-
+const {StatusCodes,Messages } = require("../controller/statusCode");
 
 const loadProfile = async (req, res) => {
   const userId = req.session.user.id;
-  console.log(userId)
 
   try {
     const user = await user_model.findById(userId);
     if (!user) {
       return res.status(404).json({ message: 'User not found' });
     }
-    const orders = await order_model
-      .find({ userId: user._id })
+    const orders = await order_model.find({ userId: user._id })
+    .populate('userId','username')
       .populate('products.productId')
+      .sort({ orderDate: -1 })
       .select(
-        '_id username totalPrice status uniqueOrderId payableAmount reason products.productName products._id products.quantity products.price products.productStatus products.image orderDate paymentMethod address.street address.contactno address.firstname address.lastname address.city address.state address.pincode address.country')
+        '_id totalPrice status isPaid uniqueOrderId payableAmount reason products.productName products._id products.quantity products.size products.price products.productStatus products.image orderDate paymentMethod address.street address.contactno address.firstname address.lastname address.city address.state address.pincode address.country')
       .exec();
-      //console.log(`orders in loadProfile ${orders}`)
 
-    // Convert product images to Base64
     orders.forEach(order => {
       order.products.forEach(product => {
         if (product.image && product.image.length > 0) {
@@ -31,11 +29,8 @@ const loadProfile = async (req, res) => {
       });
     });
 
-    // Fetch wallet details
     const wallet = await wallet_model.findOne({ userId });
-    const walletBalance = wallet ? wallet.balance : 0;
-
-    // Prepare addresses (if applicable)
+    const walletBalance = wallet ? wallet.balance : 0;   
     const addresses = user.addresses || [];
     res.render('user/user_profile', {
       username: user.username,
@@ -48,7 +43,7 @@ const loadProfile = async (req, res) => {
     });
   } catch (error) {
     console.error(error.message);
-    res.status(500).json({ message: 'Server error' });
+    res.status(StatusCodes.INTERNAL_SERVER_ERROR).send(Messages.INTERNAL_ERROR);
   }
 };
 
@@ -75,35 +70,11 @@ const loadProfile = async (req, res) => {
     }
   } catch (error) {
     console.error(error);
-    res.status(500).send('Server error');
+    res.status(StatusCodes.INTERNAL_SERVER_ERROR).send(Messages.INTERNAL_ERROR);
   }
 };
 
 
-
-
-/*
-const cancelProduct = async (req, res) => {
-  const { orderId, productId } = req.params;
-  try {
-      const order = await order_model.findById(orderId);
-      if (!order) {
-          return res.status(404).json({ message: 'Order not found' });
-      }
-      const product = order.products.find(p => p._id.toString() === productId);
-      if (!product) {
-          return res.status(404).json({ message: 'Product not found in the order' });
-      }
-      product.productStatus = 'Cancelled';
-      await order.save();
-      res.json({ success: true, message: 'Product cancelled successfully' });
-  } catch (error) {
-      console.error(error);
-      res.status(500).json({ message: 'Server error' });
-  }
-};
-
-*/
 
 const generateUniqueTransactionId = () => {
   const randomNumber = Math.floor(10000 + Math.random() * 90000); 
@@ -111,63 +82,7 @@ const generateUniqueTransactionId = () => {
 };
 
 
-/*
-const cancelProduct = async (req, res) => {
-  const { orderId, productId } = req.params;
-  console.log(orderId)
-  console.log(productId)
-  try {
-    const order = await order_model.findById(orderId);
-    if (!order) {
-      return res.status(404).json({ message: 'Order not found' });
-    }
-    const product = order.products.find((p) => p._id.toString() === productId);
-    if (!product) {
-      return res.status(404).json({ message: 'Product not found in the order' });
-    }
 
-    
-    product.productStatus = 'Cancelled';
-    const refundAmount = product.price; 
-    console.log(refundAmount)
-    const wallet = await wallet_model.findOne({ userId: order.userId });
-    if (!wallet) {
-      return res.status(404).json({ message: 'Wallet not found' });
-    }
-    console.log(wallet)
-
-    const uniqueTransactionId = generateUniqueTransactionId();
-
-    wallet.balance += refundAmount;
-    wallet.transactions.push({
-      type: 'credit',
-      amount: refundAmount,
-      description: `Refund for cancelled product`,
-      uniqueTransactionId: uniqueTransactionId,
-    });
-
-    await wallet.save();
-
-    order.payableAmount -= refundAmount;
-    if (order.payableAmount < 0) order.payableAmount = 0; // Ensure it doesn't go negative
-
-    // Check if all products in the order are canceled
-    const allProductsCancelled = order.products.every((p) => p.productStatus === 'Cancelled');
-    if (allProductsCancelled) {
-      order.status = 'Cancelled'; // Update the order status
-    }
-
-    // Save the updated order
-    await order.save();
-
-    res.json({ success: true, message: 'Product cancelled successfully' });
-  } catch (error) {
-    console.error('Error cancelling product:', error);
-    res.status(500).json({ message: 'Server error' });
-  }
-};
-
-*/
 const cancelProduct = async (req, res) => {
   const { orderId, productId } = req.params;
   console.log(orderId);
@@ -206,7 +121,7 @@ const cancelProduct = async (req, res) => {
     order.payableAmount -= refundAmount;
     if (order.payableAmount < 0) order.payableAmount = 0; 
 
-    // Add the refund amount to the wallet
+    //wallet
     wallet.balance += refundAmount;
     wallet.transactions.push({
       type: 'credit',
@@ -217,19 +132,17 @@ const cancelProduct = async (req, res) => {
 
     await wallet.save();
 
-    // Check if all products in the order are cancelled
     const allProductsCancelled = order.products.every((p) => p.productStatus === 'Cancelled');
     if (allProductsCancelled) {
-      order.status = 'Cancelled'; // Update the order status
+      order.status = 'Cancelled'; 
     }
 
-    // Save the updated order
     await order.save();
 
     res.json({ success: true, message: 'Product cancelled successfully' });
   } catch (error) {
     console.error('Error cancelling product:', error);
-    res.status(500).json({ message: 'Server error' });
+    res.status(StatusCodes.INTERNAL_SERVER_ERROR).send(Messages.INTERNAL_ERROR);
   }
 };
 
@@ -255,18 +168,12 @@ const cancelOrder = async (req, res) => {
           return res.status(400).json({ message: 'Order already delivered and cannot be cancelled' });
       }
 
-      // Calculate the refund amount
       const refundAmount = order.payableAmount - shippingCharge;
-
-      // Update order status and product statuses
       order.status = 'Cancelled';
       order.products.forEach(product => {
           product.productStatus = 'Cancelled';
       });
-
       await order.save();
-
-      // Find the user's wallet  ${orderId}
       const wallet = await wallet_model.findOne({ userId });
       if (!wallet) {
           return res.status(404).json({ message: 'Wallet not found' });
@@ -280,13 +187,12 @@ const cancelOrder = async (req, res) => {
           uniqueTransactionId: uniqueTransactionId,
       });
 
-      await wallet.save(); // Save the updated wallet
+      await wallet.save(); 
       console.log(refundAmount)
-      // Return success response
       res.json({ success: true, refundAmount });
   } catch (error) {
       console.error('Error:', error);
-      res.status(500).json({ message: 'Server error' });
+      res.status(StatusCodes.INTERNAL_SERVER_ERROR).send(Messages.INTERNAL_ERROR);
   }
 };
 
@@ -306,6 +212,7 @@ const addAddress = async (req, res) => {
 
   try {
     const user = await user_model.findById(userId);
+    console.log(user)
 
     if (!user) {
       return res.status(404).json({ error: "User not found." });
@@ -338,7 +245,7 @@ const addAddress = async (req, res) => {
     res.status(200).render("user/user_profile", { addresses: profileData.addresses });
   } catch (error) {
     console.error(error);
-    res.status(500).json({ error: "Internal server error." });
+    res.status(StatusCodes.INTERNAL_SERVER_ERROR).send(Messages.INTERNAL_ERROR);
   }
 };
 
@@ -368,7 +275,7 @@ const editAddress = async (req, res) => {
     res.redirect('/user/user_profile');
   } catch (error) {
       console.error(error);
-      res.status(500).json({ message: 'Internal Server Error' });
+      res.status(StatusCodes.INTERNAL_SERVER_ERROR).send(Messages.INTERNAL_ERROR);
   }
 };
 
@@ -390,7 +297,7 @@ const removeAddress = async (req, res) => {
       res.redirect('/user/user_profile');
   } catch (error) {
       console.error(error);
-      res.status(500).json({ message: 'Internal Server Error' });
+      res.status(StatusCodes.INTERNAL_SERVER_ERROR).send(Messages.INTERNAL_ERROR);
   }
 };
 
@@ -413,7 +320,7 @@ const changePassword = async (req, res) => {
     res.status(200).json({ message: 'Password updated successfully' });
   } catch (error) {
     console.error('Error changing password:', error);
-    res.status(500).json({ message: 'Internal Server Error' });
+    res.render('user/error')
   }
 };
 
@@ -433,10 +340,88 @@ const getWalletHistory= async (req, res) => {
     });
   } catch (error) {
     console.error(error.message);
-    res.status(500).json({ message: 'Server error' });
+    res.render('user/error')
   }
 };
 
+
+
+const getInvoice = async (req, res) => {
+  try {
+    const orderId = req.query.orderId;
+    if (!orderId) {
+      return res.status(400).send("Order ID is required");
+    }
+    const order = await order_model.findById(orderId).populate('userId').populate('products.productId').exec();
+
+    if (!order) {
+      return res.status(404).send("Order not found");
+    }
+    res.render('user/invoice', { order });
+  } catch (error) {
+    console.error("Error fetching order details:", error);
+    res.render('user/error')
+  }
+};
+
+const resumePayment = async (req, res) => {
+  try {
+      const orderId = req.params.orderId;
+      res.render('user/payment', { orderId }); 
+  } catch (error) {
+      console.error("Error in resumePayment:", error);
+      res.render('user/error')
+  }
+};
+
+const resumeOrderPayment = async (req, res) => {
+  try {
+      const orderId  = req.params.orderId;
+      if (!orderId) {
+          return res.status(400).json({ success: false, message: "Order ID is required" });
+      }
+
+      const order = await order_model.findById(orderId);
+
+      if (!order) {
+          return res.status(404).json({ success: false, message: "Order not found" });
+      }
+
+      if (order.isPaid) {
+          return res.status(400).json({ success: false, message: "Order is already paid" });
+      }
+
+      res.status(200).json({ 
+          success: true, 
+          orderId: order._id, 
+          amount: order.payableAmount,
+          currency: "INR",
+          message: "Order payment resumed successfully"
+      });
+
+  } catch (error) {
+      console.error("Error resuming order payment:", error);
+      res.status(500).json({ success: false, message: "Internal server error" });
+  }
+};
+
+const updatePayment = async (req, res) =>{
+  try {
+    const orderId = req.params.orderId; 
+    console.log(`orderId in updatePayment: ${orderId}`);
+    const updatedOrder = await order_model.findByIdAndUpdate(orderId, 
+        { isPaid: true }, 
+        { new: true } 
+    );
+    if (!updatedOrder) {
+        return res.status(404).json({ message: "Order not found" });
+    }
+    res.status(200).json({ message: "Payment updated successfully", order: updatedOrder });
+} catch (error) {
+    console.error("Error updating payment:", error);
+    res.render('user/error')
+}
+}
 
 
 
@@ -452,5 +437,10 @@ module.exports = { loadProfile,
                   changePassword,
                   cancelOrder,
                   cancelProduct,
-                  getWalletHistory
+                  getWalletHistory,
+                  getInvoice,
+                  resumePayment,
+                  resumeOrderPayment,
+                  updatePayment
+
 }

@@ -10,6 +10,8 @@ const passport = require('passport');
 const User = require('./model/user_model');
 const expressLayouts = require('express-ejs-layouts');
 const flash = require('connect-flash');
+const {StatusCodes,Messages } = require("./controller/statusCode");
+
 
 
 require('dotenv').config();
@@ -102,6 +104,20 @@ app.use((req, res, next) => {
 
 app.use('/user', userRoutes);
 app.use('/admin', adminRoutes);
+
+
+app.use((err, req, res, next) => {
+  console.error(err.stack);  
+  res.status(err.status || StatusCodes.INTERNAL_SERVER_ERROR).render('user/error', {
+      statusCode: err.status || StatusCodes.INTERNAL_SERVER_ERROR,
+      message: err.message || Messages.INTERNAL_ERROR
+  });
+});
+
+
+
+
+
 
 connectDB();
 

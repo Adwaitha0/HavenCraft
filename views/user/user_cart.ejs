@@ -106,9 +106,9 @@
                     </div>
                     <div class="content">
                       
-                      <h5 class="card-title"><%= item.name %></h5>
+                      <h5 class="card-title"><%= item.productId.name %></h5>
                       <h6 class="card-text">
-                        <% if (item.productId.discountPrice && item.productId.originalPrice && item.productId.discountPrice !== item.productId.originalPrice) { %>
+                        <% if (item.productId.discountPrice && item.productId.originalPrice !== item.productId.originalPrice) { %>
                           <div style="display: flex;"></div>
                           <h5 style="display: inline-block; "><%= item.productId.discountPrice.toLocaleString('en-IN',{style:"currency",currency:"INR"}) %></h5>
                           <span style="text-decoration: line-through; color: grey;"><%= item.productId.originalPrice.toLocaleString('en-IN',{style:"currency",currency:"INR"}) %></span>

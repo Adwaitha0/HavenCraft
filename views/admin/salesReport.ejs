@@ -51,7 +51,7 @@
                                 </form>
                             </div>
                             <div class="display">
-                                <h3>&#8377;<%= totalSales || 0 %></h3>    
+                                <h3><%= totalSales.toLocaleString('en-IN',{style:"currency",currency:"INR"}) || 0 %></h3>    
                                 <p>Total Sales</p>
                             </div>
                         </div>
@@ -97,9 +97,9 @@
                                       <th><%= order.orderId %></th>
                                       <td><%= order.username %></td>
                                       <td><%= order.orderDate%></td>
-                                      <td>₹<%= order.totalSales %></td>
-                                      <td>₹<%= order.discountPrice || 0 %></td>
-                                      <td>₹<%= (order.totalSales - (order.discountPrice || 0)) %></td>
+                                      <td><%= order.totalSales.toLocaleString('en-IN',{style:"currency",currency:"INR"}) %></td>
+                                      <td><%= order.discountPrice.toLocaleString('en-IN',{style:"currency",currency:"INR"}) || 0 %></td>
+                                      <td><%= (order.totalSales - (order.discountPrice || 0)).toLocaleString('en-IN',{style:"currency",currency:"INR"}) %></td>
                                     </tr>
                                   <% }) %>
                                 <% } %>

@@ -1,5 +1,6 @@
 const category= require('../model/category')
 const product= require('../model/product')
+const {StatusCodes,Messages } = require("../controller/statusCode");
 
 
 
@@ -69,25 +70,6 @@ const getUpdateCategory= async (req, res) => {
     res.render('update_category', { category });
 };
 
-/*
-
-const updateCategory=async (req, res) => {
-    const { id, name, parentCategoryId, productCount } = req.body;
-
-    try {
-        await category.findByIdAndUpdate(id, {
-            name,
-            parentCategoryId,
-            productCount,
-        });
-        res.redirect('/admin/admin_category');
-    } catch (error) {
-        console.error('Error updating category:', error);
-        res.status(500).send('Server error');
-    }
-};
-*/
-
 const deleteCategory =async (req, res) => {
     const { id } = req.body; 
     console.log(id)
@@ -97,7 +79,7 @@ const deleteCategory =async (req, res) => {
         res.redirect('/admin/admin_category'); 
     } catch (error) {
         console.error('Error deleting category:', error);
-        res.status(500).send('Failed to delete category');
+        res.render('admin/error')
     }
 };
 

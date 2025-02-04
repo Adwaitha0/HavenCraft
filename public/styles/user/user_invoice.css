@@ -1,0 +1,49 @@
+*{
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    
+}
+
+.container{
+    margin: 0;
+    padding: 0;
+}
+#invoice{
+    width: 794px;
+    height: auto;
+
+}
+.text-center{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+.heading-1{
+    width: 50%;
+    height: auto;
+    text-align: left;
+    padding: 2% 3%;
+    color: rgb(243, 240, 236);
+}
+.heading-2{
+    width: 50%;
+    height: auto;
+    text-align: right;
+    padding: 2% 3%;
+    color: rgb(243, 240, 236);
+}
+.bill {
+    padding-left: 10%;
+    padding-right: 10%;
+}
+.bill-2{
+    text-align: right;
+}
+.table-responsive{
+    padding-left: 5%;
+    padding-right: 5%;
+}
+.payment-method{
+    padding-left: 5%;
+}

@@ -13,19 +13,6 @@ const multer = require('multer');
 const storage = multer.memoryStorage(); 
 const upload = multer({ storage }).array('images', 4);
 
-//const upload = multer({ storage: multer.memoryStorage() }).single('productImage'); 
-/*const storage = multer.diskStorage({
-    destination: (req, file, cb) => {
-      cb(null, 'uploads/'); 
-    },
-    filename: (req, file, cb) => {
-      cb(null, Date.now() + path.extname(file.originalname)); 
-    }
-  });
-  const upload = multer({ storage: storage }).single('productImage');
-
-*/
-
 
 router.get('/login',adminAuth.isLogin,adminController.loadLogin)
 
@@ -48,8 +35,6 @@ router.post('/add_category',categoryController.addCategory)
 
 router.post('/update_category',categoryController.updateCategory)
 
-//router.get('/update_category/:id',categoryController.getUpdateCategory)
-
 router.post('/delete_category',categoryController.deleteCategory)
 
 //product
@@ -65,13 +50,8 @@ router.get('/check_product_exists',productController.check_product_exists)
 
 router.post('/check_category_exists',categoryController.check_category_exists)
 
-
-
 //order
 router.get('/admin_order',adminAuth.checkSession, orderController.loadOrder);
-
-//router.post('/admin/update_order_status/:id', orderController.updateProductStatus);
-
 
 router.get('/admin_stock',adminAuth.checkSession, stockController.createStockEntries,stockController.loadStock);
 
@@ -79,7 +59,7 @@ router.post('/update-stock',stockController.updateStock)
 
 router.get('/items', productController.loadProducts);
 
-router.get('/stocks', stockController.paginationHandler);
+router.get('/stocks', stockController.loadStock);
 
 router.post('/update-product-status',orderController.adminUpdateIndividualOrder)
 

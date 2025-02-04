@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Invoice</title>
+  <link rel="stylesheet" href="\styles\user\user_invoice.css">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body>
+  <div class="container mt-5" id="invoice">
+    <div class="row mb-4">
+      <div class="col-12 text-center " style="background-color: rgb(30, 30, 76);">
+        
+        <div class="heading-1">
+          <h1>Invoice</h1>
+          <h5><%=order.uniqueOrderId %></h5>
+          <p class="text-muted">Generated on: <%= new Date().toDateString() %></p>
+        </div>
+        <div class="heading-2">
+          <h3>HavenCraft</h3>
+          <p>havencraft@gmail.com</p>
+          <p>Kinfra, Kakkanjery</p>
+          <p>Calicut, Kerala, 672823</p>
+          <p>India</p>
+        </div>
+
+
+
+
+        
+      </div>
+    </div>
+
+    <!-- Order Info Section -->
+    <div class="row mb-4 bill">
+      <div class="col-md-6 bill-1">
+        <h5>Bill From:</h5>
+        <address>
+          HavenCraft<br>
+          Kinfra Kakkanjery<br>
+          Calicut, Kerala, 672823<br>
+          India<br>
+          Phone: 9123456320
+        </address>
+      </div>
+      <div class="col-md-6 bill-2">
+        <h5>Bill To:</h5>
+        <address>
+          <%= order.address.firstname %> <%= order.address.lastname %><br>
+          <%= order.address.street %>, <%= order.address.city %><br>
+          <%= order.address.state %>, <%= order.address.pincode %><br>
+          <%= order.address.country %><br>
+          <%= order.address.contactno %>
+        </address>
+      </div>
+    </div>
+
+    <div class="table-responsive">
+      <table class="table table-bordered">
+        <thead class="table-light">
+          <tr>
+            <th>sl No.</th>
+            <th>Product</th>
+            <th>Quantity</th>
+            <th>Unit Price</th>
+            <th>Total</th>
+          </tr>
+        </thead>
+        <tbody>
+          <% order.products.forEach((item, index) => { %>
+            <tr>
+              <td><%= index + 1 %></td>
+              <td><%= item.productName %></td>
+              <td><%= item.quantity %></td>
+              <td><%= item.price.toLocaleString('en-IN',{style:"currency",currency:"INR"}) %></td>
+              <td><%= (item.quantity *item.price).toLocaleString('en-IN',{style:"currency",currency:"INR"}) %></td>
+            </tr>
+            <% }); %>
+          
+          
+          <tr >
+            <td colspan="4" class="text-end"><strong>Subtotal</strong></td>
+            <td><%=order.subtotal.toLocaleString('en-IN',{style:"currency",currency:"INR"}) %></td>
+          </tr>
+          <tr>
+            <td colspan="4" class="text-end"><strong>Discount</strong></td>
+            <td><%=(order.totalPrice-order.payableAmount).toLocaleString('en-IN',{style:"currency",currency:"INR"}) %></td>
+          </tr>
+          <tr >
+            <td colspan="4" class="text-end"><strong>Shipping</strong></td>
+            <td><%=order.shipping.toLocaleString('en-IN',{style:"currency",currency:"INR"}) %></td>
+          </tr>
+          
+          <tr>
+            <td colspan="4" class="text-end"><strong>Grand Total</strong></td>
+            <td><%=order.payableAmount.toLocaleString('en-IN',{style:"currency",currency:"INR"}) %></td>
+          </tr>
+         
+        </tbody>
+      </table>
+    </div>
+
+    <!-- Payment Method Section -->
+    <div class="row mb-4 payment-method">
+      <div class="col-md-12">
+        <p><strong>Payment Method:</strong> <%=order.paymentMethod %></p>
+        <p><strong>Paid Amount:</strong> <%=order.payableAmount.toLocaleString('en-IN',{style:"currency",currency:"INR"}) %></p>
+      </div>
+    </div>
+    
+
+    <!-- Invoice Footer -->
+    <div class="row">
+      <div class="col-12 text-center">
+        <p class="text-muted">Thank you for your purchase!</p>
+      </div>
+    </div>
+  </div>
+
+    <div class="row mt-4">
+      <div class="col-12 text-center " style="gap: 3%;">
+        <button class="btn btn-secondary" id="downloadInvoiceBtn">Download</button>
+        <a href="/user/user_profile" class="btn btn-secondary">Back</a>
+      </div>
+    </div>
+  
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+
+  <script>
+    document.addEventListener('DOMContentLoaded', function () {
+      document.getElementById('downloadInvoiceBtn').addEventListener('click', function () {
+        const { jsPDF } = window.jspdf;  
+        const invoiceElement = document.getElementById('invoice');
+
+        html2canvas(invoiceElement, {
+          allowTaint: true, 
+          backgroundColor: null,
+        }).then(function (canvas) {
+          const pdf = new jsPDF();
+          const imgData = canvas.toDataURL('image/png');
+          const imgWidth = 210; 
+          const imgHeight = (canvas.height * imgWidth) / canvas.width; 
+
+          pdf.addImage(imgData, 'PNG', 0, 0, imgWidth, imgHeight);
+
+          pdf.save('invoice.pdf');
+        }).catch(function (error) {
+          console.error('Error generating the PDF: ', error);
+        });
+      });
+    });
+  </script>
+
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

@@ -64,6 +64,8 @@ router.get('/sculpture',userAuth.checkBlockedStatus,productController.loadSculpt
 
 router.get('/artifact',userAuth.checkBlockedStatus,productController.loadArtifactProducts)
 
+router.get('/chendelier',userAuth.checkBlockedStatus,productController.loadChendelierProducts)
+
 router.get('/user_candleDetail/:id', productController.loadCandleDetail);
 
 router.get('/user_profile',userAuth.checkBlockedStatus,profileController.loadProfile)
@@ -84,23 +86,15 @@ router.get("/user_addToCart", cartController.loadCart)
 
 router.post('/update-cart-quantity', cartController.updateCartQuantity);
 
+router.post('/update-isPaid/:orderId', cartController.updateIsPaid);
 
 router.post('/deleteCartItem', cartController.deleteCartItem);
 
 router.get("/user_checkout", cartController.loadCheckout)
 
-//router.get('/orderSummary',cartController.getOrderSummary)
-
 router.post('/place-order/:paymentMethod', cartController.placeOrder);
 
-//router.get('/place-order', cartController.placeOrder);
-
-
-//router.get('/getPaymentMethod', cartController.getPaymentMethod );
-
 router.get('/order-success', cartController.orderSuccess);
-
-//router.get('/stock/:productId/:size',stockController.displayStock);
 
 router.get('/getStock',stockController.getStock)
 
@@ -116,7 +110,6 @@ router.post("/addToWishlist/:id", wishlistController.addToWishlist)
 
 router.get("/removeFromWishlist/:id", wishlistController.removeFromWishlist)
 
-
 router.post("/add-address", cartController.addAddress )
 
 router.post("/applyCoupon", cartController.applyCoupon )
@@ -125,18 +118,19 @@ router.post("/create-order", paymentController.createOrder);
 
 router.post("/save-address", cartController.saveAddress);
 
-//router.post('/save-payment-method',cartController.savePaymentMethod);
-
 router.post("/return-order", orderController.returnOrder);
 
 router.post("/add-money", couponController.addMoney);
 
-router.post('/generate-referralcode',userController.saveRefferalcode)
-
-router.post('/apply-referralcode',userController.applyRefferalcode)
-
 router.get("/wallet-history", profileController.getWalletHistory);
 
+router.get("/invoice", profileController.getInvoice);
+
+router.get("/payment/:orderId", profileController.resumePayment);
+
+router.get("/resumeOrderPayment/:orderId", profileController.resumeOrderPayment);
+
+router.post("/update-payment/:orderId", profileController.updatePayment);
 
 
 

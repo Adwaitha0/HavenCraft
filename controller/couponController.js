@@ -1,19 +1,19 @@
 const Coupon= require('../model/coupon')
 const Wallet= require('../model/wallet')
+const {StatusCodes,Messages } = require("../controller/statusCode");
 
 const loadCoupon=  async (req, res) => {
     try {
       const coupons = await Coupon.find();  
       res.render('admin/admin_coupon', { coupons }); 
     } catch (err) {
-      res.render('user/error')
+      res.render('admin/error')
     }
 }
 
 
 const addCoupon=async (req, res) => {
     try {
-      // Extract data from the form
       const {
         couponCode,
         discountType,
@@ -25,7 +25,6 @@ const addCoupon=async (req, res) => {
         usageLimit,
       } = req.body;
   
-      // Create a new coupon document
       const newCoupon = new Coupon({
         couponCode,
         discountType,
@@ -33,22 +32,18 @@ const addCoupon=async (req, res) => {
         minimumPurchase,
         maximumPurchase,
         startDate,
-        expiryDate: endDate, // Map 'endDate' to 'expiryDate' in schema
+        expiryDate: endDate, 
         usageLimit,
       });
   
-      // Save the document to the database
-      await newCoupon.save();
-  
+      await newCoupon.save();  
       res.redirect('/admin/coupon')
     } catch (error) {
       console.error('Error saving coupon:', error);
-  
-      // Handle duplicate coupon code or validation errors
       if (error.code === 11000) {
         res.status(400).send({ success: false, message: 'Coupon code must be unique!' });
       } else {
-        res.status(500).send({ success: false, message: 'Failed to add coupon', error });
+        res.render('admin/error')
       }
     }
   }
@@ -59,18 +54,15 @@ const addCoupon=async (req, res) => {
   const changeStatus=async (req, res) => {
     try {
       const { id } = req.params; 
-      const { isActive } = req.body; // Get new status from the request body
-  
-      // Find the coupon by ID and update its isActive field
-      const updatedCoupon = await Coupon.findByIdAndUpdate(id, { isActive }, { new: true });
-  
+      const { isActive } = req.body; 
+      const updatedCoupon = await Coupon.findByIdAndUpdate(id, { isActive }, { new: true }); 
       if (updatedCoupon) {
         res.json({ success: true, coupon: updatedCoupon });
       } else {
         res.status(404).json({ success: false, message: 'Coupon not found' });
       }
     } catch (err) {
-      res.status(500).json({ success: false, message: 'Error updating coupon status' });
+      res.render('admin/error')
     }
   }
 
@@ -82,11 +74,10 @@ const deleteCoupon=async (req, res) => {
     if (!deletedCoupon) {
       return res.status(404).json({ success: false, message: 'Coupon not found' });
     }
-
     res.redirect('/admin/coupon')
   } catch (error) {
     console.error('Error deleting coupon:', error);
-    res.status(500).json({ success: false, message: 'Internal server error' });
+    res.render('admin/error')
   }
 }
 
@@ -108,8 +99,7 @@ const addMoney=async (req, res) => {
       wallet.balance += parseInt(amount);
     }
     
-    const uniqueTransactionId = generateUniqueTransactionId();
-    // Add a transaction record
+    const uniqueTransactionId = generateUniqueTransactionId(); 
     wallet.transactions.push({
       type: 'credit',
       amount,

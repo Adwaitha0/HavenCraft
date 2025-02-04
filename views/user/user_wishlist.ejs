@@ -101,7 +101,7 @@
                       </div>
                       <div class="content">
                           <h5 class="card-title"><%= item.name %></h5>
-                          <p class="card-text">Price: &#8377;<%= item.discountPrice || item.originalPrice %></p>
+                          <p class="card-text">Price: <%= item.discountPrice.toLocaleString('en-IN',{style:"currency",currency:"INR"}) || item.originalPrice.toLocaleString('en-IN',{style:"currency",currency:"INR"}) %></p>
                           <a href="javascript:void(0);" class="btn btn-outline-secondary" data-bs-toggle="modal" data-bs-target="#addToCartModal_<%= item.productId %>">Add to Cart</a>
                        
 <!-- Modal -->
@@ -128,7 +128,7 @@
         <p><span id="stock-quantity_<%= item.productId %>"></span></p>
       </div>
       <div class="modal-footer">
-        <!-- Optional footer content -->
+      
       </div>
     </div>
   </div>
