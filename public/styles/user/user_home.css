@@ -54,7 +54,7 @@ body{
     /*background-color: #f0dddd; */
 }
 .section-1{
-    width: 80%;
+    width: 100%;
     height: auto;
     
 }
@@ -63,25 +63,7 @@ body{
     position: relative;
   }
   
-  .image-overlay {
-    position: absolute;
-    bottom: 0;
-    left: 0;
-    width: 100%;
-    height: 40%;
-    background: linear-gradient(to top, rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0));
-    z-index: 1;
-  }
-  
-  .carousel-caption {
-    position: relative;
-    z-index: 2;
-    color: rgb(154, 93, 93); 
-  }
-  
-
-
-
+   
 
 
 

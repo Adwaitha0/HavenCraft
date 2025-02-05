@@ -7,7 +7,6 @@ const {StatusCodes,Messages } = require("../controller/statusCode");
 
 const loadProfile = async (req, res) => {
   const userId = req.session.user.id;
-
   try {
     const user = await user_model.findById(userId);
     if (!user) {
@@ -85,8 +84,6 @@ const generateUniqueTransactionId = () => {
 
 const cancelProduct = async (req, res) => {
   const { orderId, productId } = req.params;
-  console.log(orderId);
-  console.log(productId);
 
   try {
     const order = await order_model.findById(orderId);
@@ -102,20 +99,17 @@ const cancelProduct = async (req, res) => {
     product.productStatus = 'Cancelled';
 
     const refundAmount = product.price;
-    console.log(refundAmount);
 
     const wallet = await wallet_model.findOne({ userId: order.userId });
     if (!wallet) {
       return res.status(404).json({ message: 'Wallet not found' });
     }
-    console.log(wallet);
 
     const uniqueTransactionId = generateUniqueTransactionId();
 
     const otherActiveProducts = order.products.filter((p) => p._id.toString() !== productId && p.productStatus !== 'Cancelled');
     if (otherActiveProducts.length === 0) {
       order.payableAmount -= 50;
-      console.log('₹50 shipping charge reduced from payable amount');
     }
 
     order.payableAmount -= refundAmount;
@@ -145,12 +139,6 @@ const cancelProduct = async (req, res) => {
     res.status(StatusCodes.INTERNAL_SERVER_ERROR).send(Messages.INTERNAL_ERROR);
   }
 };
-
-
-
-
-
-
 
 
 
@@ -188,7 +176,6 @@ const cancelOrder = async (req, res) => {
       });
 
       await wallet.save(); 
-      console.log(refundAmount)
       res.json({ success: true, refundAmount });
   } catch (error) {
       console.error('Error:', error);
@@ -212,7 +199,6 @@ const addAddress = async (req, res) => {
 
   try {
     const user = await user_model.findById(userId);
-    console.log(user)
 
     if (!user) {
       return res.status(404).json({ error: "User not found." });
@@ -408,7 +394,6 @@ const resumeOrderPayment = async (req, res) => {
 const updatePayment = async (req, res) =>{
   try {
     const orderId = req.params.orderId; 
-    console.log(`orderId in updatePayment: ${orderId}`);
     const updatedOrder = await order_model.findByIdAndUpdate(orderId, 
         { isPaid: true }, 
         { new: true } 

@@ -6,6 +6,7 @@ const address_model = require('../model/address')
 const Coupon= require('../model/coupon');
 const Stock= require('../model/stock');
 const Wallet= require('../model/wallet');
+const Wishlist= require('../model/wishlist')
 const {StatusCodes,Messages } = require("../controller/statusCode");
 
 
@@ -25,15 +26,13 @@ const addToCart = async (req, res) => {
         message: Messages.RESOURCE_NOT_FOUND
       });
     }
-    let cartItem = await cart.findOne({ userId, productId }).populate({ path: 'productId' });
-    console.log(`cartItem ${cartItem}`)
+    let cartItem = await cart.findOne({ userId, productId }).populate({ path: 'productId' });   
     if (cartItem) {
       if (cartItem.quantity >= 3) {
         return res.status(400).json({ message: 'You can only purchase a maximum of 3 of the same product.' });
       }
       cartItem.quantity += 1;
-      cartItem.total = cartItem.quantity * parseFloat(cartItem.productId.discountPrice);
-      console.log(`cartItem.total ${cartItem.total}`)
+      cartItem.total = cartItem.quantity * parseFloat(cartItem.productId.discountPrice);      
       await cartItem.save();
     } else {
       cartItem = new cart({
@@ -108,8 +107,6 @@ const loadCart = async (req, res) => {
 
 const deleteCartItem = async (req, res) => {
   const { productId } = req.body; 
-  console.log('Received cart item ID:', productId);
-  console.log('User ID:', req.session.user?.id);
   try {
     const cartItem = await cart.findOne({ _id: productId, userId: req.session.user.id });
     if (!cartItem) {
@@ -186,7 +183,6 @@ const loadCheckout = async (req, res) => {
     }
 
     const cartItems = await cart.find({ userId, isDeleted: false }).populate('productId');
-    //console.log(`cartItem :: ${cartItems}`)
     const cartSummary = calculateCartSummary(cartItems);
     cartItems.forEach(item => {
       if (item.images && item.images.length > 0) {
@@ -223,7 +219,6 @@ const applyCoupon = async (req, res) => {
     if (!coupon) {
       return res.status(404).json({ success: false, message: 'Coupon not found' });
     }
-    console.log(`coupon ${coupon}`);
 
     if (!coupon.isActive) {
       return res.status(400).json({ success: false, message: 'Coupon is not active' });
@@ -352,12 +347,6 @@ const placeOrder = async (req, res) => {
   
 
 
-
-
-
-
-
-
     if (couponCode && couponId) {
       const coupon = await Coupon.findById(couponId);
       if (!coupon || coupon.expiryDate < new Date() || !coupon.isActive) {
@@ -405,8 +394,6 @@ const placeOrder = async (req, res) => {
 
 
 
-
-
     const productIds = cartItems.map(item => item.productId);
 const productDetails = await Product.find({ _id: { $in: productIds } }, 'name discountPrice');
 
@@ -419,8 +406,6 @@ productDetails.forEach(product => {
 });
 
     
-
-
 
 
     const products = cartItems.map(item => ({
@@ -482,9 +467,7 @@ const generateOrderId = () => {
 const saveAddress=async (req, res) => {
   const { addressId } = req.body;  
   if (addressId) {
-    req.session.addressId = addressId; 
-    console.log(req.session.addressId)  
-    console.log('Address ID received:', addressId); 
+    req.session.addressId = addressId;
     res.json({
       message: 'Address saved successfully',
       addressId: addressId
@@ -514,7 +497,6 @@ const updateIsPaid = async (req, res) => {
     );
     
     if (!orders) {
-      console.log('Order not found!');
       return res.status(404).json({ success: false, message: 'Order not found' });
     }   
     return res.status(200).json({
@@ -538,8 +520,6 @@ const updateIsPaid = async (req, res) => {
 
 const updateCartQuantity = async (req, res) => {
   const { productId, quantity } = req.body;
-  console.log(`productId ${productId}`)
-  console.log(`quantity ${quantity}`)
 
   try {
     const userId = req.session.user.id;
@@ -579,14 +559,21 @@ const updateCartQuantity = async (req, res) => {
   }
 };
 
-
-
-
-
-
-
-
-
+const loadNavbarData = async (req, res, next) => {
+  res.locals.cartCount = 0; 
+  res.locals.wishlistCount = 0;
+  if (req.session.user) {
+    try {
+      const cartItems = await cart.find({ userId: req.session.user.id });
+      res.locals.cartCount = cartItems.reduce((total, item) => total + (item.quantity || 0), 0); 
+      const wishlistItems = await Wishlist.find({ userId: req.session.user.id });
+      res.locals.wishlistCount = wishlistItems.length;
+    } catch (error) {
+      console.error("Error fetching cart data:", error);
+    }
+  }
+  next();
+};
 
 
 
@@ -601,5 +588,6 @@ module.exports = {
   saveAddress,
   orderSuccess,
   updateIsPaid,
-  updateCartQuantity
+  updateCartQuantity,
+  loadNavbarData
 };

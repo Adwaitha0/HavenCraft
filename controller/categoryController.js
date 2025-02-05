@@ -72,8 +72,6 @@ const getUpdateCategory= async (req, res) => {
 
 const deleteCategory =async (req, res) => {
     const { id } = req.body; 
-    console.log(id)
-
     try {
         await category.findByIdAndUpdate(id, { isDeleted: true });
         res.redirect('/admin/admin_category'); 
@@ -87,7 +85,6 @@ const deleteCategory =async (req, res) => {
 
 const updateCategory = async (req, res) => {
     const { id, name, parentCategoryId, offerPercentage } = req.body;
-    console.log(req.body)
 
     try {
         const offerPercentageNum = parseFloat(offerPercentage) || 0;
@@ -128,14 +125,8 @@ const updateCategory = async (req, res) => {
 };
 
 
-
-
-
-
-
 const check_category_exists=async (req, res) => {
     const { name } = req.body;
-    console.log(`req.body ${req.body}`)
     category.findOne({
         name: { $regex: `^${name}$`, $options: 'i' },
         isDeleted: false,

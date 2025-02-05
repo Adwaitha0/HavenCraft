@@ -26,7 +26,6 @@ const addOffer = async (req, res) => {
     try {
         const { offerName, type, offerItem, discountType, discountValue, startDate, endDate } = req.body;
         let offerDocument;
-        console.log(req.body);
         
         if (type === 'Product') {
             offerDocument = await Product.findOne({ name: offerItem }); 

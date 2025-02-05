@@ -121,7 +121,6 @@ const loadDashboard = async (req, res) => {
 const loadUsers = async (req, res) => {
     try {
         const users = await user_model.find({isDeleted: false},{ username: 1, email: 1, joinDate: 1 ,isBlocked:1});
-        console.log(users) 
         res.render('admin/admin_user', { users }); 
     } catch (error) {
         console.error('Error fetching users:', error);
@@ -130,7 +129,6 @@ const loadUsers = async (req, res) => {
 
 const blockUser=async (req, res) => {
     const { id } = req.body;
-    console.log(`Blocked user ${req.body.id}`)
     try {
         
         await user_model.findByIdAndUpdate(id, { isBlocked: true });
@@ -147,7 +145,6 @@ const blockUser=async (req, res) => {
 
 const unblockUser = async (req, res) => {
     const { id } = req.body;
-    console.log(`Unblocked user ${id}`);
     try {
         await user_model.findByIdAndUpdate(id, { isBlocked: false });
         res.redirect('/admin/admin_user');  

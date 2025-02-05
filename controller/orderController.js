@@ -29,8 +29,6 @@ const loadOrder = async (req, res) => {
         products: productsWithImages,
       };
     });
-
-    console.log('Unique orders processed successfully.');
     res.render('admin/admin_order', { orders: uniqueOrders });
   } catch (error) {
     console.error('Error fetching unique orders:', error);
@@ -63,7 +61,6 @@ const loadOrder = async (req, res) => {
 
 const adminUpdateIndividualOrder = async (req, res) => {
   const { orderId, productId } = req.body;
-  console.log('Received body:', req.body);
 
   try {
     const orders = await order.findById(orderId);
@@ -130,15 +127,13 @@ const generateUniqueTransactionId = () => {
 const adminUpdateOrderStatus = async (req, res) => {
   const { orderId, orderStatus } = req.body;
   const shippingCharge = 50; 
-  console.log(req.body);
 
   try {
       const orders = await order.findById(orderId);
       if (!orders) {
           return res.status(404).json({ success: false, message: 'Order not found' });
       }
-      console.log('adminUpdateOrder Hit')
-
+    
       orders.products.forEach(product => {
         product.productStatus = orderStatus;
       });
@@ -151,7 +146,6 @@ const adminUpdateOrderStatus = async (req, res) => {
               product.productStatus = 'Cancelled';
           });
           const refundAmount = orders.payableAmount - shippingCharge;
-          console.log(refundAmount)
           const wallet = await Wallet.findOne({ userId: orders.userId });
           if (!wallet) {
               return res.status(404).json({ success: false, message: 'Wallet not found' });
@@ -182,15 +176,11 @@ const adminUpdateOrderStatus = async (req, res) => {
 
 const returnOrder = async (req, res) => {
   const { orderId, reason } = req.body;
-  console.log(req.body);
-
   if (!orderId || !reason) {
     return res.status(400).send('Invalid request. Please provide all required details.');
   }
-
   try {
-    const orderToUpdate = await order.findById(orderId);
-    
+    const orderToUpdate = await order.findById(orderId);    
     if (!orderToUpdate) {
       return res.status(404).send('Order not found.');
     }
@@ -200,8 +190,6 @@ const returnOrder = async (req, res) => {
       product.productStatus = 'Returning';
     });
     await orderToUpdate.save();
-
-    console.log(`Order ID: ${orderId}, Return Reason: ${reason}`);
     res.redirect('/user/user_profile');
   } catch (error) {
     console.error('Error processing return:', error);
@@ -211,84 +199,17 @@ const returnOrder = async (req, res) => {
 
 
 
-
-
-
-
-
-/*
-const refundOrder= async (req, res) => {
-  const { orderId, productId, productStatus } = req.body;
-
-  try {
-    const orders = await order.findById(orderId);
-    if (!orders) {
-      return res.status(404).json({ error: 'Order not found' });
-    }
-
-    const product = orders.products.find(p => p.productId.toString() === productId);
-    if (!product) {
-      return res.status(404).json({ error: 'Product not found in order' });
-    }
-
-    product.productStatus = productStatus;
-    if (productStatus === 'Approve') {
-      const shippingCharge = 50;
-      const allApproved = orders.products.every(p => p.productStatus === 'Approve');
-      if (allApproved) {
-        orders.status = 'Returned';
-
-        const refundAmount = orders.payableAmount - shippingCharge;
-
-        const wallet = await Wallet.findOne({ userId: orders.userId });
-        if (!wallet) {
-          return res.status(404).json({ error: 'Wallet not found' });
-        }
-
-        const uniqueTransactionId = generateUniqueTransactionId();
-
-        wallet.balance += refundAmount;
-        wallet.transactions.push({
-          type: 'credit',
-          amount: refundAmount,
-          description: `Refund for order after return`,
-          uniqueTransactionId: uniqueTransactionId,
-
-        });
-
-        await wallet.save();
-      }
-
-      await orders.save();
-    }
-
-    res.redirect('/admin/admin_order')
-  } catch (err) {
-    console.error(err);
-    res.status(500).json({ error: 'Internal server error' });
-  }
-}
-
-*/
-
-
-
 const refundOrder = async (req, res) => {
   const { orderId, orderStatus } = req.body; 
-  console.log(`refundOrderId ${orderId}`)
-  console.log(`orderStatus ${orderStatus}`)
-
   try {
     const orders = await order.findById(orderId);
     if (!orders) {
       return res.status(404).json({ error: 'Order not found' });
     }
-    console.log(orders)
     orders.status = orderStatus;
     if (orderStatus === 'Approve') {
       const shippingCharge = 50; 
       const refundAmount = orders.payableAmount - shippingCharge;
-
       const wallet = await Wallet.findOne({ userId: orders.userId });
       if (!wallet) {
         return res.status(404).json({ error: 'Wallet not found' });
@@ -301,13 +222,10 @@ const refundOrder = async (req, res) => {
         description: 'Refund for order after return',
         uniqueTransactionId: uniqueTransactionId,
       });
-
       await wallet.save();
-
       orders.status = 'Returned';
       await orders.save();
     }
-
     res.redirect('/admin/admin_order'); 
   } catch (err) {
     console.error(err);

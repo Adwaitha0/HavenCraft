@@ -3,7 +3,8 @@ const Category=require('../model/category')
 const statusCode=require('../controller/statusCode')
 const message=require('../controller/statusCode')
 const {StatusCodes,Messages } = require("../controller/statusCode")
-
+const Wishlist=require('../model/wishlist')
+const Cart=require('../model/cart')
 
 
 const loadProducts = async (req, res) => {
@@ -11,7 +12,6 @@ const loadProducts = async (req, res) => {
     const limit = 6; 
     const skip = (page - 1) * limit; 
     const searchQuery = req.query.search || '';
-
     try {
         let filter = { isDeleted: false };
         if (searchQuery) {
@@ -23,7 +23,6 @@ const loadProducts = async (req, res) => {
                 ]
             };
         }
-
         const products = await product
             .find(filter, {
                 name: 1,
@@ -61,10 +60,6 @@ const loadProducts = async (req, res) => {
         res.render('admin/error')
     }
 };
-
-
-
-
 
 
 const addProduct = async (req, res) => {
@@ -111,21 +106,13 @@ const addProduct = async (req, res) => {
 };
 
 const check_product_exists= async (req, res) => {
-    console.log('check product exists hit')
     const productName = req.query.name;
-    console.log(productName)
     const products = await product.findOne({ name: { $regex: new RegExp('^' + productName + '$', 'i') } });
     if (products) {
         return res.json({ exists: true });
     }
-
     return res.json({ exists: false });
 }
-
-
-
-
-
 
 
 const updateProduct = async (req, res) => {
@@ -160,7 +147,6 @@ const updateProduct = async (req, res) => {
             offerPercentage: offerPercentageNum,  
             stock: parseInt(stock) || 0,
         });
-
         res.redirect('/admin/admin_product'); 
     } catch (error) {
         console.error('Error updating product:', error);
@@ -177,7 +163,6 @@ const deleteProduct=async (req, res) => {
             console.error('Product not found for deletion');
             return res.status(404).send('Product not found');
         }
-        console.log('Product soft deleted:', deletedProduct);
         res.redirect('/admin/admin_product');
     } catch (error) {
         console.error('Error soft deleting product:', error);
@@ -206,6 +191,14 @@ const loadCandleholderProducts = async (req, res) => {
         const products = await product.find({ category: "Candle holder", isDeleted: false })
             .select('_id name category images originalPrice discountPrice offerPercentage')
             .sort(sortCriteria); 
+            let wishlistProductIds = [];
+        if (req.session.user) {
+            const wishlist = await Wishlist.find({ userId: req.session.user.id }).select('productId');
+            wishlistProductIds = wishlist.map(item => item.productId.toString());
+        }
+
+
+
         const productsData = products.map(prod => {
             const firstImage = prod.images.length > 0 ? prod.images[0].toString('base64') : null;
             return {
@@ -213,7 +206,8 @@ const loadCandleholderProducts = async (req, res) => {
                 price: prod.originalPrice,
                 offerPercentage: prod.offerPercentage || 0 ,
                 image: firstImage,
-                id: prod._id
+                id: prod._id,
+                isInWishlist: wishlistProductIds.includes(prod._id.toString()) 
             };
         });
         res.render('user/user_candle', { products: productsData, currentCategory: 'candleHolder'});
@@ -244,6 +238,11 @@ const loadTableLampProducts = async (req, res) => {
         const products = await product.find({ category: "Table Lamp", isDeleted: false })
             .select('_id name category images originalPrice discountPrice offerPercentage')
             .sort(sortCriteria); 
+            let wishlistProductIds = [];
+            if (req.session.user) {
+            const wishlist = await Wishlist.find({ userId: req.session.user.id }).select('productId');
+            wishlistProductIds = wishlist.map(item => item.productId.toString());
+            }
         const productsData = products.map(prod => {
             const firstImage = prod.images.length > 0 ? prod.images[0].toString('base64') : null;
             return {
@@ -251,7 +250,8 @@ const loadTableLampProducts = async (req, res) => {
                 price: prod.originalPrice,
                 offerPercentage: prod.offerPercentage || 0 ,
                 image: firstImage,
-                id: prod._id
+                id: prod._id,
+                isInWishlist: wishlistProductIds.includes(prod._id.toString())
             };
         });
         res.render('user/user_candle', { products: productsData, currentCategory:'tableLamp' });
@@ -282,13 +282,19 @@ const loadVaseProducts = async (req, res) => {
         const products = await product.find({ category: "Vase", isDeleted: false })
             .select('_id name category images originalPrice discountPrice offerPercentage')
             .sort(sortCriteria); 
+            let wishlistProductIds = [];
+            if (req.session.user) {
+            const wishlist = await Wishlist.find({ userId: req.session.user.id }).select('productId');
+            wishlistProductIds = wishlist.map(item => item.productId.toString());
+            }
         const productsData = products.map(prod => {
             const firstImage = prod.images.length > 0 ? prod.images[0].toString('base64') : null;
             return {
                 name: prod.name,
                 price: prod.originalPrice,
                 image: firstImage,
-                id: prod._id
+                id: prod._id,
+                isInWishlist: wishlistProductIds.includes(prod._id.toString())
             };
         });
         res.render('user/user_candle', { products: productsData, currentCategory:'vase'});
@@ -318,6 +324,11 @@ const loadArtifactProducts = async (req, res) => {
         const products = await product.find({ category: "Artifact", isDeleted: false })
             .select('_id name category images originalPrice')
             .sort(sortCriteria); 
+            let wishlistProductIds = [];
+            if (req.session.user) {
+            const wishlist = await Wishlist.find({ userId: req.session.user.id }).select('productId');
+            wishlistProductIds = wishlist.map(item => item.productId.toString());
+            }
         const productsData = products.map(prod => {
             const firstImage = prod.images.length > 0 ? prod.images[0].toString('base64') : null;
             return {
@@ -325,7 +336,8 @@ const loadArtifactProducts = async (req, res) => {
                 price: prod.originalPrice,
                 offerPercentage: prod.offerPercentage || 0 ,
                 image: firstImage,
-                id: prod._id
+                id: prod._id,
+                isInWishlist: wishlistProductIds.includes(prod._id.toString())
             };
         });
         res.render('user/user_candle', { products: productsData, currentCategory: 'artifact' });
@@ -354,7 +366,12 @@ const loadSculptureProducts = async (req, res) => {
         }
         const products = await product.find({ category: "Sculpture", isDeleted: false })
             .select('_id name category images originalPrice discountPrice offerPercentage')
-            .sort(sortCriteria); 
+            .sort(sortCriteria);
+            let wishlistProductIds = [];
+            if (req.session.user) {
+            const wishlist = await Wishlist.find({ userId: req.session.user.id }).select('productId');
+            wishlistProductIds = wishlist.map(item => item.productId.toString());
+            } 
         const productsData = products.map(prod => {
             const firstImage = prod.images.length > 0 ? prod.images[0].toString('base64') : null;
             return {
@@ -362,7 +379,8 @@ const loadSculptureProducts = async (req, res) => {
                 price: prod.originalPrice,
                 offerPercentage: prod.offerPercentage || 0 ,
                 image: firstImage,
-                id: prod._id
+                id: prod._id,
+                isInWishlist: wishlistProductIds.includes(prod._id.toString())
             };
         });
         res.render('user/user_candle', { products: productsData, currentCategory: 'sculpture' });
@@ -392,7 +410,12 @@ const loadChendelierProducts = async (req, res) => {
         }
         const products = await product.find({ category: "Chendeliers", isDeleted: false })
             .select('_id name category images originalPrice discountPrice offerPercentage')
-            .sort(sortCriteria); 
+            .sort(sortCriteria);
+            let wishlistProductIds = [];
+            if (req.session.user) {
+            const wishlist = await Wishlist.find({ userId: req.session.user.id }).select('productId');
+            wishlistProductIds = wishlist.map(item => item.productId.toString());
+        } 
         const productsData = products.map(prod => {
             const firstImage = prod.images.length > 0 ? prod.images[0].toString('base64') : null;
             return {
@@ -400,7 +423,8 @@ const loadChendelierProducts = async (req, res) => {
                 price: prod.originalPrice,
                 offerPercentage: prod.offerPercentage || 0 ,
                 image: firstImage,
-                id: prod._id
+                id: prod._id,
+                isInWishlist: wishlistProductIds.includes(prod._id.toString())
             };
         });
         res.render('user/user_candle', { products: productsData, currentCategory: 'Chendeliers' });
@@ -425,13 +449,31 @@ const loadCandleDetail = async (req, res) => {
       _id: { $ne: productId } 
     }).limit(4); 
 
+    let isInWishlist = false;
+    let isInCart = false;
+    if (req.session.user) {
+      const wishlistItem = await Wishlist.findOne({ 
+        userId: req.session.user.id, 
+        productId: productId 
+      });
+      isInWishlist = !!wishlistItem;
+      const cartItem = await Cart.findOne({
+        userId: req.session.user.id,
+        productId: productId 
+      });
+      isInCart = !!cartItem;
+    }
+
+
+
     res.render("user/user_candleDetail", { 
       products: currentProduct, 
-      relatedProducts 
+      relatedProducts ,
+      isInWishlist,
+      isInCart
     });
   } catch (error) {
     console.error(error);
-    //res.status(500).send("Internal server error.");
     res.status(statusCode.INTERNAL_SERVER_ERROR).send(message.INTERNAL_ERROR);
   }
 };

@@ -70,7 +70,6 @@ const deleteCoupon=async (req, res) => {
   try {
     const { id } = req.params;
     const deletedCoupon = await Coupon.findByIdAndDelete(id);
-
     if (!deletedCoupon) {
       return res.status(404).json({ success: false, message: 'Coupon not found' });
     }
@@ -84,11 +83,9 @@ const deleteCoupon=async (req, res) => {
 
 const addMoney=async (req, res) => {
   const { amount } = req.body;
-
   if (!amount || amount <= 0) {
     return res.status(400).send('Invalid amount.');
   }
-
   try {
     const userId = req.user._id;
     let wallet = await Wallet.findOne({ userId });

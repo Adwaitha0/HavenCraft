@@ -64,7 +64,6 @@ const filterSales = async (req, res) => {
         } else {
             return res.redirect('/admin/salesReport'); 
         }
-
         const orders = await Order.find({
             isDeleted: false, 
             orderDate: { $gte: start, $lte: end },
@@ -99,7 +98,6 @@ const filterSales = async (req, res) => {
 
 const generatePDF=async (req, res) => {
     const { salesData } = req.body;
-
     const doc = new PDFDocument();
     const chunks = [];
     doc.on('data', (chunk) => chunks.push(chunk));

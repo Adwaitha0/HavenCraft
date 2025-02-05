@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Landing Page</title>
+    <title>Login Page</title>
     <link rel="stylesheet" href="\styles\user\user_login.css">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
 </head>
@@ -99,23 +99,20 @@
       console.log(email)
       const emailPattern = /^[a-zA-Z0-9]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,6}$/;
   
-      // Validate email format
       if (!emailPattern.test(email)) {
         Swal.fire({
           icon: 'error',
           title: 'Invalid Email',
           text: 'Please enter a valid email address.',
         });
-        return; // Stop further execution
+        return; 
       }
   
-      // Prepare data to send to the server
       const data = {
         email: email
       };
   
       try {
-        // Send a POST request to the server
         const response = await fetch('/user/sent-forgot-otp', {
           method: 'POST',
           headers: {
@@ -123,12 +120,9 @@
           },
           body: JSON.stringify(data),
         });
-  
-        // Handle the response
         const result = await response.json();
   
         if (response.ok) {
-          // Success response
           Swal.fire({
             icon: 'success',
             title: 'OTP Sent',
@@ -137,7 +131,6 @@
             window.location.href = '/user/load-forgot-otp';
           });
         } else {
-          // Error response
           Swal.fire({
             icon: 'error',
             title: 'Error',
@@ -145,7 +138,6 @@
           });
         }
       } catch (error) {
-        // Handle unexpected errors
         console.error(error);
         Swal.fire({
           icon: 'error',

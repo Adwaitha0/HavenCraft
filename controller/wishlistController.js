@@ -12,7 +12,6 @@ const loadWishlist = async (req, res) => {
             return res.status(400).json({ message: 'User not logged in' });
         }
         const obj=new mongoose.Types.ObjectId(user);
-        console.log(obj)
         const wishlist = await Wishlist.aggregate([
             { $match: { userId: obj } }, 
             {
@@ -55,7 +54,6 @@ const addToWishlist = async (req, res) => {
     try {
         const userId = req.session.user.id; 
         const productId = req.params.id;
-
          if (!userId || !productId) {
             return res.status(400).json({success: false, message: 'User ID or Product ID missing' });
         }  
@@ -74,15 +72,6 @@ const addToWishlist = async (req, res) => {
         res.status(500).json({ message: 'Failed to add product to wishlist', error: err.message });
     }
 };  
-
-
-
-
-
-
-
-
-
 
 
 const removeFromWishlist=async (req, res) => {

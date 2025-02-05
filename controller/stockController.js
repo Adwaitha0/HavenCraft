@@ -56,7 +56,6 @@ const createStockEntries = async (req, res, next) => {
   
 const updateStock = async (req, res) => {
   const { productId,stockId, largeQuantity, smallQuantity } = req.body;
-  console.log(req.body)
   if (!productId) {
      return res.status(400).send('Product ID is required');
   }
@@ -66,7 +65,6 @@ const updateStock = async (req, res) => {
         { small: smallQuantity, large: largeQuantity },
         { new: true }
      );
-     console.log(stock)
 
      if (!stock) {
         return res.status(404).send('Stock not found');
@@ -89,17 +87,14 @@ const getStock = async (req, res) => {
     if (!size) {
       return res.status(400).json({ message: 'Size is required' });
     }
-
     const validSizes = ['small', 'large'];
     if (!validSizes.includes(size.toLowerCase())) {
       return res.status(400).json({ message: `Invalid size. Valid sizes are: ${validSizes.join(', ')}` });
     }
-
     const product = await Stock.findOne({ productId });
     if (!product) {
       return res.status(404).json({ message: 'Product not found' });
     }
-
     const stock = product[size.toLowerCase()];
     if (stock === 0) {
       return res.json({ stock: 'Out of stock' });

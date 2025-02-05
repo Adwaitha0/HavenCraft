@@ -44,20 +44,44 @@
           </form>
             <div class="icons">
             <ul class="navbar-nav me-auto mb-2 mb-lg-0">
-              <li class="nav-item">
+              <li class="nav-item position-relative">
                 <% if (session.user) { %> 
-                  <a class="nav-link" href="/user/wishlist"><i class="fa-solid fa-heart"></i></a>
-                  <% } else { %>
-                    <a class="nav-link" href="/user/user_login"><i class="fa-solid fa-heart"></i></a>
-                    <% } %>
+                <a class="nav-link position-relative" href="/user/wishlist" style="display: inline-block;">
+                <i class="fa-solid fa-heart" style="font-size: 16px; position: relative;"></i>
+
+                <% if (wishlistCount > 0) { %>
+                <span class="badge bg-danger position-absolute top-10 start-90 translate-middle rounded-pill"
+                style="font-size: 12px; padding: 3px 6px; min-width: 18px; min-height: 18px;">
+                <%= wishlistCount %>
+                </span>
+                <% } %>
+                </a>
+                <% } else { %>
+                <a class="nav-link" href="/user/user_login">
+                <i class="fa-solid fa-heart" style="font-size: 16px;"></i>
+                </a>
+                <% } %>  
               </li>
-              <li class="nav-item">
+
+              <li class="nav-item position-relative" >
                 <% if (session.user) { %> 
-                  <a class="nav-link" href="/user/user_addToCart"><i class="fa-solid fa-cart-shopping"></i></a>
-                  <% } else { %>
-                    <a class="nav-link" href="/user/user_login"><i class="fa-solid fa-cart-shopping"></i></a>
+                  <a class="nav-link position-relative" href="/user/user_addToCart" style="display: inline-block;">
+                    <i class="fa-solid fa-cart-shopping" style="font-size: 16px; position: relative;"></i>
+                    
+                    <% if (cartCount > 0) { %>
+                      <span class="badge bg-danger position-absolute top-10 start-90 translate-middle rounded-pill"
+                            style="font-size: 12px; padding: 3px 6px; min-width: 18px; min-height: 18px;">
+                        <%= cartCount %>
+                      </span>
                     <% } %>
+                  </a>
+                <% } else { %>
+                  <a class="nav-link" href="/user/user_login">
+                    <i class="fa-solid fa-cart-shopping" style="font-size: 16px;"></i>
+                  </a>
+                <% } %>  
               </li>
+              
               <li class="nav-item">
                 <% if (session.user) { %>    
                   <a class="nav-link" href="/user/user_profile"><i class="fa-solid fa-user"></i></a>
@@ -108,7 +132,7 @@
                       
                       <h5 class="card-title"><%= item.productId.name %></h5>
                       <h6 class="card-text">
-                        <% if (item.productId.discountPrice && item.productId.originalPrice !== item.productId.originalPrice) { %>
+                        <% if (item.productId.discountPrice && item.productId.discountPrice !== item.productId.originalPrice) { %>
                           <div style="display: flex;"></div>
                           <h5 style="display: inline-block; "><%= item.productId.discountPrice.toLocaleString('en-IN',{style:"currency",currency:"INR"}) %></h5>
                           <span style="text-decoration: line-through; color: grey;"><%= item.productId.originalPrice.toLocaleString('en-IN',{style:"currency",currency:"INR"}) %></span>
