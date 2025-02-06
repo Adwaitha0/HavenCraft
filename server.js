@@ -56,6 +56,14 @@ passport.deserializeUser(async (id, done) => {
 });
 
 
+app.get('/', (req, res) => {
+  res.redirect('/user');  // Redirect to the /user route
+});
+
+
+
+
+
 app.use(session({
     secret: 'mysecretkey',
     resave: false,
