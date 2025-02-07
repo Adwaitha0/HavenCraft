@@ -57,7 +57,7 @@ passport.deserializeUser(async (id, done) => {
 
 
 app.get('/', (req, res) => {
-  res.redirect('/user'); 
+  res.redirect('/user/user_home'); 
 });
 
 
