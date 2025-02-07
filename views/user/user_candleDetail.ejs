@@ -189,14 +189,14 @@
                 <div class="image">
                   <img 
                     id="zoom-image" 
-                    src="data:image/png;base64,<%= products.images[0].toString('base64') %>" 
+                    src="<%= products.images[0].toString('base64') %>" 
                     alt="<%= products.name %>">
                   <div class="zoom-lens"></div>
                 </div>
               </div>
               <div class="small-image">
                 <% products.images.forEach(image => { %>
-                  <img src="data:image/png;base64,<%= image.toString('base64') %>" style="width: 60px; height: 60px;">
+                  <img src="<%= image.toString('base64') %>" style="width: 60px; height: 60px;">
                 <% }) %>
               </div>
               
@@ -240,50 +240,7 @@
        
                 <div class="product-button" style="display: flex; gap: 2%;">
       
-                  <% if (session.user) { %> 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+                  <% if (session.user) { %>
                     <% if (isInCart) { %>
                       <a class="nav-link1 btn btn-outline-secondary" href="/user/user_addToCart">Go to Cart</a>
                     <% } else { %>
@@ -357,7 +314,7 @@
     
     <% relatedProducts.forEach(relatedProduct => { %>
       <div class="cat-1">
-        <img src="data:image/png;base64,<%= relatedProduct.images[0].toString('base64') %>" alt="<%= relatedProduct.name %>" >
+        <img src="<%= relatedProduct.images[0].toString('base64') %>" alt="<%= relatedProduct.name %>" >
         <br><br>
         <p><%= relatedProduct.name %></p>
         <div class="wish" style="display: flex; justify-content: space-between;">

@@ -81,7 +81,7 @@ const loadCart = async (req, res) => {
     const cartItems = await cart.find({ userId, isDeleted: false }).populate('productId');
     cartItems.forEach(item => {
       if (item.images && item.images.length > 0) {
-        item.imageSrc = item.images[0].toString('base64');  
+        item.imageSrc = item.images[0];  
       }
      
     });
@@ -186,7 +186,7 @@ const loadCheckout = async (req, res) => {
     const cartSummary = calculateCartSummary(cartItems);
     cartItems.forEach(item => {
       if (item.images && item.images.length > 0) {
-        item.imageSrc = item.images[0].toString('base64');  
+        item.imageSrc = item.images[0];  
       }
     });
   

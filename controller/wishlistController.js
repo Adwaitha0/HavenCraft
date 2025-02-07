@@ -30,13 +30,7 @@ const loadWishlist = async (req, res) => {
                     name: '$productDetails.name',
                     originalPrice: '$productDetails.originalPrice',
                     discountPrice: '$productDetails.discountPrice',
-                    imageUrl: {
-                        $cond: {
-                            if: { $gt: [{ $size: '$productDetails.images' }, 0] },
-                            then: { $concat: ['data:image/png;base64,', { $toString: { $arrayElemAt: ['$productDetails.images', 0] } }] },
-                            else: null
-                        }
-                    },
+                    imageUrl: '$productDetails.images', 
                     addedAt: 1
                 }
             }

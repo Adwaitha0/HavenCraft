@@ -64,7 +64,6 @@ app.use(session({
 }));
 app.use(flash());
 
-// Middleware to Pass Flash Messages to Views
 app.use((req, res, next) => {
     res.locals.success = req.flash('success');
     res.locals.error = req.flash('error');

@@ -60,6 +60,8 @@ router.get('/vase',userAuth.checkBlockedStatus,cartController.loadNavbarData,pro
 
 router.get('/tableLamp',userAuth.checkBlockedStatus,cartController.loadNavbarData,productController.loadTableLampProducts)
 
+router.get('/Pendent',userAuth.checkBlockedStatus,cartController.loadNavbarData,productController.loadPendentProducts)
+
 router.get('/sculpture',userAuth.checkBlockedStatus,cartController.loadNavbarData,productController.loadSculptureProducts)
 
 router.get('/artifact',userAuth.checkBlockedStatus,cartController.loadNavbarData,productController.loadArtifactProducts)

@@ -27,42 +27,15 @@
           <input type="text" class="form-control" id="otp"  placeholder="Enter OTP here" name="otp">
         </div>
         <div class="p" style="display: flex; justify-content: space-between;" >
-          <p id="timer">2:00</p>
-            <a  style="text-decoration: none;"  href="/user/resend-otp">
-            <p style="color: black;">Resend OTP</p></a>
+          <p id="timer">Request a new OTP in 30 s</p>
+            <a id="resendOtp" style="text-decoration: none; display: none;"  href="/user/resend-otp">
+            <p style="color: black;  ">Resend OTP</p></a>
     </div> 
         <div class="otpverify"  style="text-align: center;">     
         <button type="submit" class="btn btn-primary" id="otp_btn">Verify</button>
     </div>
       </form>
-    <!--  <form action="/user/verifyOTP" method="post">
-        <div class="mb-3">
-          <input type="text" class="form-control" id="otp" placeholder="Enter OTP here" name="otp">
-        </div>
-      
-        <div class="p" style="display: flex; justify-content: space-between;">
-          <p id="timer">2:00</p>
-          <a style="text-decoration: none;" href="/user/resend-otp">
-            <p style="color: black;">Resend OTP</p>
-          </a>
-        </div>
-      
-        
-        
-      
-        <div class="otpverify" style="text-align: center;">
-          <button type="submit" class="btn btn-primary" id="otp_btn">Verify</button>
-        </div>
-      </form>  -->
-      
-
-
-
-
-
-
-
-
+   
 
 
     </div>
@@ -78,26 +51,33 @@
 
 
 <script>
+ 
+
   function startTimer() {
-      let duration = 2 * 60; //5
-      const timerElement = document.getElementById('timer');
+        let duration = 30; 
+        const timerElement = document.getElementById('timer');
+        const resendOtp = document.getElementById('resendOtp');
 
-      const interval = setInterval(() => {
-          const minutes = Math.floor(duration / 60);
-          const seconds = duration % 60;
+        const interval = setInterval(() => {
+            timerElement.textContent = `Request new OTP in ${duration} s`; 
+            duration--;
 
-          timerElement.textContent = `${minutes}:${seconds < 10 ? '0' : ''}${seconds}`;
-          duration--;
+            if (duration < 0) {
+                clearInterval(interval);
+                timerElement.textContent = ""; 
+                resendOtp.style.display = "block"; 
+            }
+        }, 1000);
+    }
 
-          if (duration < 0) {
-              clearInterval(interval);
-              timerElement.textContent = "Time's up!";
-          }
-      }, 1000);
-  }
+    window.onload = startTimer;
 
 
-  window.onload = startTimer;
+
+
+
+
+
 </script>
 
 

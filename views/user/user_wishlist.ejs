@@ -118,7 +118,7 @@
                   <div class="card-body" style="display: flex; gap: 3%;">
                       <div class="image">
                           <% if (item.imageUrl) { %>
-                              <img src="<%= item.imageUrl %>" width="150px" height="150px" alt="<%= item.name %>">
+                              <img src="<%= item.imageUrl[0] %>" width="150px" height="150px" alt="<%= item.name %>">
                           <% } else { %>
                               <p>No image available</p>
                           <% } %>

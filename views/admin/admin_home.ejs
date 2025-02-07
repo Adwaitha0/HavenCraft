@@ -112,7 +112,7 @@
                     <tr>
                         <td>
                         <% if (category.image) { %>
-                            <img src="data:image/jpeg;base64,<%= category.image.toString('base64') %>" alt="Product Image" width="50">
+                            <img src="<%= category.image %>" alt="Product Image" width="50">
                         <% } else { %>
                             No Image
                         <% } %>
@@ -144,7 +144,7 @@
                     <tr>
                       <td>
                         <% if (product.image) { %>
-                            <img src="data:image/jpeg;base64,<%= product.image.toString('base64') %>" 
+                            <img src="<%= product.image.toString('base64') %>" 
                                 alt="Product Image" width="50">
                         <% } else { %>
                             No Image

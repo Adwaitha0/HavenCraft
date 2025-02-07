@@ -9,9 +9,15 @@ const couponController=require('../controller/couponController')
 const offerController=require('../controller/offerController')
 const salesController=require('../controller/salesController')
 const adminAuth=require('../middleware/adminAuth')
+/*const multer = require('multer');
+const storage = multer.memoryStorage(); 
+const upload = multer({ storage }).array('images', 4);  */
+
+
 const multer = require('multer');
 const storage = multer.memoryStorage(); 
-const upload = multer({ storage }).array('images', 4);
+const upload = multer({ storage }).array('images', 4); 
+
 
 
 router.get('/login',adminAuth.isLogin,adminController.loadLogin)

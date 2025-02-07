@@ -7,7 +7,7 @@ const productSchema = new mongoose.Schema({
     originalPrice: { type: Number, required: true },
     discountPrice: { type: Number, required: false },
     offerPercentage: { type: Number, required: false },
-    images: [{ type: Buffer }],
+    images: [{ type: String }],
     isDeleted: { type: Boolean, default: false },
     offerPrice: { type: Number, required: false },
 },{timestamps:true});

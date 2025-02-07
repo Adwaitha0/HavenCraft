@@ -68,6 +68,7 @@ const sendVerificationEmail=async function (email, otp) {
   const sendForgotOTP = async (req, res) => {
     try {
       const { email } = req.body; 
+      console.log(req.body)
       console.log('Forgot OTP Controller hit!');
       console.log(req.body); 
       const checkUserPresent = await User.findOne({ email });

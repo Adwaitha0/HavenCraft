@@ -160,7 +160,7 @@
                                                     <div class="product-images">
                                                         <% if (product.images && product.images.length > 0) { %>
                                                             <% product.images.forEach(image => { %>
-                                                                <img src="data:image/jpeg;base64,<%= image %>" alt="Product Image" style="width: 50%; height: 50%; margin-bottom: 10px;" />
+                                                                <img src="<%= image %>" alt="Product Image" style="width: 50%; height: 50%; margin-bottom: 10px;" />
                                                             <% }) %>
                                                         <% } else { %>
                                                             <p>No images available.</p>
@@ -170,7 +170,6 @@
                                                     <p><strong>Category:</strong> <%= product.category %></p>
                                                     <p><strong>Original Price:</strong> <%= product.originalPrice %></p>
                                                     <p><strong>Discount Price:</strong> <%= product.discountPrice %></p>
-                                                    <p><strong>Stock:</strong> <%= product.stock %></p>
                                                     <p><strong>Description:</strong> <%= product.description %></p>
                                                     
                                                 </div>

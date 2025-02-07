@@ -118,7 +118,7 @@
                   Decorative Lights
                 </a>
                 <ul class="dropdown-menu">
-                  <li><a class="dropdown-item" href="#">Pendant Lights</a></li>
+                  <li><a class="dropdown-item" href="/user/pendent">Pendant Lights</a></li>
                   <li><a class="dropdown-item" href="/user/chendelier">Chendeliers</a></li>
                   <li><a class="dropdown-item" href="#">Outdoor Lights</a></li>
                 </ul>
@@ -133,7 +133,7 @@
                 <ul class="dropdown-menu">
                   <li><a class="dropdown-item" href="/user/tableLamp">Table Lights</a></li>
                   <li><a class="dropdown-item" href="#">Ceiling Lights</a></li>
-                  <li><a class="dropdown-item" href="#">Wall Lights</a></li>
+                
                 </ul>
               </li>
 
@@ -282,7 +282,7 @@
       
       <% products.forEach(product => { %>
         <div class="cat-1">
-          <img src="data:image/png;base64,<%= product.image %>" alt="<%= product.name %>" >
+          <img src="<%= product.image %>" alt="<%= product.name %>" >
           <br><br>
           <p><%= product.name %></p>
           <div class="wish" style="display: flex; justify-content: space-between;">

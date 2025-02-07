@@ -47,6 +47,7 @@ const loadDashboard = async (req, res) => {
         const totalSales = orders.reduce((sum, order) => sum + order.payableAmount, 0);
         const totalDiscounts = orders.reduce((sum, order) => sum + (order.totalPrice - order.payableAmount), 0);
 
+
         const categorySales = {};
         orders.forEach(order => {
             order.products.forEach(item => {
@@ -108,7 +109,7 @@ const loadDashboard = async (req, res) => {
         });
     } catch (err) {
         console.error('Error loading dashboard:', err.message);
-        res.status(StatusCodes.INTERNAL_SERVER_ERROR).render('user/error', {
+        res.status(StatusCodes.INTERNAL_SERVER_ERROR).render('admin/error', {
             statusCode: StatusCodes.INTERNAL_SERVER_ERROR,
             message: Messages.INTERNAL_ERROR
         });

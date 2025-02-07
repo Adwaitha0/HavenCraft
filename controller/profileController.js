@@ -23,7 +23,7 @@ const loadProfile = async (req, res) => {
     orders.forEach(order => {
       order.products.forEach(product => {
         if (product.image && product.image.length > 0) {
-          product.imageBase64 = product.image[0].toString('base64'); 
+          product.imageBase64 = product.image[0]; 
         }
       });
     });

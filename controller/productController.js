@@ -5,6 +5,8 @@ const message=require('../controller/statusCode')
 const {StatusCodes,Messages } = require("../controller/statusCode")
 const Wishlist=require('../model/wishlist')
 const Cart=require('../model/cart')
+const cloudinary = require('../cloudinaryConfig'); 
+const fs = require('fs'); 
 
 
 const loadProducts = async (req, res) => {
@@ -62,6 +64,7 @@ const loadProducts = async (req, res) => {
 };
 
 
+
 const addProduct = async (req, res) => {
     try {
         const {
@@ -69,41 +72,63 @@ const addProduct = async (req, res) => {
             category,
             size,
             originalPrice,
-            offerPercentage, 
+            offerPercentage,
             description,
-            stock,           
+            stock,
         } = req.body;
 
         let images = [];
-        if (req.files) {
-            images = req.files.map(file => file.buffer); 
+        if (req.files && req.files.length > 0) {
+            const uploadPromises = req.files.map((file) => {
+                return new Promise((resolve, reject) => {
+                    const stream = cloudinary.uploader.upload_stream(
+                        { resource_type: 'image' },
+                        (error, result) => {
+                            if (error) {
+                                console.error('Cloudinary Upload Error:', error);
+                                reject(error);
+                            } else {
+                                resolve(result.secure_url);
+                            }
+                        }
+                    );
+                    stream.end(file.buffer);
+                });
+            });
+
+            images = await Promise.all(uploadPromises); // Wait for all uploads
+        } else {
+            return res.status(400).json({ error: 'No images uploaded' });
         }
 
         const originalPriceNum = parseFloat(originalPrice) || 0;
         const offerPercentageNum = parseFloat(offerPercentage) || 0;
 
-        const discountPrice = offerPercentageNum > 0 
-            ? originalPriceNum - ((offerPercentageNum / 100) * originalPriceNum) 
-            : originalPriceNum; 
+        const discountPrice = offerPercentageNum > 0
+            ? originalPriceNum - ((offerPercentageNum / 100) * originalPriceNum)
+            : originalPriceNum;
+
         const newProduct = new product({
             name,
             category,
             size,
-            originalPrice: originalPriceNum, 
-            discountPrice: parseInt(discountPrice),  
-            offerPercentage: offerPercentageNum, 
+            originalPrice: originalPriceNum,
+            discountPrice: parseInt(discountPrice),
+            offerPercentage: offerPercentageNum,
             description,
-            stock: parseInt(stock) || 0, 
-            images,
+            stock: parseInt(stock) || 0,
+            images, 
         });
 
         await newProduct.save();
         res.redirect('/admin/admin_product');
     } catch (error) {
         console.error('Error adding product:', error);
-        res.render('admin/error')
+        res.render('admin/error');
     }
 };
+
+
 
 const check_product_exists= async (req, res) => {
     const productName = req.query.name;
@@ -200,7 +225,7 @@ const loadCandleholderProducts = async (req, res) => {
 
 
         const productsData = products.map(prod => {
-            const firstImage = prod.images.length > 0 ? prod.images[0].toString('base64') : null;
+            const firstImage = prod.images.length > 0 ? prod.images[0] : null;
             return {
                 name: prod.name,
                 price: prod.originalPrice,
@@ -244,7 +269,7 @@ const loadTableLampProducts = async (req, res) => {
             wishlistProductIds = wishlist.map(item => item.productId.toString());
             }
         const productsData = products.map(prod => {
-            const firstImage = prod.images.length > 0 ? prod.images[0].toString('base64') : null;
+            const firstImage = prod.images.length > 0 ? prod.images[0]: null;
             return {
                 name: prod.name,
                 price: prod.originalPrice,
@@ -260,6 +285,56 @@ const loadTableLampProducts = async (req, res) => {
         res.status(StatusCodes.INTERNAL_SERVER_ERROR).send(Messages.INTERNAL_ERROR);
     }
 };
+
+
+const loadPendentProducts = async (req, res) => {
+    try {
+        const sortOption = req.query.sort || '';
+        let sortCriteria = {};
+        switch (sortOption) {
+            case 'priceLowToHigh':
+                sortCriteria = { originalPrice: 1 }; 
+                break;
+            case 'priceHighToLow':
+                sortCriteria = { originalPrice: -1 }; 
+                break;
+            case 'newArrivals':
+                sortCriteria = { _id: -1 };
+                break;
+            default:
+                sortCriteria = {}; 
+        }
+        const products = await product.find({ category: "Pendent Lights", isDeleted: false })
+            .select('_id name category images originalPrice discountPrice offerPercentage')
+            .sort(sortCriteria); 
+            let wishlistProductIds = [];
+            if (req.session.user) {
+            const wishlist = await Wishlist.find({ userId: req.session.user.id }).select('productId');
+            wishlistProductIds = wishlist.map(item => item.productId.toString());
+            }
+        const productsData = products.map(prod => {
+            const firstImage = prod.images.length > 0 ? prod.images[0] : null;
+            return {
+                name: prod.name,
+                price: prod.originalPrice,
+                offerPercentage: prod.offerPercentage || 0 ,
+                image: firstImage,
+                id: prod._id,
+                isInWishlist: wishlistProductIds.includes(prod._id.toString())
+            };
+        });
+        res.render('user/user_candle', { products: productsData, currentCategory:'tableLamp' });
+    } catch (error) {
+        console.error('Error fetching products:', error);
+        res.status(StatusCodes.INTERNAL_SERVER_ERROR).send(Messages.INTERNAL_ERROR);
+    }
+};
+
+
+
+
+
+
 
 
 const loadVaseProducts = async (req, res) => {
@@ -288,7 +363,7 @@ const loadVaseProducts = async (req, res) => {
             wishlistProductIds = wishlist.map(item => item.productId.toString());
             }
         const productsData = products.map(prod => {
-            const firstImage = prod.images.length > 0 ? prod.images[0].toString('base64') : null;
+            const firstImage = prod.images.length > 0 ? prod.images[0] : null;
             return {
                 name: prod.name,
                 price: prod.originalPrice,
@@ -330,7 +405,7 @@ const loadArtifactProducts = async (req, res) => {
             wishlistProductIds = wishlist.map(item => item.productId.toString());
             }
         const productsData = products.map(prod => {
-            const firstImage = prod.images.length > 0 ? prod.images[0].toString('base64') : null;
+            const firstImage = prod.images.length > 0 ? prod.images[0]: null;
             return {
                 name: prod.name,
                 price: prod.originalPrice,
@@ -373,7 +448,7 @@ const loadSculptureProducts = async (req, res) => {
             wishlistProductIds = wishlist.map(item => item.productId.toString());
             } 
         const productsData = products.map(prod => {
-            const firstImage = prod.images.length > 0 ? prod.images[0].toString('base64') : null;
+            const firstImage = prod.images.length > 0 ? prod.images[0] : null;
             return {
                 name: prod.name,
                 price: prod.originalPrice,
@@ -417,7 +492,7 @@ const loadChendelierProducts = async (req, res) => {
             wishlistProductIds = wishlist.map(item => item.productId.toString());
         } 
         const productsData = products.map(prod => {
-            const firstImage = prod.images.length > 0 ? prod.images[0].toString('base64') : null;
+            const firstImage = prod.images.length > 0 ? prod.images[0]: null;
             return {
                 name: prod.name,
                 price: prod.originalPrice,
@@ -490,5 +565,6 @@ module.exports = {loadProducts,updateProduct,addProduct,deleteProduct,
     loadArtifactProducts,
     loadSculptureProducts,
     loadChendelierProducts,
+    loadPendentProducts,
     check_product_exists
 }
