@@ -8,7 +8,6 @@ const userSchema = new mongoose.Schema({
     email: {
         type: String,
         required: false,
-        unique: true,
     },
     phone: {
         type: String,
@@ -23,7 +22,6 @@ const userSchema = new mongoose.Schema({
     },
     googleId: {
         type: String,
-        unique: true,
         sparse: true,
     },
     profilePic: {
@@ -31,7 +29,6 @@ const userSchema = new mongoose.Schema({
     },
     referralCode: { 
         type: String,
-         unique: true,
         required:false },
     addresses: [
         {
