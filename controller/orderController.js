@@ -19,8 +19,7 @@ const loadOrder = async (req, res) => {
       const productsWithImages = order.products.map((product) => ({
         ...product._doc,
         imageBase64: product.image && product.image.length > 0
-          ? `data:image/png;base64,${product.image[0].toString('base64')}`
-          : '/path-to-default-image.jpg', 
+          ?product.image[0] : '/path-to-default-image.jpg', 
       }));
 
       return {
