@@ -560,7 +560,6 @@ function finalizeOrder(paymentMethod, isRazorPayFlow) {
     .then(data => {
         if (data.success) {
             const orderId = data.orderId; 
-            console.log(`orderId in front ${orderId}`)
 
             if (isRazorPayFlow) {
                 openRazorPay()
