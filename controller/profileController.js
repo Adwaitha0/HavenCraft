@@ -100,7 +100,7 @@ const cancelProduct = async (req, res) => {
 
     const refundAmount = product.price;
 
-    const wallet = await wallet_model.findOne({ userId: order.userId });
+    let wallet = await wallet_model.findOne({ userId: order.userId });
     if (!wallet) {
       wallet = new wallet_model({
         userId: order.userId,
@@ -167,7 +167,7 @@ const cancelOrder = async (req, res) => {
           product.productStatus = 'Cancelled';
       });
       await order.save();
-      const wallet = await wallet_model.findOne({ userId });
+      let wallet = await wallet_model.findOne({ userId });
       if (!wallet) {
         wallet = new wallet_model({
             userId,
