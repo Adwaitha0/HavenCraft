@@ -582,73 +582,6 @@
 
 
 
-/*
-document.getElementById("applyForm").addEventListener("submit", async function (event) {
-    event.preventDefault(); 
-
-    const referralCode = document.getElementById("applyreferralCode").value.trim();
-
-    if (!referralCode) {
-      Swal.fire({
-        icon: "warning",
-        title: "Empty Field",
-        text: "Please enter a referral code.",
-      });
-      return;
-    }
-
-    try {
-      const response = await fetch("/user/apply-referralcode", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ referralCode }),
-      });
-
-      const result = await response.json();
-
-      if (result.swal) {
-        Swal.fire({
-          icon: result.swal.icon,
-          title: result.swal.title,
-          text: result.swal.text,
-        });
-      } else {
-        Swal.fire({
-          icon: "error",
-          title: "Unexpected Error",
-          text: "An unexpected error occurred. Please try again later.",
-        });
-      }
-    } catch (error) {
-      console.error(error);
-      Swal.fire({
-        icon: "error",
-        title: "Request Failed",
-        text: "Could not apply the referral code. Please check your connection and try again.",
-      });
-    }
-  });
-
-*/
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-  
-
-
 
 function showSection(sectionId) {
   const sections = document.querySelectorAll('.section-1-2');
@@ -660,10 +593,6 @@ function showSection(sectionId) {
     selectedSection.style.display = 'block';
   }
 }
-
-
-
-
 
 
 async function changePassword() {

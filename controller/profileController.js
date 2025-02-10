@@ -102,7 +102,11 @@ const cancelProduct = async (req, res) => {
 
     const wallet = await wallet_model.findOne({ userId: order.userId });
     if (!wallet) {
-      return res.status(404).json({ message: 'Wallet not found' });
+      wallet = new wallet_model({
+        userId: order.userId,
+        balance: 0,
+        transactions: [],
+      });
     }
 
     const uniqueTransactionId = generateUniqueTransactionId();
@@ -165,8 +169,12 @@ const cancelOrder = async (req, res) => {
       await order.save();
       const wallet = await wallet_model.findOne({ userId });
       if (!wallet) {
-          return res.status(404).json({ message: 'Wallet not found' });
-      }
+        wallet = new wallet_model({
+            userId,
+            balance: 0,
+            transactions: [],
+        });
+    }
       const uniqueTransactionId = generateUniqueTransactionId();
       wallet.balance += refundAmount;
       wallet.transactions.push({
