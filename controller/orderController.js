@@ -211,8 +211,12 @@ const refundOrder = async (req, res) => {
       const refundAmount = orders.payableAmount - shippingCharge;
       const wallet = await Wallet.findOne({ userId: orders.userId });
       if (!wallet) {
-        return res.status(404).json({ error: 'Wallet not found' });
-      }
+        wallet = new wallet_model({
+            userId : orders.userId,
+            balance: 0,
+            transactions: [],
+        });
+  }
       const uniqueTransactionId = generateUniqueTransactionId();
       wallet.balance += refundAmount;
       wallet.transactions.push({
