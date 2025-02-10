@@ -374,7 +374,7 @@ const placeOrder = async (req, res) => {
     if (paymentMethod === 'wallet') {
       let  wallet = await Wallet.findOne({ userId });
       if (!wallet) {
-              wallet = new wallet_model({
+              wallet = new Wallet({
                   userId,
                   balance: 0,
                   transactions: [],
