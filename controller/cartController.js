@@ -372,7 +372,7 @@ const placeOrder = async (req, res) => {
       return res.status(400).json({ message: 'Payment method is required' });
     }
     if (paymentMethod === 'wallet') {
-      const wallet = await Wallet.findOne({ userId });
+      let  wallet = await Wallet.findOne({ userId });
       if (!wallet) {
               wallet = new wallet_model({
                   userId,
