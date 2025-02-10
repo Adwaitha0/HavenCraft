@@ -147,6 +147,7 @@ const cancelOrder = async (req, res) => {
   const userId = req.session.user.id; 
   const shippingCharge = 50;
   
+  
   try {
       const order = await order_model.findById(orderId);     
       if (!order) {
@@ -227,8 +228,9 @@ const addAddress = async (req, res) => {
       contactno: savedAddress.contactno,
     });
     await user.save();
-    const profileData = await loadProfile(userId);
-    res.status(200).render("user/user_profile", { addresses: profileData.addresses });
+    // const profileData = await loadProfile(userId);
+    // res.status(200).render("user/user_profile", { addresses: profileData.addresses });
+    res.redirect('/user/user_profile');
   } catch (error) {
     console.error(error);
     res.status(StatusCodes.INTERNAL_SERVER_ERROR).send(Messages.INTERNAL_ERROR);
