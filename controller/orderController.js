@@ -83,8 +83,12 @@ const adminUpdateIndividualOrder = async (req, res) => {
 
     const wallet = await Wallet.findOne({ userId: orders.userId });
     if (!wallet) {
-      return res.status(404).json({ success: false, message: 'Wallet not found' });
-    }
+      wallet = new wallet_model({
+          userId: orders.userId,
+          balance: 0,
+          transactions: [],
+      });
+}
 
     wallet.balance += refundAmount;
     wallet.transactions.push({
@@ -147,9 +151,12 @@ const adminUpdateOrderStatus = async (req, res) => {
           const refundAmount = orders.payableAmount - shippingCharge;
           const wallet = await Wallet.findOne({ userId: orders.userId });
           if (!wallet) {
-              return res.status(404).json({ success: false, message: 'Wallet not found' });
-          }
-
+            wallet = new Wallet({
+                userId: orders.userId,
+                balance: 0,
+                transactions: [],
+            });
+      }
           const uniqueTransactionId = generateUniqueTransactionId();
           wallet.balance += refundAmount;
           wallet.transactions.push({
@@ -209,9 +216,9 @@ const refundOrder = async (req, res) => {
     if (orderStatus === 'Approve') {
       const shippingCharge = 50; 
       const refundAmount = orders.payableAmount - shippingCharge;
-      const wallet = await Wallet.findOne({ userId: orders.userId });
+      let wallet = await Wallet.findOne({ userId: orders.userId });
       if (!wallet) {
-        wallet = new wallet_model({
+        wallet = new Wallet({
             userId : orders.userId,
             balance: 0,
             transactions: [],
