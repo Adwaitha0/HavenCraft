@@ -18,6 +18,7 @@ Templating Engine: EJS
 
 
 
+
 🚀 Features
 
 🛒 Product listing with images, prices, and descriptions
@@ -59,21 +60,29 @@ HevanCraft/
 
 
 
+
 🔧 Installation & Setup
 
 1. Clone the repository
+
 git clone https://github.com/your-username/hevancraft.git
+
 cd hevancraft
 
 3. Install dependencies
+   
 npm install
 
-4. Create a .env file
+5. Create a .env file
+
 DB_URI=your-mongodb-connection-string
+
 PORT=3000
 
-5. Run the app
+7. Run the app
+
 npm start
 
 5.Open in browser
+
 http://localhost:3000
