@@ -1,10 +1,10 @@
-🏡 HevanCraft
-HevanCraft is a beautifully crafted e-commerce website focused on home decor products, built using Node.js, Express, EJS, and MongoDB.
+🏡 HevanCraft is a beautifully crafted e-commerce website focused on home decor products, built using Node.js, Express, EJS, and MongoDB.
 The platform allows users to browse, view, and manage decor items with a clean and responsive user interface.
 Designed with aesthetics and performance in mind, HevanCraft provides a smooth shopping experience for customers interested in enhancing their living spaces.
 
 
 🛠️ Tech Stack
+
 Frontend: HTML, CSS, EJS (Embedded JavaScript)
 Backend: Node.js, Express.js
 Database: MongoDB (using Mongoose)
@@ -12,13 +12,13 @@ Templating Engine: EJS
 
 
 🚀 Features
-🛒 Product listing with images, prices, and descriptions
-🔍 View detailed product pages
-➕ Admin-side functionality to add, edit, or delete products
-📄 EJS-based server-side rendering for dynamic content
-💾 MongoDB database for storing product data
-🌐 RESTful API routes
-🧼 Clean and modern UI with responsive design
+1. Product listing with images, prices, and descriptions
+2. View detailed product pages
+3.Admin-side functionality to add, edit, or delete products
+4. EJS-based server-side rendering for dynamic content
+5. MongoDB database for storing product data
+6. RESTful API routes
+7. Clean and modern UI with responsive design
 
 
 📁 Folder Structure
