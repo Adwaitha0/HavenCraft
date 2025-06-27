@@ -69,17 +69,17 @@ git clone https://github.com/your-username/hevancraft.git
 
 cd hevancraft
 
-3. Install dependencies
+2. Install dependencies
    
 npm install
 
-5. Create a .env file
+3. Create a .env file
 
 DB_URI=your-mongodb-connection-string
 
 PORT=3000
 
-7. Run the app
+4. Run the app
 
 npm start
 
