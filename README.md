@@ -65,7 +65,7 @@ HevanCraft/
 
 1. Clone the repository
 
-git clone https://github.com/your-username/hevancraft.git
+git clone https://github.com/Adwaitha0/hevancraft.git
 
 cd hevancraft
 
